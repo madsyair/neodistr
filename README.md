@@ -1,0 +1,2 @@
+# neodistr
+Neo-normal distribution
