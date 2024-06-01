@@ -2,8 +2,7 @@
 % Please edit documentation in R/stanf_jfst.R
 \name{stanf_jfst}
 \alias{stanf_jfst}
-\title{Distribution Jones and Faddys Skew-t
-These functions is translated from ST5 in gamlss.dist that was written by Bob Rigby and Mikis Stasinopoulos}
+\title{Distribution Jones and Faddys Skew-t}
 \usage{
 stanf_jfst(vectorize = TRUE, rng = TRUE)
 }
