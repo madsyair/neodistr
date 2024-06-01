@@ -1,0 +1,28 @@
+Package: neodistr
+Type: Package
+Title: Neo-normal Distribution 
+Version: 0.1.0
+Authors@R:
+    c(person("Achmad Syahrul", "Choir", email = "madsyair@stis.ac.id",
+             comment = c(ORCID = "0000-0001-7088-0646"), role = c("aut", "cre")),
+      person("Anisa'", "Faoziah", role = c("aut")),
+      person("Nur", "Iriawan", role = c("aut"),
+           comment = c(ORCID = "0000-0003-2833-6115"))
+      )
+Maintainer: Achmad Syahrul Choir <madsyair@stis.ac.id>
+Description: Density, distribution function, quantile function
+    and random generation for a number of univariate distribution
+    as neo-normal distribution. This package implements the
+    following distributions: MSNBurr, MSNBurr-IIa, GMSNBurr
+    and Jones-Faddy Skew-t. Stan's code of these distributions 
+    also available in this package. These distributions can be
+    used as custom distributions in brms package.
+License: GPL
+Depends:  R (>= 3.6.0),shinythemes,plotly
+Imports:  rstan (>= 2.32.6), stats,brms,Rmpfr,ggplot2,shiny
+Suggests: kableExtra,knitr, testthat
+Encoding: UTF-8
+LazyData: true
+NeedsCompilation: no
+Packaged: 2019-02-28 09:55:35 UTC; madsyair
+RoxygenNote: 7.3.1
