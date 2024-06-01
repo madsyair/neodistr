@@ -1,5 +1,5 @@
 #' Jones Faddy's Skew-t Distribution
-#' These functions is adapted from ST5 in gamlss.dist that was written by Bob Rigby and Mikis Stasinopoulos
+# These functions is adapted from ST5 in gamlss.dist that was written by Bob Rigby and Mikis Stasinopoulos
 #' @export 
 #' @name jfst
 #' @importFrom stats pbeta qbeta
