@@ -5,7 +5,7 @@ library(devtools)
 install_github("madsyair/neodistr")
 ```
 
-## Reference
+## References
 Choir, A. S. (2020).The New Neo-Normal Distributions and their Properties. 
        Disertation. Institut Teknologi Sepuluh Nopember.
        
