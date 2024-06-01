@@ -67,7 +67,7 @@ main = 'Distribution of MSNBurr Random Number ')
 \references{
 Iriawan, N. (2000). Computationally Intensive Approaches to Inference in Neo-Normal Linear Models. Curtin University of Technology.
 
-Choir, A. S. (2020). The New Neo-Normal DDistributions and their Properties. Disertation. Institut Teknologi Sepuluh Nopember.
+Choir, A. S. (2020). The New Neo-Normal Distributions and their Properties. Disertation. Institut Teknologi Sepuluh Nopember.
 }
 \author{
 Achmad Syahrul Choir and Nur Iriawan

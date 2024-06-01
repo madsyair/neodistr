@@ -6,8 +6,7 @@
 \alias{pjfst}
 \alias{qjfst}
 \alias{rjfst}
-\title{Jones Faddy's Skew-t Distribution
-These functions is adapted from ST5 in gamlss.dist that was written by Bob Rigby and Mikis Stasinopoulos}
+\title{Jones Faddy's Skew-t Distribution}
 \usage{
 djfst(x, mu = 0, sigma = 1, alpha = 0, kappa = 2, log = FALSE)
 
