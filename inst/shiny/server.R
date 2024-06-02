@@ -81,21 +81,55 @@ function(input, output, session) {
     }
   })
   
-  dtd_seq <- reactive({
+ 
+   
+
+  
+  xmin <- reactive({
     if(input$menu=="prob"){
       if(input$dist=="msnburr"){
-        data_sequence(qmsnburr(0.00001,mu=input$bmu, sigma=input$bsigma,alpha=input$balpha), qmsnburr(0.99999,mu=input$bmu,sigma= input$bsigma,alpha=input$balpha), 100)
+        qmsnburr(0.0001,mu=input$bmu, sigma=input$bsigma,alpha=input$balpha)
       }else if(input$dist=="msnburr2a"){
-        data_sequence(qmsnburr2a(0.00001,mu=input$b2mu, sigma=input$b2sigma,alpha=input$b2alpha), qmsnburr2a(0.99999,mu=input$bmu, sigma=input$bsigma,alpha=input$balpha), 100)
+        qmsnburr2a(0.0001,mu=input$b2mu, sigma=input$b2sigma,alpha=input$b2alpha)
       }else if(input$dist=="gmsnburr"){
-        data_sequence(qgmsnburr(0.00001,mu=input$gmu, sigma=input$gsigma,alpha=input$galpha,beta=input$gbeta), qgmsnburr(0.99999,mu=input$gmu, sigma=input$gsigma,alpha=input$galpha,beta=input$gbeta), 100)
+        qgmsnburr(0.0001,mu=input$gmu, sigma=input$gsigma,alpha=input$galpha,beta=input$gbeta)
       }else if(input$dist=="jfst"){
-        data_sequence(qjfst(0.00001,mu=input$jmu, sigma=input$jsigma,alpha=input$jalpha,kappa=input$jkappa), qjfst(0.99999,mu=input$jmu, sigma=input$jsigma,alpha=input$jalpha,kappa=input$jkappa), 100)     
+        qjfst(0.0001,mu=input$jmu, sigma=input$jsigma,alpha=input$jalpha,kappa=input$jkappa)
+      }
     }
-  }
   }  )
   
-  densn<- reactive({
+  xmax <- reactive({
+    if(input$menu=="prob"){
+      if(input$dist=="msnburr"){
+        qmsnburr(0.9999,mu=input$bmu, sigma=input$bsigma,alpha=input$balpha)
+      }else if(input$dist=="msnburr2a"){
+        qmsnburr2a(0.9999,mu=input$b2mu, sigma=input$b2sigma,alpha=input$b2alpha)
+      }else if(input$dist=="gmsnburr"){
+        x<-qgmsnburr(0.9999,mu=input$gmu, sigma=input$gsigma,alpha=input$galpha,beta=input$gbeta)
+        if(is.infinite(x)){
+          ifelse(input$galpha<input$gbeta,qmsnburr(0.9999,mu=input$gmu, sigma=input$gsigma,alpha=input$galpha),qmsnburr(0.9999,mu=input$gmu, sigma=input$gsigma,alpha=input$gbeta))
+        } else{
+          x
+        }
+      }else if(input$dist=="jfst"){
+        qjfst(0.9999,mu=input$jmu, sigma=input$jsigma,alpha=input$jalpha,kappa=input$jkappa)
+      }
+    }
+  }  )
+  
+  dtd_seq <- reactive({
+    if(input$menu=="prob"){
+      data_sequence(xmin(),xmax(), 100)
+    }else if(input$dist=="msnburr2a"){
+      data_sequence(xmin(),xmax(), 100)
+    }else if(input$dist=="gmsnburr"){
+      data_sequence(xmin(),xmax(), 100)
+    }else if(input$dist=="jfst"){
+      data_sequence(xmin(),xmax(), 100)
+    }
+  })
+    densn<- reactive({
     if(input$menu=="prob"){
       if (input$dist=="msnburr"){
         (dmsnburr(dtd_seq(),mu=input$bmu, sigma=input$bsigma, alpha = input$balpha))
@@ -588,7 +622,7 @@ function(input, output, session) {
   output$pdfPlot <- renderPlot({
     if(input$menu=="prob"){
       if(input$dist=="msnburr"){
- suppressWarnings( ggplot(data.frame(Value = dtd_seq()), aes(x = Value)) +
+ suppressWarnings( ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
           geom_line(aes(x = Value,y = densn(),color="MSNburr"), linewidth = 2.25, linetype = "solid",inherit.aes = FALSE) +
           geom_line(aes(x = Value,y = densnorm(),color="normal"), linewidth = 2, linetype = "dashed",inherit.aes = FALSE) +
                     #coord_cartesian(xlim = c(lb(),ub()))+
@@ -605,7 +639,7 @@ function(input, output, session) {
             legend.position="bottom"
           ))
       } else if (input$dist=="msnburr2a"){
-suppressWarnings(  ggplot(data.frame(Value = dtd_seq()), aes(x = Value)) +
+suppressWarnings(  ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
           geom_line(aes(x = Value,y = densn(),color="MSNBurr-IIa"), linewidth = 2.25, linetype = "solid") +
           geom_line(aes(x = Value,y = densnorm(),color="normal"), linewidth = 2, linetype = "dashed",inherit.aes = FALSE) +
           labs(title = "Probability density Function (PDF)", x = "x", y = "density") +
@@ -620,7 +654,7 @@ suppressWarnings(  ggplot(data.frame(Value = dtd_seq()), aes(x = Value)) +
                                       legend.position="bottom"))
           
       } else if (input$dist =="gmsnburr"){
- suppressWarnings(ggplot(data.frame(Value = dtd_seq()), aes(x = Value)) +
+ suppressWarnings(ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
           geom_line(aes(x = Value,y = densn(),color="GMSNBurr"), linewidth = 2.25, linetype = "solid",inherit.aes = FALSE) +
           geom_line(aes(x = Value,y = densnorm(),color="normal"), linewidth = 2, linetype = "dashed",inherit.aes = FALSE) +
             labs(title = "Probability density Function (PDF)", x = "x", y = "density") +
@@ -633,7 +667,7 @@ suppressWarnings(  ggplot(data.frame(Value = dtd_seq()), aes(x = Value)) +
             legend.position="bottom"
           ))
       }else if (input$dist == "jfst"){
- suppressWarnings( ggplot(data.frame(Value = dtd_seq()), aes(x = Value)) +
+ suppressWarnings( ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
           geom_line(aes(x = Value,y = densn(),color="Jones-Faddy Skew-t"), size = 2.25, linetype = "solid") +
           geom_line(aes(x = Value,y = densnorm(),color="Normal "), size = 2, linetype = "dashed") +
           labs(title = "Probability density Function (PDF)", x = "x", y = "density") +
@@ -655,7 +689,7 @@ suppressWarnings(  ggplot(data.frame(Value = dtd_seq()), aes(x = Value)) +
   output$cdfPlot <- renderPlot({
     if(input$menu=="prob"){
       if(input$dist=="msnburr"){
-        ggplot(data.frame(Value = dtd_seq()), aes(x = Value)) +
+        ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
           geom_line(aes(y = cumn()),color="#7ECBE3", linewidth = 2.25, linetype = "solid") +
           labs(title = "Cumulative distribution function (CDF)", x = "x", y = "density") +
           theme_minimal()+
@@ -665,7 +699,7 @@ suppressWarnings(  ggplot(data.frame(Value = dtd_seq()), aes(x = Value)) +
             axis.title.y = element_text(family = "roboto", size = 14, color = "#2C3E50"),
           )
       }else if (input$dist == "msnburr2a"){
-        ggplot(data.frame(Value = dtd_seq()), aes(x = Value)) +
+        ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
           geom_line(aes(y = cumn()),color="#000FFF", linewidth = 2.25, linetype = "solid") +
           labs(title = "Cumulative distribution function (CDF)", x = "x", y = "density") +
           theme_minimal()+
@@ -675,7 +709,7 @@ suppressWarnings(  ggplot(data.frame(Value = dtd_seq()), aes(x = Value)) +
             axis.title.y = element_text(family = "roboto", size = 14, color = "#2C3E50"),
           )
       }else if (input$dist=="gmsnburr"){
-        ggplot(data.frame(Value = dtd_seq()), aes(x = Value)) +
+        ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
           geom_line(aes(y = cumn()),color="#000C66", linewidth = 2.25, linetype = "solid") +
           labs(title = "Cumulative distribution function (CDF)", x = "x", y = "density") +
           theme_minimal()+
@@ -685,7 +719,7 @@ suppressWarnings(  ggplot(data.frame(Value = dtd_seq()), aes(x = Value)) +
             axis.title.y = element_text(family = "roboto", size = 14, color = "#2C3E50"),
           )
       }else if (input$dist =="jfst"){
-        ggplot(data.frame(Value = dtd_seq()), aes(x = Value)) +
+        ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
           geom_line(aes(y = cumn()),color="#050A30", linewidth = 2.25, linetype = "solid") +
           labs(title = "Cumulative distribution function (CDF)", x = "x", y = "density") +
           theme_minimal()+
