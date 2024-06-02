@@ -1,7 +1,7 @@
 Package: neodistr
 Type: Package
 Title: Neo-normal Distribution 
-Version: 0.1.1
+Version: 0.1.0
 Authors@R:
     c(person("Achmad Syahrul", "Choir", email = "madsyair@stis.ac.id",
              comment = c(ORCID = "0000-0001-7088-0646"), role = c("aut", "cre")),
