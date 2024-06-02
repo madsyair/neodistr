@@ -114,26 +114,27 @@ qgmsnburr<-function(p,mu=0,sigma=1,alpha=1,beta=1,lower.tail=TRUE,log.p=FALSE){
     stop(paste("beta must be positive", "\n", ""))
   if (any(p <= 0) | any(p >= 1)) 
     stop(paste("p must be between 0 and 1", "\n", ""))
-  if (lower.tail==TRUE) {
-    if (log.p==TRUE){
-      tp <- exp(p)
-    }else{
-      tp <- p
-    }
-  } else {
-    if (log.p){
-      tp <- 1-exp(p)
-    }
-    else{
-      tp <- 1-p
-    }
-  }
+# if (lower.tail==TRUE) {
+#   if (log.p==TRUE){
+#      tp <- exp(p)
+#    }else{
+#      tp <- p
+#    }
+#  } else {
+#    if (log.p){
+#      tp <- 1-exp(p)
+#    }
+#    else{
+#      tp <- 1-p
+#     }
+#   }
   lomega=-0.5*log(2*pi)+lbeta(alpha,beta)-beta*(log(beta)-log(alpha))+(alpha+beta)*log1p(beta/alpha)
   omega=exp(lomega)
-  ib<-qbeta(tp,alpha, beta );
-  s <- (1/ib)-1
-   return (mu-(sigma/omega)*(beta/alpha)*log(s))
-
+  # ib<-qbeta(tp,alpha, beta );
+  # s <- (1/ib)-1
+  #  return (mu-(sigma/omega)*(beta/alpha)*log(s))
+  zf <-qf(p,2*beta,2*alpha,lower.tail=!lower.tail,log.p=log.p)
+  return (mu-(sigma/omega)*log(zf))
 }
 #' @export
 #' @rdname gmsnburr
