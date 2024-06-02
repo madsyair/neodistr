@@ -121,7 +121,7 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
   } else if(family=="gmsnburr"){ #GMSNBurr
      stan_funs_family<-stanf_gmsnburr(vectorize=vectorize)
     log_lik_gmsnburr <- function(i, prep){
-      gmsnburr_lpdf<-.<-NULL
+      .<-gmsnburr_lpdf<-NULL
       mu <- brms::get_dpar(prep, "mu", i = i)
       sigma <- brms::get_dpar(prep, "sigma")
       alpha <- brms::get_dpar(prep, "alpha")     
