@@ -121,13 +121,13 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
   } else if(family=="gmsnburr"){ #GMSNBurr
      stan_funs_family<-stanf_gmsnburr(vectorize=vectorize)
     log_lik_gmsnburr <- function(i, prep){
-      gmsnburr_lpdf<-.<-NULL
+      .<-gmsnburr_lpdf<-NULL
       mu <- brms::get_dpar(prep, "mu", i = i)
       sigma <- brms::get_dpar(prep, "sigma")
       alpha <- brms::get_dpar(prep, "alpha")     
       beta <- brms::get_dpar(prep, "beta")   
       y <- prep$data$Y[i]
-      gmsnbur_lpdf(y, mu, sigma, alpha,beta)
+      gmsnburr_lpdf(y, mu, sigma, alpha,beta)
     }
     posterior_predict_gmsnburr <- function(i, prep, ...) {
       .<-gmsnburr_rng<-NULL
