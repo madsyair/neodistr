@@ -50,7 +50,7 @@
 #'   with applications. Journal of the Royal Statistical Society, 
 #'   Series B, 65, pp 159-174
 #'  Rigby, R.A. and Stasinopoulos, M.D. and Heller, G.Z. and De Bastiani, F. 
-#'   (2020) Distributions for Modeling Location, Scale, 
+#'   (2019) Distributions for Modeling Location, Scale, 
 #'   and Shape: Using GAMLSS in R.CRC Press
 
 #' @rdname jfst
@@ -72,7 +72,7 @@ djfst<- function(x,mu=0, sigma=1,alpha=0, kappa=2, log=FALSE){
     b <- (nu - lam)/2
     z <- (x-mu)/sigma
     rz <-  z / sqrt(a + b + (z*z))
-    rz[is.infinite(z)]<-ifelse(z<0,-1,1)
+    rz[is.infinite(z)]<-ifelse(z[is.infinite(z)]<0,-1,1)
     p <- (a + 0.5) * (log(1+rz)) + (b + 0.5) * (log(1-rz)) - ((a + b - 1) * log(2)) -  (0.5 * log (a + b)) - lbeta(a,b) - log(sigma)
     #p <- dST5(x,mu=mu,sigma=sigma, nu=alpha,tau=kappa, log=log)
     if(log){
@@ -102,7 +102,7 @@ pjfst <- function(q,mu=0, sigma=1,alpha=0, kappa=2,lower.tail=TRUE, log.p=FALSE)
     b = (nu - lam)/2
     z = (q-mu)/sigma
     rz =  z / sqrt(a + b + (z*z))
-    rz[is.infinite(z)]<-ifelse(z<0,-1,1)
+    rz[is.infinite(z)]<-ifelse(z[is.infinite(z)]<0,-1,1)
     r <- 0.5 * (1+rz)
     p <- pbeta(r,a,b)
     if(lower.tail){

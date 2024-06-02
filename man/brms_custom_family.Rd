@@ -7,13 +7,13 @@
 brms_custom_family(family = "msnburr", vectorize = TRUE)
 }
 \arguments{
-\item{family}{distribution neo-normal option: "msnburr", "msnburr2a", "gmsnburr"}
+\item{family}{distribution neo-normal option: "msnburr", "msnburr2a", "gmsnburr", and "jfst"}
 
 \item{vectorize}{logical; if TRUE,  Stan code of family distribution is vectorize 
 The default value of this parameter is TRUE}
 }
 \value{
-An object of class customfamily of brms
+custom_family is an object of class customfamily of brms and stanvars_family is stanvars object, the stan's code of function of neo-normal distributions (lpdf,cdf,lcdf,lccdf,quantile and rng)
 }
 \description{
 Neonormal as Custom Distribution in brms

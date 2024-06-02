@@ -145,7 +145,7 @@ print(fit2, pars = c("mu", "sigma", "alpha", "kappa", "lp__"), probs=c(.025,.5,.
 }
 \references{
 Jones, M.C. and Faddy, M. J. (2003) A skew extension of the t distribution, with applications. Journal of the Royal Statistical Society, Series B, 65, pp 159-174
-Rigby, R.A. and Stasinopoulos, M.D. and Heller, G.Z. and De Bastiani, F. (2020) Distributions for Modeling Location, Scale, and Shape: Using GAMLSS in R.CRC Press
+Rigby, R.A. and Stasinopoulos, M.D. and Heller, G.Z. and De Bastiani, F. (2019) Distributions for Modeling Location, Scale, and Shape: Using GAMLSS in R.CRC Press
 }
 \author{
 Anisa'Faoziah and Achmad Syahrul Choir

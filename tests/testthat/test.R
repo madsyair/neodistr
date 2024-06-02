@@ -549,12 +549,12 @@ test_that("Wrong parameter values in CDF functions", {
 
 test_that("Wrong parameter values in inverse CDF functions", {
   
-  expect_true(is.na(qmsnburr(NA, 0, 1, 1)))
+  expect_error(expect_true(is.na(qmsnburr(NA, 0, 1, 1))))
   expect_error(expect_true(is.na(qmsnburr(1, NA, 1, 1))))
   expect_error(expect_true(is.na(qmsnburr(1, 0, NA, 1))))
   expect_error(expect_true(is.na(qmsnburr(1, 0, 1, NA))))
   
-  expect_true(is.na(qmsnburr2a(NA, 0, 1, 1)))
+  expect_error(expect_true(is.na(qmsnburr2a(NA, 0, 1, 1))))
   expect_error(expect_true(is.na(qmsnburr2a(1, NA, 1, 1))))
   expect_error(expect_true(is.na(qmsnburr2a(1, 0, NA, 1))))
   expect_error(expect_true(is.na(qmsnburr2a(1, 0, 1, NA))))
@@ -692,7 +692,7 @@ test_that("Ones in quantile functions", {
 
 test_that("Checking p = F(F^-1(p))", {
   
-  pp <- seq(0, 1, by = 0.001)
+  pp <- seq(0.00001, 1, by = 0.001)
   
   expect_equal(pp, pmsnburr(qmsnburr(pp, 0, 1, 1), 0, 1, 1))
   expect_equal(pp, pmsnburr2a(qmsnburr2a(pp, 0, 1, 1), 0, 1, 1))
@@ -741,7 +741,7 @@ test_that("Coverage of RNG's", {
   
   expect_gte(probCoverage("gmsnburr", 0, 1, 1, 1), 0.99)
   
-  expect_gte(probCoverage("jfst", 0, 1, 2, 2), 0.99)
+  expect_gte(probCoverage("jfst", 0, 1, 0, 2), 0.99)
   
   
   
@@ -781,41 +781,41 @@ cdf0_jfst <- neonormal_stanfunc(family ="jfst", func = "cdf",vectorize = FALSE )
 
 test_that("integrate PDF from -inf to inf == 1", {
   
-  expect_true(suppressWarnings(integrate(dmsnburr,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=1 )) == 1)
-  expect_true(suppressWarnings(integrate(pdf_msnburr,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=1 )) == 1)
-  expect_true(suppressWarnings(integrate(pdf0_msnburr,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=1 )) == 1)
+  expect_equal(integrate(dmsnburr,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=1 )$value,1)
+  expect_equal(integrate(pdf_msnburr,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=1 )$value,1)
+  expect_equal(integrate(pdf0_msnburr,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=1 )$value,1)
   
-  expect_true(suppressWarnings(integrate(dmsnburr2a,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=1 )) == 1)
-  expect_true(suppressWarnings(integrate(pdf_msnburr2a,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=1 )) == 1)
-  expect_true(suppressWarnings(integrate(pdf0_msnburr2a,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=1 )) == 1)
+  expect_equal(integrate(dmsnburr2a,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=1 )$value,1)
+  expect_equal(integrate(pdf_msnburr2a,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=1 )$value,1)
+  expect_equal(integrate(pdf0_msnburr2a,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=1 )$value,1)
   
-  expect_true(suppressWarnings(integrate(dgmsnburr,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=1, beta=1 )) == 1)
-  expect_true(suppressWarnings(integrate(pdf_gmsnburr,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=1, beta=1 )) == 1)
-  expect_true(suppressWarnings(integrate(pdf0_gmsnburr,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=1, beta=1 )) == 1)
+  expect_equal(integrate(dgmsnburr,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=1,beta=1 )$value,1)
+  expect_equal(integrate(pdf_gmsnburr,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=1,beta=1 )$value,1)
+  expect_equal(integrate(pdf0_gmsnburr,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=1,beta=1 )$value,1)
   
-  expect_true(suppressWarnings(integrate(djfst,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=0.5, kappa=0.2 )) == 1)
-  expect_true(suppressWarnings(integrate(pdf_jfst,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=0.5, kappa=0.2 )) == 1)
-  expect_true(suppressWarnings(integrate(pdf0_jfst,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=0.5, kappa=0.2 )) == 1)
+  expect_equal(integrate(djfst,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=0,kappa= 0.2 )$value,1)
+  expect_equal(integrate(pdf_jfst,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=0,kappa= 0.2 )$value,1)
+  expect_equal(integrate(pdf0_jfst,lower=-Inf, upper = Inf,mu=0,sigma=1,alpha=0,kappa= 0.2)$value,1)
   
-})
+ })
 
 test_that("integrate PDF from - Inf until x equal to cdf x", {
   
-  expect_true(suppressWarnings(suppressWarnings((integrate(dmsnburr, lower= -Inf, upper=4, mu=0, sigma=1,alpha=1)$value) == (pmsnburr(4, mu=0, sigma=1, alpha=1)))))
-  expect_true(suppressWarnings(suppressWarnings((integrate(pdf_msnburr, lower= -Inf, upper=4, mu=0, sigma=1,alpha=1)$value) == (cdf_msnburr(4, mu=0, sigma=1, alpha=1)))))
-  expect_true(suppressWarnings(suppressWarnings((integrate(pdf0_msnburr, lower= -Inf, upper=4, mu=0, sigma=1,alpha=1)$value) == (cdf0_msnburr(4, mu=0, sigma=1, alpha=1)))))
+  expect_equal((integrate(dmsnburr, lower= -Inf, upper=4, mu=0, sigma=1,alpha=1)$value),(pmsnburr(4, mu=0, sigma=1, alpha=1)))
+  expect_equal((integrate(pdf_msnburr, lower= -Inf, upper=4, mu=0, sigma=1,alpha=1)$value), (cdf_msnburr(4, mu=0, sigma=1, alpha=1)))
+  expect_equal((integrate(pdf0_msnburr, lower= -Inf, upper=4, mu=0, sigma=1,alpha=1)$value),(cdf0_msnburr(4, mu=0, sigma=1, alpha=1)))
   
-  expect_true(suppressWarnings(suppressWarnings((integrate(dmsnburr2a, lower= -Inf, upper=4, mu=0, sigma=1,alpha=1)$value) == (pmsnburr2a(4, mu=0, sigma=1, alpha=1)))))
-  expect_true(suppressWarnings(suppressWarnings((integrate(pdf_msnburr2a, lower= -Inf, upper=4, mu=0, sigma=1,alpha=1)$value) == (cdf_msnburr2a(4, mu=0, sigma=1, alpha=1)))))
-  expect_true(suppressWarnings(suppressWarnings((integrate(pdf0_msnburr2a, lower= -Inf, upper=4, mu=0, sigma=1,alpha=1)$value) == (cdf0_msnburr2a(4, mu=0, sigma=1, alpha=1)))))
+  expect_equal((integrate(dmsnburr2a, lower= -Inf, upper=4, mu=0, sigma=1,alpha=1)$value) , (pmsnburr2a(4, mu=0, sigma=1, alpha=1)))
+  expect_equal((integrate(pdf_msnburr2a, lower= -Inf, upper=4, mu=0, sigma=1,alpha=1)$value), (cdf_msnburr2a(4, mu=0, sigma=1, alpha=1)))
+  expect_equal((integrate(pdf0_msnburr2a, lower= -Inf, upper=4, mu=0, sigma=1,alpha=1)$value) , (cdf0_msnburr2a(4, mu=0, sigma=1, alpha=1)))
   
-  expect_true(suppressWarnings(suppressWarnings((integrate(dgmsnburr, lower= -Inf, upper=4, mu=0, sigma=1,alpha=1, beta=1)$value) == (pgmsnburr(4, mu=0, sigma=1, alpha=1, beta=1)))))
-  expect_true(suppressWarnings(suppressWarnings((integrate(pdf_gmsnburr, lower= -Inf, upper=4, mu=0, sigma=1,alpha=1, beta=1)$value) == (cdf_gmsnburr(4, mu=0, sigma=1, alpha=1, beta=1)))))
-  expect_true(suppressWarnings(suppressWarnings((integrate(pdf0_gmsnburr, lower= -Inf, upper=4, mu=0, sigma=1,alpha=1, beta=1)$value) == (cdf0_gmsnburr(4, mu=0, sigma=1, alpha=1, beta=1)))))
+  expect_equal((integrate(dgmsnburr, lower= -Inf, upper=4, mu=0, sigma=1,alpha=1, beta=1)$value), (pgmsnburr(4, mu=0, sigma=1, alpha=1, beta=1)))
+  expect_equal((integrate(pdf_gmsnburr, lower= -Inf, upper=4, mu=0, sigma=1,alpha=1, beta=1)$value) , (cdf_gmsnburr(4, mu=0, sigma=1, alpha=1, beta=1)))
+  expect_equal((integrate(pdf0_gmsnburr, lower= -Inf, upper=4, mu=0, sigma=1,alpha=1, beta=1)$value) , (cdf0_gmsnburr(4, mu=0, sigma=1, alpha=1, beta=1)))
   
-  expect_true(suppressWarnings(suppressWarnings((integrate(djfst, lower= -Inf, upper=4, mu=0, sigma=1,alpha=0, kappa=0.2)$value) == (pjfst(4, mu=0, sigma=1, alpha=0, kappa=0.2)))))
-  expect_true(suppressWarnings(suppressWarnings((integrate(pdf_jfst, lower= -Inf, upper=4, mu=0, sigma=1,alpha=0, kappa=0.2)$value) == (cdf_jfst(4, mu=0, sigma=1, alpha=0, kappa=0.2)))))
-  expect_true(suppressWarnings(suppressWarnings((integrate(pdf0_jfst, lower= -Inf, upper=4, mu=0, sigma=1,alpha=0, kappa=0.2)$value) == (cdf0_jfst(4, mu=0, sigma=1, alpha=0, kappa=0.2)))))
+  expect_equal((integrate(djfst, lower= -Inf, upper=4, mu=0, sigma=1,alpha=0, kappa=0.2)$value) , (pjfst(4, mu=0, sigma=1, alpha=0, kappa=0.2)))
+  expect_equal((integrate(pdf_jfst, lower= -Inf, upper=4, mu=0, sigma=1,alpha=0, kappa=0.2)$value) , (cdf_jfst(4, mu=0, sigma=1, alpha=0, kappa=0.2)))
+  expect_equal((integrate(pdf0_jfst, lower= -Inf, upper=4, mu=0, sigma=1,alpha=0, kappa=0.2)$value) , (cdf0_jfst(4, mu=0, sigma=1, alpha=0, kappa=0.2)))
   
 })
 

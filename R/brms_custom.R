@@ -1,10 +1,10 @@
 #' Neonormal as Custom Distribution in brms 
 #' @name brms_custom_family
 #' @import brms 
-#' @param family distribution neo-normal option: "msnburr", "msnburr2a", "gmsnburr"
+#' @param family distribution neo-normal option: "msnburr", "msnburr2a", "gmsnburr", and "jfst"
 #' @param vectorize logical; if TRUE,  Stan code of family distribution is vectorize 
 #' The default value of this parameter is TRUE
-#' @return An object of class customfamily of brms
+#' @return custom_family is an object of class customfamily of brms and stanvars_family is stanvars object, the stan's code of function of neo-normal distributions (lpdf,cdf,lcdf,lccdf,quantile and rng) 
 #' @author Achmad Syahrul Choir
 #' @examples
 #' \dontrun{
@@ -127,7 +127,7 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
       alpha <- brms::get_dpar(prep, "alpha")     
       beta <- brms::get_dpar(prep, "beta")   
       y <- prep$data$Y[i]
-      gmsnbur_lpdf(y, mu, sigma, alpha,beta)
+      gmsnburr_lpdf(y, mu, sigma, alpha,beta)
     }
     posterior_predict_gmsnburr <- function(i, prep, ...) {
       .<-gmsnburr_rng<-NULL

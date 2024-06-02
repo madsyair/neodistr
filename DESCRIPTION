@@ -1,7 +1,7 @@
 Package: neodistr
 Type: Package
 Title: Neo-normal Distribution 
-Version: 0.1.0
+Version: 0.1.1
 Authors@R:
     c(person("Achmad Syahrul", "Choir", email = "madsyair@stis.ac.id",
              comment = c(ORCID = "0000-0001-7088-0646"), role = c("aut", "cre")),
@@ -17,12 +17,16 @@ Description: Density, distribution function, quantile function
     and Jones-Faddy Skew-t. Stan's code of these distributions 
     also available in this package. These distributions can be
     used as custom distributions in brms package.
-License: GPL
-Depends:  R (>= 3.6.0),shinythemes,plotly
-Imports:  rstan (>= 2.32.6), stats,brms,Rmpfr,ggplot2,shiny
+    References:
+    Choir, A. S. (2020). "The New Neo-Normal Distributions and Their Properties".Unpublished Dissertation.
+    Iriawan, N. (2000). "Computationally Intensive Approaches to Inference in NeoNormal Linear Models".Unpublished Dissertation.
+    Jones,  M. C. and Faddy,M. J. (2003). "A Skew Extension of the T-Distribution, with Applications".<doi:10.1111/1467-9868.00378>.
+    Rigby, R. A., Stasinopoulos, M. D., Heller, G. Z., & Bastiani, F. D. (2019) <doi:10.1201/9780429298547>.
+License: GPL-3 | file LICENSE
+Depends: R (>= 3.6.0),shinythemes,plotly
+Imports: rstan (>= 2.32.6), stats,brms,Rmpfr,ggplot2,shiny
 Suggests: kableExtra,knitr, testthat
 Encoding: UTF-8
-LazyData: true
 NeedsCompilation: no
 Packaged: 2019-02-28 09:55:35 UTC; madsyair
 RoxygenNote: 7.3.1

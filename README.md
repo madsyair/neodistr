@@ -17,7 +17,7 @@ Jones, M.C. and Faddy, M. J. (2003) A skew extension of the t distribution,
        Series B, 65, pp 159-174.
        
 Rigby, R.A. and Stasinopoulos, M.D. and Heller, G.Z. and De Bastiani, F. 
-       (2020) Distributions for Modeling Location, Scale, 
+       (2019) Distributions for Modeling Location, Scale, 
        and Shape: Using GAMLSS in R.CRC Press
        
 
