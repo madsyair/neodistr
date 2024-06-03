@@ -76,11 +76,11 @@ neonormal_stanfunc<-function(family="gmsnburr",func="pdf",vectorize=TRUE){
             }
           return(pdf)
           },
-        "jfst"=function(y,mu,sigma,alpha,kappa){
+        "jfst"=function(y,mu,sigma,alpha,beta){
           n<-length(y)
           pdf<-rep(0,n)
             for(i in 1:n){
-              pdf[i] <-exp(sapply(y[i], FUN=jfst_lpdf, mu=mu, sigma=sigma,alpha=alpha,kappa=kappa))
+              pdf[i] <-exp(sapply(y[i], FUN=jfst_lpdf, mu=mu, sigma=sigma,alpha=alpha,beta=beta))
             }
           return(pdf)
         }
@@ -117,11 +117,11 @@ neonormal_stanfunc<-function(family="gmsnburr",func="pdf",vectorize=TRUE){
             }
         },
               
-       "jfst"=function(y, mu, sigma, alpha,kappa){
+       "jfst"=function(y, mu, sigma, alpha,beta){
           n<- length(y)
           cdf<-rep(0,n)
           for (i in 1:n){
-           cdf[i]<- sapply(y[i], FUN= jfst_cdf, mu=mu, sigma=sigma, alpha=alpha,kappa=kappa)
+           cdf[i]<- sapply(y[i], FUN= jfst_cdf, mu=mu, sigma=sigma, alpha=alpha,beta=beta)
           }
           return(cdf)
        }
@@ -161,11 +161,11 @@ neonormal_stanfunc<-function(family="gmsnburr",func="pdf",vectorize=TRUE){
                       }
                     },
                     
-                    "jfst"=function(y, mu, sigma, alpha,kappa){
+                    "jfst"=function(y, mu, sigma, alpha,beta){
                       n<- length(y)
                       lcdf<-rep(0,n)
                       for (i in 1:n){
-                        lcdf[i]<- sapply(y[i], FUN= jfst_lcdf, mu=mu, sigma=sigma, alpha=alpha,kappa=kappa)
+                        lcdf[i]<- sapply(y[i], FUN= jfst_lcdf, mu=mu, sigma=sigma, alpha=alpha,beta=beta)
                       }
                       return(lcdf)
                     }
@@ -203,11 +203,11 @@ neonormal_stanfunc<-function(family="gmsnburr",func="pdf",vectorize=TRUE){
             return(ccdf)
         },
        
-        "jfst" = function(y, mu, sigma, alpha, kappa){
+        "jfst" = function(y, mu, sigma, alpha, beta){
             n<- length(y)
             ccdf<-rep(0,n)
             for(i in 1:n){
-                ccdf[i]<-exp(sapply(y[i], FUN =jfst_lccdf, mu=mu, sigma=sigma,  alpha=alpha,kappa=kappa ))
+                ccdf[i]<-exp(sapply(y[i], FUN =jfst_lccdf, mu=mu, sigma=sigma,  alpha=alpha,beta=beta ))
             }
             return(ccdf)
         }
@@ -240,10 +240,10 @@ neonormal_stanfunc<-function(family="gmsnburr",func="pdf",vectorize=TRUE){
           return(rng)
           },
          
-          "jfst"=function(n,mu,sigma,alpha,kappa){
+          "jfst"=function(n,mu,sigma,alpha,beta){
             rng<-rep(0,n)
             for(i in 1:n){
-              rng[i]<- jfst_rng(mu=mu, sigma=sigma, alpha=alpha,kappa=kappa)
+              rng[i]<- jfst_rng(mu=mu, sigma=sigma, alpha=alpha,beta=beta)
             }
             return(rng)
           }
@@ -275,11 +275,11 @@ neonormal_stanfunc<-function(family="gmsnburr",func="pdf",vectorize=TRUE){
                         }
                         return(quan)
                       },
-                       "jfst"=function(p, mu, sigma,alpha,kappa) {
+                       "jfst"=function(p, mu, sigma,alpha,beta) {
                         n<-length(p)
                         quan <-rep(0,n)
                         for (i in 1:n){
-                          quan[i]<-(sapply(p[i], FUN = jfst_quantile, mu=mu, sigma = sigma, alpha=alpha,kappa = kappa))
+                          quan[i]<-(sapply(p[i], FUN = jfst_quantile, mu=mu, sigma = sigma, alpha=alpha,beta = beta))
                         }
                         return(quan)
                       }  

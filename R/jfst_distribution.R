@@ -55,7 +55,7 @@
 
 #' @rdname jfst
 #' @examples
-#' djfst(4, mu=0, sigma=1, alpha=0, beta=1)
+#' djfst(4, mu=0, sigma=1, alpha=2, beta=2)
 djfst<- function(x,mu=0, sigma=1,alpha=0, beta=2, log=FALSE){
   if(is.na(alpha)|is.na(beta)|is.na(mu)|is.na(sigma)){
     stop("mu, sigma,alpha, or beta must be not missing value")
@@ -63,7 +63,7 @@ djfst<- function(x,mu=0, sigma=1,alpha=0, beta=2, log=FALSE){
   if (any(sigma <= 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(alpha <= 0)) 
-    stop(paste("beta must be positive", "\n", ""))
+    stop(paste("alpha must be positive", "\n", ""))
   
     if (any(beta <= 0)) 
     stop(paste("beta must be positive", "\n", ""))
@@ -91,7 +91,7 @@ b<-beta
 #' @export
 #' @rdname jfst
 #' @examples
-#' pjfst(4, mu=0, sigma=1, alpha=0, beta=1)
+#' pjfst(4, mu=0, sigma=1, alpha=2, beta=2)
 pjfst <- function(q,mu=0, sigma=1,alpha=0, beta=2,lower.tail=TRUE, log.p=FALSE){
   
   if(is.na(alpha)|is.na(beta)|is.na(mu)|is.na(sigma)){
@@ -100,7 +100,7 @@ pjfst <- function(q,mu=0, sigma=1,alpha=0, beta=2,lower.tail=TRUE, log.p=FALSE){
   if (any(sigma <= 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(alpha <= 0)) 
-    stop(paste("beta must be positive", "\n", ""))
+    stop(paste("alpha must be positive", "\n", ""))
   
   if (any(beta <= 0)) 
     stop(paste("beta must be positive", "\n", ""))
@@ -137,7 +137,7 @@ pjfst <- function(q,mu=0, sigma=1,alpha=0, beta=2,lower.tail=TRUE, log.p=FALSE){
 #' @export
 #' @rdname jfst
 #' @examples
-#' qjfst(0.4, mu=0, sigma=1, alpha=0, beta=1)
+#' qjfst(0.4, mu=0, sigma=1, alpha=2, beta=2)
 qjfst<-function(p,mu=0,sigma=1, alpha = 2, beta=2,lower.tail=TRUE,log.p=FALSE){
   if(is.na(alpha)|is.na(beta)|is.na(mu)|is.na(sigma)){
     stop("mu, sigma,alpha, or beta must be not missing value")
@@ -145,7 +145,7 @@ qjfst<-function(p,mu=0,sigma=1, alpha = 2, beta=2,lower.tail=TRUE,log.p=FALSE){
   if (any(sigma <= 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(alpha <= 0)) 
-    stop(paste("sigma must be positive", "\n", ""))
+    stop(paste("alpha must be positive", "\n", ""))
   if (any(beta <= 0)) 
     stop(paste("beta must be positive", "\n", ""))
   if (any(p <= 0) | any(p >= 1)) 
@@ -178,11 +178,11 @@ qjfst<-function(p,mu=0,sigma=1, alpha = 2, beta=2,lower.tail=TRUE,log.p=FALSE){
 #' @export
 #' @rdname jfst
 #' @examples
-#' r=rjfst(10000, mu=0, sigma=1, alpha=0, beta=0.2)
+#' r=rjfst(10000, mu=0, sigma=1, alpha=2, beta=2)
 #' head(r)
 #' hist(r, xlab = 'jfst random number', ylab = 'Frequency', 
 #' main = 'Distribution of jfst Random Number ')
-rjfst <- function(n,mu=0, sigma=1, alpha=0, beta=2){
+rjfst <- function(n,mu=0, sigma=1, alpha=2, beta=2){
   if(is.na(alpha)|is.na(beta)|is.na(mu)|is.na(sigma)){
     stop("mu, sigma,alpha, or beta must be not missing value")
   }

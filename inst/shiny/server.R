@@ -434,13 +434,14 @@ function(input, output, session) {
         #alpha <- jfst_alpha(input$kjalpha, input$kjbeta)
         #beta <- jfst_beta (input$kjalpha, input$kjalpha)
         #alphajs <- seq(jfst_alpha(2,2), jfst_alpha(10,input$kjbeta), length.out=50)
-        alphajs <- seq(-0.57, 0.47,length.out=50 )
-        betajs <- seq(0.02, 0.2,length.out=50 )
+        alphajs <- seq(1.6, 15,length.out=50 )
+        betajs <- seq(1.6, 15,length.out=50 )
         
         #alphajs <- seq(-0.57, 0.47, length.out=50 )
         #betajs <- rep(beta,length.out=50 )
         #betajs <- rep(input$kjbeta, length.out = 50)
-        zj <- matrix(0, length(alphajs), length(alphajs))
+        skew<-jfst_skewness(input$kjalpha,input$kjbeta)
+        zj <- matrix(, length(alphajs), length(alphajs))
         for (i in 1:length(alphajs)) {
         for (j in 1:length(alphajs)) {
           suppressWarnings(zj[j,i] <- jfst_skewness(alphajs[i], betajs[i]))
@@ -449,26 +450,26 @@ function(input, output, session) {
         df<-data.frame(alphajs,betajs,zj)
      suppressWarnings(   plot_ly(df, x = ~alphajs, y = ~betajs, z = ~zj, type = "surface",
                 hovertemplate = paste('α : %{x:.4f}',
-                                      '<br> κ : %{y:.4f}', 
+                                      '<br> β : %{y:.4f}', 
                                       '<br>Skewness : %{z:.4f}<br>',
                                       '<extra> </extra>' )) %>%
           layout(
             title = list(text = "Skewness Plot", font = list(family = "montserrat", size = 16, color = "#2C3E50")),
             scene = list(
               xaxis = list(title = 'α'),
-              yaxis = list(title = ' κ'),
+              yaxis = list(title = ' β'),
               zaxis = list(title = 'skewness')
             ))%>%
           add_trace(
             x = input$kjalpha,
             y = input$kjbeta,
-            z = jfst_skewness(input$kjalpha,input$kjbeta),
+            z = skew,
             type = "scatter3d",
             mode='lines+markers',
             showlegend = FALSE,
             marker = list(color = 'red', size = 10, opacity = 5),
             hovertemplate = paste('α : %{x:.4f}',
-                                  '<br> κ : %{y:.4f}',
+                                  '<br> β : %{y:.4f}',
                                   '<br>Skewness : %{z:.4f}<br>',
                                   '<extra> </extra>' )
           )%>%
@@ -489,13 +490,13 @@ function(input, output, session) {
    suppressWarnings(     plot_ly(df, x = ~alphab, y = ~ybk, type = 'scatter', mode = 'lines',
                 line = list(color = '#7ECBE3', width = 5),
                 hovertemplate = paste('α : %{x:.4f}',
-                                      '<br>Kurtosis : %{y:.4f}<br>',
+                                      '<br>Excess-Kurtosis : %{y:.4f}<br>',
                                       '<extra> </extra>' )
                 ) %>%
           layout(
             title = list(text = "Excess-Kurtosis Plot", font = list(family = "montserrat", size = 16, color = "#2C3E50")),
             xaxis = list(title = list(text = "α", font = list(family = "roboto", size = 20, color = "#2C3E50"))),
-            yaxis = list(title = list(text = "Kurtosis", font = list(family = "roboto", size = 14, color = "#2C3E50")))
+            yaxis = list(title = list(text = "Excess-Kurtosis", font = list(family = "roboto", size = 14, color = "#2C3E50")))
           ) %>%
           add_trace(
             x = input$kbalpha,
@@ -505,7 +506,7 @@ function(input, output, session) {
             showlegend = FALSE,
             marker = list(color = 'red', size = 10, opacity = 5),
             hovertemplate = paste('α : %{x:.4f}',
-                                  '<br>Kurtosis : %{y:.4f}<br>',
+                                  '<br>Excess-Kurtosis : %{y:.4f}<br>',
                                   '<extra> </extra>' )
           )%>%
           config(displayModeBar = FALSE))  # Menghilangkan mode bar plotly
@@ -516,14 +517,14 @@ function(input, output, session) {
      suppressWarnings(   plot_ly(df, x = ~alphab2, y = ~yb2k, type = 'scatter', mode = 'lines',
                 line = list(color = '#000FFF', width = 5),
                 hovertemplate = paste('α : %{x:.4f}',
-                                      '<br>Kurtois : %{y:.4f}<br>',
+                                      '<br>Excess-Kurtois : %{y:.4f}<br>',
                                       '<extra> </extra>' )
                 ) %>%
           
           layout(
             title = list(text = "Excess-Kurtosis Plot", font = list(family = "montserrat", size = 16, color = "#2C3E50")),
             xaxis = list(title = list(text = "α", font = list(family = "roboto", size = 20, color = "#2C3E50"))),
-            yaxis = list(title = list(text = "kurtosis", font = list(family = "roboto", size = 14, color = "#2C3E50")))
+            yaxis = list(title = list(text = "Excess-kurtosis", font = list(family = "roboto", size = 14, color = "#2C3E50")))
           ) %>%
           add_trace(
             x = input$kb2alpha,
@@ -578,8 +579,8 @@ function(input, output, session) {
           config(displayModeBar = FALSE))  # Menghilangkan mode bar plotly
       }else if (input$kdist=="jfst"){
         
-        alphast <- seq(-0.57, 0.47,length.out=50 )
-        betast <- seq(0.02, 0.2,length.out=50 )
+        alphast <- seq(2.1, 30,length.out=50 )
+        betast <- seq(2.1, 30,length.out=50 )
         z <- matrix(0, length(alphast), length(betast))
        
         for (i in 1:length(alphast)) {

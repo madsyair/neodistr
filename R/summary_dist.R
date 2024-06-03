@@ -65,15 +65,15 @@ summary_dist<-function(family="msnburr",par=c(mu=0,sigma=1,alpha=1)){
       par["sigma"] <-1
     }
     if(is.na(par["alpha"])){
-      par["alpha"]<-0
+      par["alpha"]<-2
     }
-    if(is.na(par["kappa"])){
-      par["kappa"] <-1
+    if(is.na(par["beta"])){
+      par["beta"] <-2
     }
     mu=par["mu"]
     sigma=par["sigma"]
     alpha=par["alpha"]
-    kappa=par["kappa"]
+    beta=par["beta"]
   }
 
 
@@ -112,16 +112,17 @@ if(family %in%c("msnburr","msnburr2a","gmsnburr")){
     mode<-mu
     
   }else if(family == "jfst"){
-     nu =2/kappa
-    lam=2*alpha/(kappa*sqrt(2*kappa+alpha*alpha))
-    a =(nu+lam)/2
-    b = (nu-lam)/2
-    
+  #   nu =2/beta
+   # lam=2*alpha/(beta*sqrt(2*beta+alpha*alpha))
+  #  a =(nu+lam)/2
+   # b = (nu-lam)/2
+    a<-alpha
+    b<-beta
     if(a<=1|b<=1) {
       
-      warning(paste0("a=",a, " b= ",b,". Variance, skewness, and kurtosis is calculated when a and b  greater than 1. a and b are calculated from alpha and kappa"))
+      warning(paste0("a=",a, " b= ",b,". Variance, skewness, and kurtosis is calculated when a and b  greater than 1. a and b are calculated from alpha and beta"))
         if(a<=0.5|b<=0.5){
-          warning(paste0("a=",a, " b= ",b," mean is calculated when a and b  greater than 0.5. a and b are calculated from alpha and kappa"))
+          warning(paste0("a=",a, " b= ",b," mean is calculated when a and b  greater than 0.5. a and b are calculated from alpha and beta"))
           
                          }
                       }
@@ -137,10 +138,10 @@ if(family %in%c("msnburr","msnburr2a","gmsnburr")){
     m4z<-ez4-4*ez3*ez+(6*varz*ez^2)+3*ez^4
     m4y<-m4z*sigma^4
     m4y<-m4z*sigma^4
-    median<-qjfst(0.5,mu,sigma,alpha,kappa)
+    median<-qjfst(0.5,mu,sigma,alpha,beta)
     mode<-mu+(sigma*sqrt(a+b)*(a-b))/(sqrt(2*a+1)*sqrt(2*b+1))
     if(a<=1.5|b<=1.5){
-      warning(paste0("a=",a, " b= ",b,". skewness is calculated when a and b  greater than 1.5. a and b are calculated from alpha and kappa"))
+      warning(paste0("a=",a, " b= ",b,". skewness is calculated when a and b  greater than 1.5. a and b are calculated from alpha and beta"))
       
     skewness=NA 
     }else{
@@ -148,7 +149,7 @@ if(family %in%c("msnburr","msnburr2a","gmsnburr")){
     }
  
     if(a<=2|b<=2){
-      warning(paste0("a=",a, " b= ",b,".  kurtosis is calculated when a and b  greater than 2. a and b are calculated from alpha and kappa"))
+      warning(paste0("a=",a, " b= ",b,".  kurtosis is calculated when a and b  greater than 2. a and b are calculated from alpha and beta"))
       
       excess.kurtosis<-NA
     }else{
@@ -156,7 +157,7 @@ if(family %in%c("msnburr","msnburr2a","gmsnburr")){
     }
     
     if(a<=1|b<=1){
-      warning(paste0("a=",a, " b= ",b,".  variance is calculated when a and b  greater than 1. a and b are calculated from alpha and kappa"))
+      warning(paste0("a=",a, " b= ",b,".  variance is calculated when a and b  greater than 1. a and b are calculated from alpha and beta"))
       variance<-NA
       skewness=NA
       excess.kurtosis=NA
@@ -167,7 +168,7 @@ if(family %in%c("msnburr","msnburr2a","gmsnburr")){
     }
     
     if(a<=0.5|b<=0.5){
-      warning(paste0("a=",a, " b= ",b,". mean is calculated when a and b  greater than 0.5. a and b are calculated from alpha and kappa"))
+      warning(paste0("a=",a, " b= ",b,". mean is calculated when a and b  greater than 0.5. a and b are calculated from alpha and beta"))
        mean=NA
       variance<-NA
       skewness=NA

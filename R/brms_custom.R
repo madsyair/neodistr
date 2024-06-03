@@ -28,7 +28,6 @@
 #'   }
 #' @export
 brms_custom_family<- function(family="msnburr",vectorize=TRUE){
-  .<-gmsnburr_lpdf<-NULL
   .<-posterior_predict_msnburr<-posterior_predict_msnburr2a<-posterior_predict_gmsnburr<-posterior_predict_jfst<-NULL
   .<-log_lik_msnburr<-log_lik_msnburr2a<-log_lik_gmsnburr<-log_lik_jfst<-NULL
   .<-posterior_epred_gmsnburr<-posterior_epred_msnburr<-posterior_epred_msnburr2a<-posterior_epred_jfst<-NULL
@@ -171,7 +170,7 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
       alpha <- brms::get_dpar(prep, "alpha")     
       beta <- brms::get_dpar(prep, "beta")   
       y <- prep$data$Y[i]
-      jfst_lpdf(y, mu, sigma, alpha,beta,log=TRUE)
+      jfst_lpdf(y, mu, sigma, alpha,beta)
     }
     posterior_predict_jfst <- function(i, prep, ...) {
       .<-jfst_rng<-NULL
@@ -195,7 +194,7 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
         dpars = c("mu", "sigma","alpha","beta"),
         links = c("identity","log","identity","log"),
         type = "real",
-        lb=c(NA,0,NA,0),
+        lb=c(NA,0,0,0),
         ub=c(NA,NA,NA,NA),
         loop=loop,
         log_lik = log_lik_jfst,

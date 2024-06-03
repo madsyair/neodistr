@@ -30,7 +30,7 @@ qjfst(
   log.p = FALSE
 )
 
-rjfst(n, mu = 0, sigma = 1, alpha = 0, beta = 2)
+rjfst(n, mu = 0, sigma = 1, alpha = 2, beta = 2)
 }
 \arguments{
 \item{x, q}{vector of quantiles.}
@@ -78,10 +78,10 @@ with:
 \eqn{ a = \beta^{-1}{[1+{\nu{(2 \beta +nu^2)^\frac{1}{2}}}]}}, \eqn{ b = \beta^{-1}{[1-{\nu{(2 \beta +nu^2)^\frac{1}{2}}}]}}
 }
 \examples{
-djfst(4, mu=0, sigma=1, alpha=0, beta=1)
-pjfst(4, mu=0, sigma=1, alpha=0, beta=1)
-qjfst(0.4, mu=0, sigma=1, alpha=0, beta=1)
-r=rjfst(10000, mu=0, sigma=1, alpha=0, beta=0.2)
+djfst(4, mu=0, sigma=1, alpha=2, beta=2)
+pjfst(4, mu=0, sigma=1, alpha=2, beta=2)
+qjfst(0.4, mu=0, sigma=1, alpha=2, beta=2)
+r=rjfst(10000, mu=0, sigma=1, alpha=2, beta=2)
 head(r)
 hist(r, xlab = 'jfst random number', ylab = 'Frequency', 
 main = 'Distribution of jfst Random Number ')
