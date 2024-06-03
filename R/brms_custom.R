@@ -11,7 +11,7 @@
 #'   library(brms)
 #'   library(neodistr)
 #'   x<-runif(100)
-#'   e<-rmnsburr(100,0,1,0.8)
+#'   e<-rmsnburr(100,0,1,0.8)
 #'   y<-0.5+0.8*x+e
 #'   data<-data.frame(y,x)
 #'   msnburr<-brms_custom_family("msnburr")
