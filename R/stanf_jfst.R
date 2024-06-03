@@ -156,7 +156,7 @@ dist<-'real jfst_lpdf(vector y, vector mu, real sigma, real alpha, real beta)
    if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
   if(alpha<=0)
-    reject ("beta<=0, found beta = ", beta);
+    reject ("alpha<=0, found beta = ", alpha);
   if (beta<=0)
     reject ("beta<=0; found beta =", beta);
 //     nu =2/beta;
@@ -194,7 +194,7 @@ real jfst_cdf(vector y, vector mu, real sigma, real alpha, real beta)
    if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
   if(alpha<=0)
-    reject ("beta<=0, found beta = ", beta);
+    reject ("alpha<=0, found alpha = ", alpha);
   if (beta<=0)
     reject ("beta<=0; found beta =", beta);
     z=(y-mu)/sigma;
@@ -236,7 +236,7 @@ real jfst_lcdf(vector y, vector mu, real sigma, real alpha, real beta)
    if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
   if(alpha<=0)
-    reject ("beta<=0, found beta = ", beta);
+    reject ("alpha<=0, found alpha = ", alpha);
   if (beta<=0)
     reject ("beta<=0; found beta =", beta);
 //     nu =2/beta;
@@ -277,7 +277,7 @@ real jfst_lccdf (vector y, vector mu, real sigma, real alpha, real beta)
    if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
   if(alpha<=0)
-    reject ("beta<=0, found beta = ", beta);
+    reject ("alpha<=0, found alpha = ", alpha);
   if (beta<=0)
     reject ("beta<=0; found beta =", beta);
 //     nu =2/beta;
@@ -314,7 +314,7 @@ real jfst_lccdf (vector y, vector mu, real sigma, real alpha, real beta)
    if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
   if(alpha<=0)
-    reject ("beta<=0, found beta = ", beta);
+    reject ("alpha<=0, found alpha = ", alpha);
   if (beta<=0)
     reject ("beta<=0; found beta =", beta);
 //     nu =2/beta;
@@ -349,7 +349,7 @@ real jfst_cdf(real y, real mu, real sigma, real alpha, real beta)
    if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
   if(alpha<=0)
-    reject ("beta<=0, found beta = ", beta);
+    reject ("alpha<=0, found alpha = ", alpha);
   if (beta<=0)
     reject ("beta<=0; found beta =", beta);
     z=(y-mu)/sigma;
@@ -385,7 +385,7 @@ real jfst_lcdf(real y, real mu, real sigma, real alpha, real beta)
    if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
   if(alpha<=0)
-    reject ("beta<=0, found beta = ", beta);
+    reject ("alpha<=0, found alpha = ", alpha);
   if (beta<=0)
     reject ("beta<=0; found beta =", beta);
 //     nu =2/beta;
@@ -421,7 +421,7 @@ real jfst_lccdf (real y, real mu, real sigma, real alpha, real beta)
    if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
   if(alpha<=0)
-    reject ("beta<=0, found beta = ", beta);
+    reject ("alpha<=0, found alpha = ", alpha);
   if (beta<=0)
     reject ("beta<=0; found beta =", beta);
 //     nu =2/beta;
@@ -458,7 +458,7 @@ real jfst_quantile(real p, real mu, real sigma, real alpha, real beta)
   if(sigma<=0)
     reject("sigma<=0, found sigma = ", sigma);
   if(alpha<=0)
-    reject ("beta<=0, found beta = ", beta);
+    reject ("alpha<=0, found alpha = ", alpha);
   if(beta<=0)
     reject ("beta<=0, found beta = ", beta);
   if(p < 0||p > 1)
