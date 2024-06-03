@@ -14,28 +14,28 @@
 #' \code{jfst_lpdf} gives the log of density, \code{jfst_cdf} gives the distribution
 #' function, \code{jfst_lcdf} gives the log of distribution function and \code{jfst_rng} generates
 #' random deviates.
-#' @author Anisa'Faoziah and Achmad Syahrul Choir
+#' @author Anisa' Faoziah and Achmad Syahrul Choir
 #' @details
 #' To determine the value of the probability density function of the Jones-Faddy’s Skew-t distribution :
-#' \deqn{f(y |\mu,\sigma,\kappa,\alpha)= \frac{c}{\sigma} [{1+\frac{z}{({a+b+z^2})^\frac{1}{2}}}]^{a+\frac{1}{2}}
+#' \deqn{f(y |\mu,\sigma,\beta,\alpha)= \frac{c}{\sigma} [{1+\frac{z}{({a+b+z^2})^\frac{1}{2}}}]^{a+\frac{1}{2}}
 #' [{1-\frac{z}{({a+b+z^2})^\frac{1}{2}}}]^{b+\frac{1}{2}}}
 #' 
 #' has: 
-#' \eqn{\sigma >0, \kappa>0},
+#' \eqn{\sigma >0, \beta>0},
 #' \eqn{z = {y-\mu}}, \eqn{ c = [2^{(a+b-1)} (a+b)^\frac{1}{2} B(a,b)]^-1 }, 
-#' \eqn{ a = \kappa^{-1}{[1+{\nu{(2 \kappa +nu^2)^\frac{1}{2}}}]}}, \eqn{ b = \kappa^{-1}{[1-{\nu{(2 \kappa +nu^2)^\frac{1}{2}}}]}}
+#' \eqn{ a = \beta^{-1}{[1+{\nu{(2 \beta +nu^2)^\frac{1}{2}}}]}}, \eqn{ b = \beta^{-1}{[1-{\nu{(2 \beta +nu^2)^\frac{1}{2}}}]}}
 #' 
 ##' 
 #' @references 
 #' Jones, M.C. and Faddy, M. J. (2003) A skew extension of the t distribution, with applications. Journal of the Royal Statistical Society, Series B, 65, pp 159-174
 #' Rigby, R.A. and Stasinopoulos, M.D. and Heller, G.Z. and De Bastiani, F. (2019) Distributions for Modeling Location, Scale, and Shape: Using GAMLSS in R.CRC Press
-#' @examples {\dontrun{
+#' @examples{\dontrun{
 #' library (neodistr)
 #' library (rstan)
 #' 
 #' # inputting data
 #' set.seed(400)
-#' dt <- neodistr::rjfst(100,mu=0, sigma=1, lambda = 0, kappa = 0.2) # random generating JFST data
+#' dt <- neodistr::rjfst(100,mu=0, sigma=1, alpha = 0, beta = 0.2) # random generating JFST data
 #' dataf <- list(
 #'  n = 100,
 #'  y = dt
@@ -56,22 +56,22 @@
 #'       real mu;
 #'       real <lower=0> sigma;
 #'       real alpha;
-#'       real <lower=0, upper=1>kappa;
+#'       real <lower=0, upper=1>beta;
 #'     }
 #'     model {
 #'       for(i in 1 : n){
-#'       y[i] ~ jfst(mu,sigma, alpha, kappa);
+#'       y[i] ~ jfst(mu,sigma, alpha, beta);
 #'       }
 #'       mu ~ cauchy (0,1);
 #'       sigma ~ cauchy (0, 2.5);
 #'       alpha ~ normal (0,1);
-#'       kappa ~ lognormal (0,1)
+#'       beta ~ lognormal (0,1);
 #'       
 #'     }
 #' "
 #' 
 #' # Merge stan model code and selected neo-normal stan function
-#' fit_code <- paste (c(func_code,model,"\n), collapse = "\n")
+#' fit_code <- paste (c(func_code,model,"\n"), collapse = "\n")
 #' 
 #' # Create the model using Stan Function
 #' fit1 <- stan(
@@ -88,7 +88,7 @@
 #' )
 #' 
 #' # Showing the estimation result of the parameters that were executed using the Stan file
-#' print(fit1, pars = c("mu", "sigma", "alpha", "kappa", "lp__"), probs=c(.025,.5,.975))
+#' print(fit1, pars = c("mu", "sigma", "alpha", "beta", "lp__"), probs=c(.025,.5,.975))
 #' 
 #' 
 #' #### Vector
@@ -105,20 +105,20 @@
 #'       real mu;
 #'       real <lower=0> sigma;
 #'       real alpha;
-#'       real <lower=0, upper=1>kappa;
+#'       real <lower=0, upper=1>beta;
 #'     }
 #'     model {
-#'       y ~ jfst(rep_vector(mu,n),sigma, alpha, kappa);
+#'       y ~ jfst(rep_vector(mu,n),sigma, alpha, beta);
 #'       mu ~ cauchy (0,1);
 #'       sigma ~ cauchy (0, 2.5);
 #'       alpha ~ normal (0,1);
-#'       kappa ~ lognormal (0,1);
+#'       beta ~ lognormal (0,1);
 #'       
 #'     }
 #'  "
 #'  
 #'  # Merge stan model code and selected neo-normal stan function
-#' fit_code <- paste (c(func_code_vector,model_vector,"\n), collapse = "\n")
+#' fit_code <- paste (c(func_code_vector,model_vector,"\n"), collapse = "\n")
 #' 
 #' # Create the model using Stan Function
 #' fit2 <- stan(
@@ -135,18 +135,19 @@
 #' )
 #' 
 #' # Showing the estimation result of the parameters that were executed using the Stan file
-#' print(fit2, pars = c("mu", "sigma", "alpha", "kappa", "lp__"), probs=c(.025,.5,.975))
+#' print(fit2, pars = c("mu", "sigma", "alpha", "beta", "lp__"), probs=c(.025,.5,.975))
 #'  }
 #'  }
+
 #' @export
 
 stanf_jfst<-function(vectorize=TRUE,rng=TRUE){
   if(vectorize){
-dist<-'real jfst_lpdf(vector y, vector mu, real sigma, real alpha, real kappa)
+dist<-'real jfst_lpdf(vector y, vector mu, real sigma, real alpha, real beta)
 {
   int N=rows(y);
-  real nu;
-  real lam;
+//  real nu;
+//  real lam;
   real a;
   real b;
   vector[N] z;
@@ -154,12 +155,16 @@ dist<-'real jfst_lpdf(vector y, vector mu, real sigma, real alpha, real kappa)
   real result;
    if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
-  if (kappa<=0)
-    reject ("kappa<=0; found kappa =", kappa);
-     nu =2/kappa;
-    lam=2*alpha/(kappa*sqrt(2*kappa+alpha*alpha));
-      a =(nu+lam)/2;
-      b = (nu-lam)/2;
+  if(alpha<=0)
+    reject ("beta<=0, found beta = ", beta);
+  if (beta<=0)
+    reject ("beta<=0; found beta =", beta);
+//     nu =2/beta;
+//    lam=2*alpha/(beta*sqrt(2*beta+alpha*alpha));
+//      a =(nu+lam)/2;
+//      b = (nu-lam)/2;
+a=alpha;
+b=beta;
     z=(y-mu)/sigma;
       rz=z./(sqrt(a+b+(z.*z)));
     for (i in 1:N){
@@ -176,11 +181,11 @@ dist<-'real jfst_lpdf(vector y, vector mu, real sigma, real alpha, real kappa)
 }
 
 //CDF
-real jfst_cdf(vector y, vector mu, real sigma, real alpha, real kappa)
+real jfst_cdf(vector y, vector mu, real sigma, real alpha, real beta)
 {
   int N=rows(y);
-  real nu;
-  real lam;
+//  real nu;
+//  real lam;
   real  a;
   real  b;  
   vector[N] z;
@@ -188,13 +193,17 @@ real jfst_cdf(vector y, vector mu, real sigma, real alpha, real kappa)
     vector[N] rz;
    if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
-  if (kappa<=0)
-    reject ("kappa<=0; found kappa =", kappa);
+  if(alpha<=0)
+    reject ("beta<=0, found beta = ", beta);
+  if (beta<=0)
+    reject ("beta<=0; found beta =", beta);
     z=(y-mu)/sigma;
-    nu =2/kappa;
-    lam=2*alpha/(kappa*sqrt(2*kappa+alpha*alpha));
-      a =(nu+lam)/2;
-      b = (nu-lam)/2;
+//     nu =2/beta;
+//    lam=2*alpha/(beta*sqrt(2*beta+alpha*alpha));
+//      a =(nu+lam)/2;
+//      b = (nu-lam)/2;
+      a=alpha;
+      b=beta;
   //menggunakan element waist
   
  rz=z./(sqrt(a+b+(z.*z)));
@@ -214,11 +223,11 @@ real jfst_cdf(vector y, vector mu, real sigma, real alpha, real kappa)
 }
 
 //Log CDF
-real jfst_lcdf(vector y, vector mu, real sigma, real alpha, real kappa)
+real jfst_lcdf(vector y, vector mu, real sigma, real alpha, real beta)
 {
   int N=rows(y);
-  real nu;
-  real lam;
+//  real nu;
+//  real lam;
   real  a;
   real  b;
   vector[N] z;
@@ -226,12 +235,16 @@ real jfst_lcdf(vector y, vector mu, real sigma, real alpha, real kappa)
     vector[N] rz;
    if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
-  if (kappa<=0)
-    reject ("kappa<=0; found kappa =", kappa);
-     nu =2/kappa;
-    lam=2*alpha/(kappa*sqrt(2*kappa+alpha*alpha));
-      a =(nu+lam)/2;
-      b = (nu-lam)/2;
+  if(alpha<=0)
+    reject ("beta<=0, found beta = ", beta);
+  if (beta<=0)
+    reject ("beta<=0; found beta =", beta);
+//     nu =2/beta;
+//    lam=2*alpha/(beta*sqrt(2*beta+alpha*alpha));
+//      a =(nu+lam)/2;
+//      b = (nu-lam)/2;
+a=alpha;
+b=beta;
       z=(y-mu)/sigma;
   
  rz=z./(sqrt(a+b+(z.*z)));
@@ -251,11 +264,11 @@ real jfst_lcdf(vector y, vector mu, real sigma, real alpha, real kappa)
 }
 
 //log CCDF
-real jfst_lccdf (vector y, vector mu, real sigma, real alpha, real kappa)
+real jfst_lccdf (vector y, vector mu, real sigma, real alpha, real beta)
 {
   int N=rows(y);
-  real nu;
-  real lam;
+//  real nu;
+//  real lam;
   real  a;
   real  b;
   vector[N] z;
@@ -263,12 +276,16 @@ real jfst_lccdf (vector y, vector mu, real sigma, real alpha, real kappa)
   vector[N] rz;
    if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
-  if (kappa<=0)
-    reject ("kappa<=0; found kappa =", kappa);
-     nu =2/kappa;
-    lam=2*alpha/(kappa*sqrt(2*kappa+alpha*alpha));
-      a =(nu+lam)/2;
-      b = (nu-lam)/2;
+  if(alpha<=0)
+    reject ("beta<=0, found beta = ", beta);
+  if (beta<=0)
+    reject ("beta<=0; found beta =", beta);
+//     nu =2/beta;
+//    lam=2*alpha/(beta*sqrt(2*beta+alpha*alpha));
+//      a =(nu+lam)/2;
+//      b = (nu-lam)/2;
+    a=alpha;
+    b=beta;
       z=(y-mu)/sigma;
   rz=z./(sqrt(a+b+(z.*z)));
       for (i in 1:N){
@@ -286,22 +303,26 @@ real jfst_lccdf (vector y, vector mu, real sigma, real alpha, real kappa)
 }
 '
   }else{
-    dist<-'real jfst_lpdf(real y, real mu, real sigma, real alpha, real kappa)
+    dist<-'real jfst_lpdf(real y, real mu, real sigma, real alpha, real beta)
 {
-  real nu;
-  real lam;
+//  real nu;
+//  real lam;
   real a;
   real b;
   real z;
   real rz;
    if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
-  if (kappa<=0)
-    reject ("kappa<=0; found kappa =", kappa);
-     nu =2/kappa;
-    lam=2*alpha/(kappa*sqrt(2*kappa+alpha*alpha));
-      a =(nu+lam)/2;
-      b = (nu-lam)/2;
+  if(alpha<=0)
+    reject ("beta<=0, found beta = ", beta);
+  if (beta<=0)
+    reject ("beta<=0; found beta =", beta);
+//     nu =2/beta;
+//    lam=2*alpha/(beta*sqrt(2*beta+alpha*alpha));
+//      a =(nu+lam)/2;
+//      b = (nu-lam)/2;
+a=alpha;
+b=beta;
   z=(y-mu)/sigma;
       rz=z/(sqrt(a+b+(z*z)));
   if(is_inf(z)==1){
@@ -316,10 +337,10 @@ return (a+0.5)*(log1p(rz))+(b+0.5)*(log1m(rz))-((a+b-1)*log(2))-(0.5*log(a+b))-l
 }
 
 //CDF
-real jfst_cdf(real y, real mu, real sigma, real alpha, real kappa)
+real jfst_cdf(real y, real mu, real sigma, real alpha, real beta)
 {
-  real nu;
-  real lam;
+//  real nu;
+//  real lam;
   real  a;
   real  b;  
   real z;
@@ -327,13 +348,17 @@ real jfst_cdf(real y, real mu, real sigma, real alpha, real kappa)
     real rz;
    if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
-  if (kappa<=0)
-    reject ("kappa<=0; found kappa =", kappa);
+  if(alpha<=0)
+    reject ("beta<=0, found beta = ", beta);
+  if (beta<=0)
+    reject ("beta<=0; found beta =", beta);
     z=(y-mu)/sigma;
-    nu =2/kappa;
-    lam=2*alpha/(kappa*sqrt(2*kappa+alpha*alpha));
-      a =(nu+lam)/2;
-      b = (nu-lam)/2;
+//     nu =2/beta;
+//    lam=2*alpha/(beta*sqrt(2*beta+alpha*alpha));
+//      a =(nu+lam)/2;
+//      b = (nu-lam)/2;
+a=alpha;
+b=beta;
     rz=z/(sqrt(a+b+(z*z)));
  if(is_inf(z)==1){
   // if(z<0){
@@ -348,10 +373,10 @@ real jfst_cdf(real y, real mu, real sigma, real alpha, real kappa)
 }
 
 //Log CDF
-real jfst_lcdf(real y, real mu, real sigma, real alpha, real kappa)
+real jfst_lcdf(real y, real mu, real sigma, real alpha, real beta)
 {
-  real nu;
-  real lam;
+//  real nu;
+//  real lam;
   real  a;
   real  b;
   real z;
@@ -359,12 +384,16 @@ real jfst_lcdf(real y, real mu, real sigma, real alpha, real kappa)
     real rz;
    if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
-  if (kappa<=0)
-    reject ("kappa<=0; found kappa =", kappa);
-     nu =2/kappa;
-    lam=2*alpha/(kappa*sqrt(2*kappa+alpha*alpha));
-      a =(nu+lam)/2;
-      b = (nu-lam)/2;
+  if(alpha<=0)
+    reject ("beta<=0, found beta = ", beta);
+  if (beta<=0)
+    reject ("beta<=0; found beta =", beta);
+//     nu =2/beta;
+//    lam=2*alpha/(beta*sqrt(2*beta+alpha*alpha));
+//      a =(nu+lam)/2;
+//      b = (nu-lam)/2;
+a=alpha;
+b=beta;
       z=(y-mu)/sigma;
        rz=z/(sqrt(a+b+(z*z)));
   if(is_inf(z)==1){
@@ -380,10 +409,10 @@ real jfst_lcdf(real y, real mu, real sigma, real alpha, real kappa)
 }
 
 //log CCDF
-real jfst_lccdf (real y, real mu, real sigma, real alpha, real kappa)
+real jfst_lccdf (real y, real mu, real sigma, real alpha, real beta)
 {
-  real nu;
-  real lam;
+//  real nu;
+//  real lam;
   real  a;
   real  b;
   real z;
@@ -391,12 +420,16 @@ real jfst_lccdf (real y, real mu, real sigma, real alpha, real kappa)
   real rz;
    if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
-  if (kappa<=0)
-    reject ("kappa<=0; found kappa =", kappa);
-     nu =2/kappa;
-    lam=2*alpha/(kappa*sqrt(2*kappa+alpha*alpha));
-      a =(nu+lam)/2;
-      b = (nu-lam)/2;
+  if(alpha<=0)
+    reject ("beta<=0, found beta = ", beta);
+  if (beta<=0)
+    reject ("beta<=0; found beta =", beta);
+//     nu =2/beta;
+//    lam=2*alpha/(beta*sqrt(2*beta+alpha*alpha));
+//      a =(nu+lam)/2;
+//      b = (nu-lam)/2;
+a=alpha;
+b=beta;
       z=(y-mu)/sigma;
   rz=z/(sqrt(a+b+(z*z)));
   if(is_inf(z)==1){
@@ -414,24 +447,28 @@ real jfst_lccdf (real y, real mu, real sigma, real alpha, real kappa)
   }
 qr<-'
 //quantile
-real jfst_quantile(real p, real mu, real sigma, real alpha, real kappa)
+real jfst_quantile(real p, real mu, real sigma, real alpha, real beta)
 {
-  real nu;
-  real lam;
+//  real nu;
+//  real lam;
   real  a;
   real  b;
   real Balpha;
   real zalpha;
   if(sigma<=0)
     reject("sigma<=0, found sigma = ", sigma);
-  if(kappa<=0)
-    reject ("kappa<=0, found kappa = ", kappa);
+  if(alpha<=0)
+    reject ("beta<=0, found beta = ", beta);
+  if(beta<=0)
+    reject ("beta<=0, found beta = ", beta);
   if(p < 0||p > 1)
     reject("p<0 or p>1, found p = ", p);
-  nu = 2/kappa;
-  lam = 2*alpha/(kappa*sqrt((2*kappa)+(alpha*alpha)));
-  a = (nu+lam)/2;
-  b = (nu-lam)/2;
+//     nu =2/beta;
+//    lam=2*alpha/(beta*sqrt(2*beta+alpha*alpha));
+//      a =(nu+lam)/2;
+//      b = (nu-lam)/2;
+a=alpha;
+b=beta;
   Balpha = inv_inc_beta(a,b,p);
   zalpha = (sqrt(a+b))*(2*Balpha-1)/(2*sqrt(Balpha*(1-Balpha)));
   return mu + sigma*zalpha;
@@ -439,12 +476,12 @@ real jfst_quantile(real p, real mu, real sigma, real alpha, real kappa)
 }
 
 // RNG --> Random Number Generator (RNG)
-  real jfst_rng(real mu, real sigma, real alpha, real kappa)
+  real jfst_rng(real mu, real sigma, real alpha, real beta)
   {
     real p;
     real r;
     p = uniform_rng(0,1);
-    r =jfst_quantile(p,mu,sigma, alpha, kappa);
+    r =jfst_quantile(p,mu,sigma, alpha, beta);
     return r;
   }
   '

@@ -9,7 +9,7 @@
 #' @param mu a location parameter.
 #' @param sigma a scale parameter.
 #' @param alpha a shape parameter (skewness).
-#' @param kappa a shape parameter (kurtosis).
+#' @param beta a shape parameter (kurtosis).
 #' @param log,log.p logical; if TRUE, probabilities p are given as log(p)
 #' The default value of this parameter is FALSE 
 #' @param lower.tail logical;if TRUE (default), probabilities are
@@ -34,16 +34,16 @@
 #' 
 #' 
 #' 
-#' The Jones-Faddy's Skew-t distribution with parameters \eqn{\mu}, \eqn{\sigma},\eqn{\alpha}, and \eqn{\kappa}
+#' The Jones-Faddy's Skew-t distribution with parameters \eqn{\mu}, \eqn{\sigma},\eqn{\alpha}, and \eqn{\beta}
 #' has density:
-#' \deqn{f(y |\mu,\sigma,\kappa,\alpha)= \frac{c}{\sigma} [{1+\frac{z}{({a+b+z^2})^\frac{1}{2}}}]^{a+\frac{1}{2}}
+#' \deqn{f(y |\mu,\sigma,\beta,\alpha)= \frac{c}{\sigma} [{1+\frac{z}{({a+b+z^2})^\frac{1}{2}}}]^{a+\frac{1}{2}}
 #' [{1-\frac{z}{({a+b+z^2})^\frac{1}{2}}}]^{b+\frac{1}{2}}}
 #' with: 
-#' \eqn{\sigma >0, \kappa>0},
+#' \eqn{\sigma >0, \beta>0},
 #' 
 #' \eqn{z = {y-\mu}}, \eqn{ c = [2^{(a+b-1)} (a+b)^\frac{1}{2} B(a,b)]^-1 },
 #'  
-#' \eqn{ a = \kappa^{-1}{[1+{\nu{(2 \kappa +nu^2)^\frac{1}{2}}}]}}, \eqn{ b = \kappa^{-1}{[1-{\nu{(2 \kappa +nu^2)^\frac{1}{2}}}]}}
+#' \eqn{ a = \beta^{-1}{[1+{\nu{(2 \beta +nu^2)^\frac{1}{2}}}]}}, \eqn{ b = \beta^{-1}{[1-{\nu{(2 \beta +nu^2)^\frac{1}{2}}}]}}
 #' 
 #' @references 
 #' Jones, M.C. and Faddy, M. J. (2003) A skew extension of the t distribution,
@@ -55,26 +55,31 @@
 
 #' @rdname jfst
 #' @examples
-#' djfst(4, mu=0, sigma=1, alpha=0, kappa=1)
-djfst<- function(x,mu=0, sigma=1,alpha=0, kappa=2, log=FALSE){
-  if(is.na(alpha)|is.na(kappa)|is.na(mu)|is.na(sigma)){
-    stop("mu, sigma,alpha, or kappa must be not missing value")
+#' djfst(4, mu=0, sigma=1, alpha=0, beta=1)
+djfst<- function(x,mu=0, sigma=1,alpha=0, beta=2, log=FALSE){
+  if(is.na(alpha)|is.na(beta)|is.na(mu)|is.na(sigma)){
+    stop("mu, sigma,alpha, or beta must be not missing value")
   }
-  if (any(sigma < 0)) 
+  if (any(sigma <= 0)) 
     stop(paste("sigma must be positive", "\n", ""))
-  if (any(kappa < 0)) 
-    stop(paste("kappa must be positive", "\n", ""))
+  if (any(alpha <= 0)) 
+    stop(paste("beta must be positive", "\n", ""))
+  
+    if (any(beta <= 0)) 
+    stop(paste("beta must be positive", "\n", ""))
   
   
-    nu  <-2/kappa
-    lam <- (2*alpha)/(kappa*sqrt(2*kappa+(alpha*alpha))) 
-    a <- (nu + lam)/2
-    b <- (nu - lam)/2
-    z <- (x-mu)/sigma
+#    nu  <-2/beta
+#    lam <- (2*alpha)/(beta*sqrt(2*beta+(alpha*alpha))) 
+#    a <- (nu + lam)/2
+#    b <- (nu - lam)/2
+a<-alpha
+b<-beta
+      z <- (x-mu)/sigma
     rz <-  z / sqrt(a + b + (z*z))
     rz[is.infinite(z)]<-ifelse(z[is.infinite(z)]<0,-1,1)
     p <- (a + 0.5) * (log(1+rz)) + (b + 0.5) * (log(1-rz)) - ((a + b - 1) * log(2)) -  (0.5 * log (a + b)) - lbeta(a,b) - log(sigma)
-    #p <- dST5(x,mu=mu,sigma=sigma, nu=alpha,tau=kappa, log=log)
+    #p <- dST5(x,mu=mu,sigma=sigma, nu=alpha,tau=beta, log=log)
     if(log){
       p <- p
     }else{
@@ -86,20 +91,27 @@ djfst<- function(x,mu=0, sigma=1,alpha=0, kappa=2, log=FALSE){
 #' @export
 #' @rdname jfst
 #' @examples
-#' pjfst(4, mu=0, sigma=1, alpha=0, kappa=1)
-pjfst <- function(q,mu=0, sigma=1,alpha=0, kappa=2,lower.tail=TRUE, log.p=FALSE){
+#' pjfst(4, mu=0, sigma=1, alpha=0, beta=1)
+pjfst <- function(q,mu=0, sigma=1,alpha=0, beta=2,lower.tail=TRUE, log.p=FALSE){
   
-  if(is.na(alpha)|is.na(kappa)|is.na(mu)|is.na(sigma)){
-    stop("mu, sigma,alpha, or kappa must be not missing value")
+  if(is.na(alpha)|is.na(beta)|is.na(mu)|is.na(sigma)){
+    stop("mu, sigma,alpha, or beta must be not missing value")
   }
-  if (any(sigma < 0)) 
+  if (any(sigma <= 0)) 
     stop(paste("sigma must be positive", "\n", ""))
-  if (any(kappa < 0)) 
-    stop(paste("kappa must be positive", "\n", ""))
-    nu  = 2/kappa
-    lam = (2*alpha)/(kappa*sqrt(2*kappa+(alpha*alpha))) 
-    a = (nu + lam)/2
-    b = (nu - lam)/2
+  if (any(alpha <= 0)) 
+    stop(paste("beta must be positive", "\n", ""))
+  
+  if (any(beta <= 0)) 
+    stop(paste("beta must be positive", "\n", ""))
+  
+  
+  #    nu  <-2/beta
+  #    lam <- (2*alpha)/(beta*sqrt(2*beta+(alpha*alpha))) 
+  #    a <- (nu + lam)/2
+  #    b <- (nu - lam)/2
+  a<-alpha
+  b<-beta
     z = (q-mu)/sigma
     rz =  z / sqrt(a + b + (z*z))
     rz[is.infinite(z)]<-ifelse(z[is.infinite(z)]<0,-1,1)
@@ -116,7 +128,7 @@ pjfst <- function(q,mu=0, sigma=1,alpha=0, kappa=2,lower.tail=TRUE, log.p=FALSE)
     }else{
       p <-p
     }
-    #p<-pST5(q, mu=mu, sigma=sigma, nu=alpha, tau=kappa,log.p=log.p)
+    #p<-pST5(q, mu=mu, sigma=sigma, nu=alpha, tau=beta,log.p=log.p)
     return(p)
   
   
@@ -125,22 +137,26 @@ pjfst <- function(q,mu=0, sigma=1,alpha=0, kappa=2,lower.tail=TRUE, log.p=FALSE)
 #' @export
 #' @rdname jfst
 #' @examples
-#' qjfst(0.4, mu=0, sigma=1, alpha=0, kappa=1)
-qjfst<-function(p,mu=0,sigma=1, alpha = 0, kappa=2,lower.tail=TRUE,log.p=FALSE){
-  if(is.na(alpha)|is.na(kappa)|is.na(mu)|is.na(sigma)){
-    stop("mu, sigma,alpha, or kappa must be not missing value")
+#' qjfst(0.4, mu=0, sigma=1, alpha=0, beta=1)
+qjfst<-function(p,mu=0,sigma=1, alpha = 2, beta=2,lower.tail=TRUE,log.p=FALSE){
+  if(is.na(alpha)|is.na(beta)|is.na(mu)|is.na(sigma)){
+    stop("mu, sigma,alpha, or beta must be not missing value")
   }
-  if (any(sigma < 0)) 
+  if (any(sigma <= 0)) 
     stop(paste("sigma must be positive", "\n", ""))
-  if (any(kappa < 0)) 
-    stop(paste("kappa must be positive", "\n", ""))
+  if (any(alpha <= 0)) 
+    stop(paste("sigma must be positive", "\n", ""))
+  if (any(beta <= 0)) 
+    stop(paste("beta must be positive", "\n", ""))
   if (any(p <= 0) | any(p >= 1)) 
     stop(paste("p must be between 0 and 1", "\n", "")) 
-    nu  = 2/kappa
-    lam = (2*alpha)/(kappa*sqrt(2*kappa+(alpha*alpha))) 
-    a = (nu + lam)/2
-    b = (nu - lam)/2
-    balpha = qbeta(p,a,b)
+ #   nu  = 2/beta
+#    lam = (2*alpha)/(beta*sqrt(2*beta+(alpha*alpha))) 
+#    a = (nu + lam)/2
+#    b = (nu - lam)/2
+ a<-alpha
+ b<-beta
+     balpha = qbeta(p,a,b)
     zalpha =(sqrt(a+b))*(2*balpha-1)/(2*sqrt(balpha*(1-balpha)))
     p = mu + sigma * zalpha
     if(lower.tail){
@@ -162,22 +178,22 @@ qjfst<-function(p,mu=0,sigma=1, alpha = 0, kappa=2,lower.tail=TRUE,log.p=FALSE){
 #' @export
 #' @rdname jfst
 #' @examples
-#' r=rjfst(10000, mu=0, sigma=1, alpha=0, kappa=0.2)
+#' r=rjfst(10000, mu=0, sigma=1, alpha=0, beta=0.2)
 #' head(r)
 #' hist(r, xlab = 'jfst random number', ylab = 'Frequency', 
 #' main = 'Distribution of jfst Random Number ')
-rjfst <- function(n,mu=0, sigma=1, alpha=0, kappa=2){
-  if(is.na(alpha)|is.na(kappa)|is.na(mu)|is.na(sigma)){
-    stop("mu, sigma,alpha, or kappa must be not missing value")
+rjfst <- function(n,mu=0, sigma=1, alpha=0, beta=2){
+  if(is.na(alpha)|is.na(beta)|is.na(mu)|is.na(sigma)){
+    stop("mu, sigma,alpha, or beta must be not missing value")
   }
   if (any(sigma < 0)) 
     stop(paste("sigma must be positive", "\n", ""))
-  if (any(kappa < 0)) 
-    stop(paste("kappa must be positive", "\n", ""))  
+  if (any(beta < 0)) 
+    stop(paste("beta must be positive", "\n", ""))  
     n <- ceiling(n)
     p <- runif(n)
-    r <- qjfst(p, mu=mu, sigma=sigma, alpha=alpha, kappa=kappa)
-    #x<-rST5(n, mu=mu, sigma=sigma, nu=alpha, tau=kappa)
+    r <- qjfst(p, mu=mu, sigma=sigma, alpha=alpha, beta=beta)
+    #x<-rST5(n, mu=mu, sigma=sigma, nu=alpha, tau=beta)
     return(r)
   
 }

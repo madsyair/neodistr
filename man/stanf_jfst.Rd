@@ -24,13 +24,13 @@ To determine probability function using Jones and Faddys Skew-t
 }
 \details{
 To determine the value of the probability density function of the Jones-Faddy’s Skew-t distribution :
-\deqn{f(y |\mu,\sigma,\kappa,\alpha)= \frac{c}{\sigma} [{1+\frac{z}{({a+b+z^2})^\frac{1}{2}}}]^{a+\frac{1}{2}}
+\deqn{f(y |\mu,\sigma,\beta,\alpha)= \frac{c}{\sigma} [{1+\frac{z}{({a+b+z^2})^\frac{1}{2}}}]^{a+\frac{1}{2}}
 [{1-\frac{z}{({a+b+z^2})^\frac{1}{2}}}]^{b+\frac{1}{2}}}
 
 has: 
-\eqn{\sigma >0, \kappa>0},
+\eqn{\sigma >0, \beta>0},
 \eqn{z = {y-\mu}}, \eqn{ c = [2^{(a+b-1)} (a+b)^\frac{1}{2} B(a,b)]^-1 }, 
-\eqn{ a = \kappa^{-1}{[1+{\nu{(2 \kappa +nu^2)^\frac{1}{2}}}]}}, \eqn{ b = \kappa^{-1}{[1-{\nu{(2 \kappa +nu^2)^\frac{1}{2}}}]}}
+\eqn{ a = \beta^{-1}{[1+{\nu{(2 \beta +nu^2)^\frac{1}{2}}}]}}, \eqn{ b = \beta^{-1}{[1-{\nu{(2 \beta +nu^2)^\frac{1}{2}}}]}}
 }
 \examples{
 {\dontrun{
@@ -39,7 +39,7 @@ library (rstan)
 
 # inputting data
 set.seed(400)
-dt <- neodistr::rjfst(100,mu=0, sigma=1, lambda = 0, kappa = 0.2) # random generating JFST data
+dt <- neodistr::rjfst(100,mu=0, sigma=1, alpha = 0, beta = 0.2) # random generating JFST data
 dataf <- list(
  n = 100,
  y = dt
@@ -60,22 +60,22 @@ model <-"
       real mu;
       real <lower=0> sigma;
       real alpha;
-      real <lower=0, upper=1>kappa;
+      real <lower=0, upper=1>beta;
     }
     model {
       for(i in 1 : n){
-      y[i] ~ jfst(mu,sigma, alpha, kappa);
+      y[i] ~ jfst(mu,sigma, alpha, beta);
       }
       mu ~ cauchy (0,1);
       sigma ~ cauchy (0, 2.5);
       alpha ~ normal (0,1);
-      kappa ~ lognormal (0,1)
+      beta ~ lognormal (0,1);
       
     }
 "
 
 # Merge stan model code and selected neo-normal stan function
-fit_code <- paste (c(func_code,model,"\n), collapse = "\n")
+fit_code <- paste (c(func_code,model,"\n"), collapse = "\n")
 
 # Create the model using Stan Function
 fit1 <- stan(
@@ -92,7 +92,7 @@ fit1 <- stan(
 )
 
 # Showing the estimation result of the parameters that were executed using the Stan file
-print(fit1, pars = c("mu", "sigma", "alpha", "kappa", "lp__"), probs=c(.025,.5,.975))
+print(fit1, pars = c("mu", "sigma", "alpha", "beta", "lp__"), probs=c(.025,.5,.975))
 
 
 #### Vector
@@ -109,20 +109,20 @@ model_vector <-"
       real mu;
       real <lower=0> sigma;
       real alpha;
-      real <lower=0, upper=1>kappa;
+      real <lower=0, upper=1>beta;
     }
     model {
-      y ~ jfst(rep_vector(mu,n),sigma, alpha, kappa);
+      y ~ jfst(rep_vector(mu,n),sigma, alpha, beta);
       mu ~ cauchy (0,1);
       sigma ~ cauchy (0, 2.5);
       alpha ~ normal (0,1);
-      kappa ~ lognormal (0,1);
+      beta ~ lognormal (0,1);
       
     }
  "
  
  # Merge stan model code and selected neo-normal stan function
-fit_code <- paste (c(func_code_vector,model_vector,"\n), collapse = "\n")
+fit_code <- paste (c(func_code_vector,model_vector,"\n"), collapse = "\n")
 
 # Create the model using Stan Function
 fit2 <- stan(
@@ -139,7 +139,7 @@ fit2 <- stan(
 )
 
 # Showing the estimation result of the parameters that were executed using the Stan file
-print(fit2, pars = c("mu", "sigma", "alpha", "kappa", "lp__"), probs=c(.025,.5,.975))
+print(fit2, pars = c("mu", "sigma", "alpha", "beta", "lp__"), probs=c(.025,.5,.975))
  }
  }
 }
@@ -148,5 +148,5 @@ Jones, M.C. and Faddy, M. J. (2003) A skew extension of the t distribution, with
 Rigby, R.A. and Stasinopoulos, M.D. and Heller, G.Z. and De Bastiani, F. (2019) Distributions for Modeling Location, Scale, and Shape: Using GAMLSS in R.CRC Press
 }
 \author{
-Anisa'Faoziah and Achmad Syahrul Choir
+Anisa' Faoziah and Achmad Syahrul Choir
 }

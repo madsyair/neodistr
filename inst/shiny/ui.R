@@ -91,7 +91,7 @@ fluidPage(
           sliderInput("jmu", "mu (μ)", min = -10, max = 10, step = 0.01, value = 0),
           sliderInput("jsigma", "sigma (σ)", min = 0.01, max = 10, step = 0.01, value = 1),
           sliderInput("jalpha", "alpha (α)", min = -1, max = 1, step = 0.01, value = 0),
-          sliderInput("jkappa", "kappa (κ)", min = 0.01, max = 0.5, step = 0.01, value = 0.2)
+          sliderInput("jbeta", "beta (κ)", min = 0.01, max = 0.5, step = 0.01, value = 0.2)
         )
       ),
       
@@ -127,7 +127,7 @@ fluidPage(
           sliderInput("kjmu", "μ", min = -10, max = 10, step = 0.01, value = 0),
           sliderInput("kjsigma", "σ", min = 0.01, max = 10, step = 0.01, value = 1),
           sliderInput("kjalpha", "α", min = -0.188, max = 0.224, step = 0.01, value = 0),
-          sliderInput("kjkappa", "κ", min = 0.02, max = 0.2, step = 0.001, value = 0.2)
+          sliderInput("kjbeta", "κ", min = 0.02, max = 0.2, step = 0.001, value = 0.2)
         )
       )
     ),

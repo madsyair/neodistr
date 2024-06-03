@@ -8,14 +8,14 @@
 \alias{rjfst}
 \title{Jones Faddy's Skew-t Distribution}
 \usage{
-djfst(x, mu = 0, sigma = 1, alpha = 0, kappa = 2, log = FALSE)
+djfst(x, mu = 0, sigma = 1, alpha = 0, beta = 2, log = FALSE)
 
 pjfst(
   q,
   mu = 0,
   sigma = 1,
   alpha = 0,
-  kappa = 2,
+  beta = 2,
   lower.tail = TRUE,
   log.p = FALSE
 )
@@ -24,13 +24,13 @@ qjfst(
   p,
   mu = 0,
   sigma = 1,
-  alpha = 0,
-  kappa = 2,
+  alpha = 2,
+  beta = 2,
   lower.tail = TRUE,
   log.p = FALSE
 )
 
-rjfst(n, mu = 0, sigma = 1, alpha = 0, kappa = 2)
+rjfst(n, mu = 0, sigma = 1, alpha = 0, beta = 2)
 }
 \arguments{
 \item{x, q}{vector of quantiles.}
@@ -41,7 +41,7 @@ rjfst(n, mu = 0, sigma = 1, alpha = 0, kappa = 2)
 
 \item{alpha}{a shape parameter (skewness).}
 
-\item{kappa}{a shape parameter (kurtosis).}
+\item{beta}{a shape parameter (kurtosis).}
 
 \item{log, log.p}{logical; if TRUE, probabilities p are given as log(p)
 The default value of this parameter is FALSE}
@@ -66,22 +66,22 @@ Jones-Faddy's Skew-t Distribution
 
 
 
-The Jones-Faddy's Skew-t distribution with parameters \eqn{\mu}, \eqn{\sigma},\eqn{\alpha}, and \eqn{\kappa}
+The Jones-Faddy's Skew-t distribution with parameters \eqn{\mu}, \eqn{\sigma},\eqn{\alpha}, and \eqn{\beta}
 has density:
-\deqn{f(y |\mu,\sigma,\kappa,\alpha)= \frac{c}{\sigma} [{1+\frac{z}{({a+b+z^2})^\frac{1}{2}}}]^{a+\frac{1}{2}}
+\deqn{f(y |\mu,\sigma,\beta,\alpha)= \frac{c}{\sigma} [{1+\frac{z}{({a+b+z^2})^\frac{1}{2}}}]^{a+\frac{1}{2}}
 [{1-\frac{z}{({a+b+z^2})^\frac{1}{2}}}]^{b+\frac{1}{2}}}
 with: 
-\eqn{\sigma >0, \kappa>0},
+\eqn{\sigma >0, \beta>0},
 
 \eqn{z = {y-\mu}}, \eqn{ c = [2^{(a+b-1)} (a+b)^\frac{1}{2} B(a,b)]^-1 },
  
-\eqn{ a = \kappa^{-1}{[1+{\nu{(2 \kappa +nu^2)^\frac{1}{2}}}]}}, \eqn{ b = \kappa^{-1}{[1-{\nu{(2 \kappa +nu^2)^\frac{1}{2}}}]}}
+\eqn{ a = \beta^{-1}{[1+{\nu{(2 \beta +nu^2)^\frac{1}{2}}}]}}, \eqn{ b = \beta^{-1}{[1-{\nu{(2 \beta +nu^2)^\frac{1}{2}}}]}}
 }
 \examples{
-djfst(4, mu=0, sigma=1, alpha=0, kappa=1)
-pjfst(4, mu=0, sigma=1, alpha=0, kappa=1)
-qjfst(0.4, mu=0, sigma=1, alpha=0, kappa=1)
-r=rjfst(10000, mu=0, sigma=1, alpha=0, kappa=0.2)
+djfst(4, mu=0, sigma=1, alpha=0, beta=1)
+pjfst(4, mu=0, sigma=1, alpha=0, beta=1)
+qjfst(0.4, mu=0, sigma=1, alpha=0, beta=1)
+r=rjfst(10000, mu=0, sigma=1, alpha=0, beta=0.2)
 head(r)
 hist(r, xlab = 'jfst random number', ylab = 'Frequency', 
 main = 'Distribution of jfst Random Number ')

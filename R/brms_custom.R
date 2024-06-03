@@ -169,30 +169,30 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
       mu <- brms::get_dpar(prep, "mu")
       sigma <- brms::get_dpar(prep, "sigma")
       alpha <- brms::get_dpar(prep, "alpha")     
-      kappa <- brms::get_dpar(prep, "kappa")   
+      beta <- brms::get_dpar(prep, "beta")   
       y <- prep$data$Y[i]
-      jfst_lpdf(y, mu, sigma, alpha,kappa,log=TRUE)
+      jfst_lpdf(y, mu, sigma, alpha,beta,log=TRUE)
     }
     posterior_predict_jfst <- function(i, prep, ...) {
       .<-jfst_rng<-NULL
       mu <- brms::get_dpar(prep, "mu", i = i)
       sigma <- brms::get_dpar(prep, "sigma")
       alpha <- brms::get_dpar(prep, "alpha")  
-      kappa <- brms::get_dpar(prep, "kappa")  
-      jfst_rng(mu, sigma,alpha,kappa)
+      beta <- brms::get_dpar(prep, "beta")  
+      jfst_rng(mu, sigma,alpha,beta)
     }
     posterior_epred_jfst <- function(prep) {
       mu <- brms::get_dpar(prep, "mu")
       sigma <- brms::get_dpar(prep, "sigma") 
       alpha <- brms::get_dpar(prep, "alpha") 
-      kappa <- brms::get_dpar(prep, "kappa") 
-      summary_dist("jfst",par=c(mu=mu,sigma=sigma,alpha=alpha,kappa=kappa))$Mean
+      beta <- brms::get_dpar(prep, "beta") 
+      summary_dist("jfst",par=c(mu=mu,sigma=sigma,alpha=alpha,beta=beta))$Mean
     }
     neonormal_family <- function(vectorize=TRUE) {
       loop<-ifelse(vectorize,FALSE,TRUE)
       custom_family(
         "jfst",
-        dpars = c("mu", "sigma","alpha","kappa"),
+        dpars = c("mu", "sigma","alpha","beta"),
         links = c("identity","log","identity","log"),
         type = "real",
         lb=c(NA,0,NA,0),

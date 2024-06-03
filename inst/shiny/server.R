@@ -19,8 +19,8 @@ msnburr2a_skewness <- function(alpha){
 gmsnburr_skewness <- function(alpha, beta) {
   neodistr::summary_dist(family = "gmsnburr", par = c(mu = 0, sigma = 1, alpha = alpha, beta = beta))$Skewness
 }
-jfst_skewness <- function(alpha,kappa){
-  neodistr::summary_dist(family = "jfst", par = c(mu = 0, sigma = 1, alpha = alpha, kappa=kappa))$Skewness
+jfst_skewness <- function(alpha,beta){
+  neodistr::summary_dist(family = "jfst", par = c(mu = 0, sigma = 1, alpha = alpha, beta=beta))$Skewness
 }
 
 msnburr_kurtosis <- function(alpha){
@@ -32,14 +32,14 @@ msnburr2a_kurtosis <- function(alpha){
 gmsnburr_kurtosis <- function(alpha,beta){
   neodistr::summary_dist(family = "gmsnburr", par = c(mu = 0, sigma = 1, alpha = alpha, beta = beta))$`Excess-Kurtosis`
 }
-jfst_kurtosis <- function(alpha, kappa){
-  neodistr::summary_dist(family = "jfst", par = c(mu = 0, sigma = 1, alpha = alpha, kappa=kappa))$`Excess-Kurtosis`
+jfst_kurtosis <- function(alpha, beta){
+  neodistr::summary_dist(family = "jfst", par = c(mu = 0, sigma = 1, alpha = alpha, beta=beta))$`Excess-Kurtosis`
 }
 
 jfst_alpha <- function(a,b){
   (a-b) / sqrt(a*b*(a+b))
 }
-jfst_kappa <- function(a,b){
+jfst_beta <- function(a,b){
   2/(a+b)
 }
 
@@ -61,7 +61,7 @@ function(input, output, session) {
       }else if(input$dist=="gmsnburr"){
         rgmsnburr(input$num_samples, mu=input$gmu, sigma=input$gsigma, alpha=input$galpha, beta=input$gbeta )
       }else if(input$dist=="jfst"){
-        (rjfst(input$num_samples,mu=input$jmu, sigma=input$jsigma, alpha=input$jalpha, kappa=input$jkappa))
+        (rjfst(input$num_samples,mu=input$jmu, sigma=input$jsigma, alpha=input$jalpha, beta=input$jbeta))
       }
     }
   })
@@ -94,7 +94,7 @@ function(input, output, session) {
       }else if(input$dist=="gmsnburr"){
         qgmsnburr(0.0001,mu=input$gmu, sigma=input$gsigma,alpha=input$galpha,beta=input$gbeta)
       }else if(input$dist=="jfst"){
-        qjfst(0.0001,mu=input$jmu, sigma=input$jsigma,alpha=input$jalpha,kappa=input$jkappa)
+        qjfst(0.0001,mu=input$jmu, sigma=input$jsigma,alpha=input$jalpha,beta=input$jbeta)
       }
     }
   }  )
@@ -113,7 +113,7 @@ function(input, output, session) {
           x
         }
       }else if(input$dist=="jfst"){
-        qjfst(0.9999,mu=input$jmu, sigma=input$jsigma,alpha=input$jalpha,kappa=input$jkappa)
+        qjfst(0.9999,mu=input$jmu, sigma=input$jsigma,alpha=input$jalpha,beta=input$jbeta)
       }
     }
   }  )
@@ -138,7 +138,7 @@ function(input, output, session) {
       }else if (input$dist=="gmsnburr"){
         (dgmsnburr(dtd_seq(),mu=input$gmu, sigma=input$gsigma, alpha=input$galpha, beta=input$gbeta))
       }else if (input$dist=="jfst"){
-        (djfst(dtd_seq(),mu=input$jmu, sigma=input$jsigma, alpha=input$jalpha, kappa=input$jkappa))
+        (djfst(dtd_seq(),mu=input$jmu, sigma=input$jsigma, alpha=input$jalpha, beta=input$jbeta))
       }
     }
   })
@@ -153,7 +153,7 @@ function(input, output, session) {
       }else if (input$dist=="gmsnburr"){
         (pgmsnburr(dtd_seq(),mu=input$gmu, sigma=input$gsigma, alpha=input$galpha, beta=input$gbeta))
       }else if (input$dist=="jfst"){
-        (pjfst(dtd_seq(),mu=input$jmu, sigma=input$jsigma, alpha=input$jalpha, kappa=input$jkappa))
+        (pjfst(dtd_seq(),mu=input$jmu, sigma=input$jsigma, alpha=input$jalpha, beta=input$jbeta))
       }
     }
   })
@@ -185,7 +185,7 @@ function(input, output, session) {
       }else if (input$dist=="gmsnburr"){
         (dgmsnburr(dt_seq(),mu=input$gmu, sigma=input$gsigma, alpha=input$galpha, beta=input$gbeta))
       }else if (input$dist=="jfst"){
-        (djfst(dt_seq(),mu=input$jmu, sigma=input$jsigma, alpha=input$jalpha, kappa=input$jkappa))
+        (djfst(dt_seq(),mu=input$jmu, sigma=input$jsigma, alpha=input$jalpha, beta=input$jbeta))
       }
     }
   })
@@ -204,7 +204,7 @@ function(input, output, session) {
       }else if (input$kdist=="gmsnburr"){
         neodistr::summary_dist(family="gmsnburr", par=c(mu=input$kgmu, sigma=input$kgsigma, alpha=input$kgalpha, beta=input$kgbeta))
       }else if (input$kdist=="jfst"){
-        neodistr::summary_dist(family="jfst", par=c(mu=input$kjmu, sigma=input$kjsigma, alpha=input$kjalpha, kappa=input$kjkappa))
+        neodistr::summary_dist(family="jfst", par=c(mu=input$kjmu, sigma=input$kjsigma, alpha=input$kjalpha, beta=input$kjbeta))
       }
     }
   })
@@ -224,7 +224,7 @@ function(input, output, session) {
       }else if(input$kdist=="gmsnburr"){
         rgmsnburr(200, mu=input$kgmu, sigma=input$kgsigma, alpha=input$kgalpha, beta=input$kgbeta )
       }else if(input$kdist=="jfst"){
-        (rjfst(200,mu=input$kjmu, sigma=input$kjsigma, alpha=input$kjalpha, kappa=input$kjkappa))
+        (rjfst(200,mu=input$kjmu, sigma=input$kjsigma, alpha=input$kjalpha, beta=input$kjbeta))
       }
     }
   })
@@ -431,23 +431,23 @@ function(input, output, session) {
           )%>%
           config(displayModeBar = FALSE))  # Menghilangkan mode bar plotly
       }else if (input$kdist=="jfst"){
-        #alpha <- jfst_alpha(input$kjalpha, input$kjkappa)
-        #kappa <- jfst_kappa (input$kjalpha, input$kjalpha)
-        #alphajs <- seq(jfst_alpha(2,2), jfst_alpha(10,input$kjkappa), length.out=50)
+        #alpha <- jfst_alpha(input$kjalpha, input$kjbeta)
+        #beta <- jfst_beta (input$kjalpha, input$kjalpha)
+        #alphajs <- seq(jfst_alpha(2,2), jfst_alpha(10,input$kjbeta), length.out=50)
         alphajs <- seq(-0.57, 0.47,length.out=50 )
-        kappajs <- seq(0.02, 0.2,length.out=50 )
+        betajs <- seq(0.02, 0.2,length.out=50 )
         
         #alphajs <- seq(-0.57, 0.47, length.out=50 )
-        #kappajs <- rep(kappa,length.out=50 )
-        #kappajs <- rep(input$kjkappa, length.out = 50)
+        #betajs <- rep(beta,length.out=50 )
+        #betajs <- rep(input$kjbeta, length.out = 50)
         zj <- matrix(0, length(alphajs), length(alphajs))
         for (i in 1:length(alphajs)) {
         for (j in 1:length(alphajs)) {
-          suppressWarnings(zj[j,i] <- jfst_skewness(alphajs[i], kappajs[i]))
+          suppressWarnings(zj[j,i] <- jfst_skewness(alphajs[i], betajs[i]))
         }
         }
-        df<-data.frame(alphajs,kappajs,zj)
-     suppressWarnings(   plot_ly(df, x = ~alphajs, y = ~kappajs, z = ~zj, type = "surface",
+        df<-data.frame(alphajs,betajs,zj)
+     suppressWarnings(   plot_ly(df, x = ~alphajs, y = ~betajs, z = ~zj, type = "surface",
                 hovertemplate = paste('α : %{x:.4f}',
                                       '<br> κ : %{y:.4f}', 
                                       '<br>Skewness : %{z:.4f}<br>',
@@ -461,8 +461,8 @@ function(input, output, session) {
             ))%>%
           add_trace(
             x = input$kjalpha,
-            y = input$kjkappa,
-            z = jfst_skewness(input$kjalpha,input$kjkappa),
+            y = input$kjbeta,
+            z = jfst_skewness(input$kjalpha,input$kjbeta),
             type = "scatter3d",
             mode='lines+markers',
             showlegend = FALSE,
@@ -579,16 +579,16 @@ function(input, output, session) {
       }else if (input$kdist=="jfst"){
         
         alphast <- seq(-0.57, 0.47,length.out=50 )
-        kappast <- seq(0.02, 0.2,length.out=50 )
-        z <- matrix(0, length(alphast), length(kappast))
+        betast <- seq(0.02, 0.2,length.out=50 )
+        z <- matrix(0, length(alphast), length(betast))
        
         for (i in 1:length(alphast)) {
-          for (j in 1 : length(kappast)){
-            suppressWarnings(z[j, i] <- jfst_kurtosis(alphast[i], kappast[j]))
+          for (j in 1 : length(betast)){
+            suppressWarnings(z[j, i] <- jfst_kurtosis(alphast[i], betast[j]))
           }
         }
-        df<-data.frame(alphast,kappast,z)
-      suppressWarnings(  plot_ly(df, x = ~alphast, y = ~kappast, z = ~z, type = "surface",
+        df<-data.frame(alphast,betast,z)
+      suppressWarnings(  plot_ly(df, x = ~alphast, y = ~betast, z = ~z, type = "surface",
                 hovertemplate = paste('α : %{x:.4f}',
                                       '<br> κ : %{y:.4f}', 
                                       '<br>Excess-Kutrosis : %{z:.4f}<br>',
@@ -598,12 +598,12 @@ function(input, output, session) {
             scene = list(
               xaxis = list(title = 'α'),
               yaxis = list(title = ' κ'),
-              zaxis = list(title = 'kurtosis')
+              zaxis = list(title = 'Excess-kurtosis')
             ))%>%
           add_trace(
             x = input$kjalpha,
-            y = input$kjkappa,
-            z = jfst_kurtosis (input$kjalpha,input$kjkappa),
+            y = input$kjbeta,
+            z = jfst_kurtosis (input$kjalpha,input$kjbeta),
             type = "scatter3d",
             mode='lines+markers',
             showlegend = FALSE,
