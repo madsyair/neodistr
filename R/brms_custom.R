@@ -173,7 +173,7 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
       jfst_lpdf(y, mu, sigma, alpha,beta)
     }
     posterior_predict_jfst <- function(i, prep, ...) {
-      .<-jfst_rng<-NULL
+     .<-jfst_rng<-NULL
       mu <- brms::get_dpar(prep, "mu", i = i)
       sigma <- brms::get_dpar(prep, "sigma")
       alpha <- brms::get_dpar(prep, "alpha")  
