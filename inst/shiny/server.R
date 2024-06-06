@@ -69,15 +69,15 @@ function(input, output, session) {
   # membuat data sequential dari random sample
   dt_seq <- reactive({
     if(input$menu=="prob"){
-      if(input$dist=="msnburr"){
-        data_sequence(min(data()), max(data()), input$num_samples)
-      }else if(input$dist=="msnburr2a"){
+   #   if(input$dist=="msnburr"){
+  #      data_sequence(min(data()), max(data()), input$num_samples)
+   #   }else if(input$dist=="msnburr2a"){
+  #      data_sequence(min(data()), max(data()),input$num_samples)
+  #    }else if(input$dist=="gmsnburr"){
         data_sequence(min(data()), max(data()),input$num_samples)
-      }else if(input$dist=="gmsnburr"){
-        data_sequence(min(data()), max(data()),input$num_samples)
-      }else if(input$dist=="jfst"){
-        data_sequence(min(data()), max(data()),input$num_samples)
-      }
+   #   }else if(input$dist=="jfst"){
+    #    data_sequence(min(data()), max(data()),input$num_samples)
+     # }
     }
   })
   
@@ -92,8 +92,14 @@ function(input, output, session) {
       }else if(input$dist=="msnburr2a"){
         qmsnburr2a(0.0001,mu=input$b2mu, sigma=input$b2sigma,alpha=input$b2alpha)
       }else if(input$dist=="gmsnburr"){
-        qgmsnburr(0.0001,mu=input$gmu, sigma=input$gsigma,alpha=input$galpha,beta=input$gbeta)
-      }else if(input$dist=="jfst"){
+        x<-qgmsnburr(0.0001,mu=input$gmu, sigma=input$gsigma,alpha=input$galpha,beta=input$gbeta)
+        if(is.infinite(x)){
+          ifelse(input$galpha<input$gbeta,qmsnburr(0.0001,mu=input$gmu, sigma=input$gsigma,alpha=input$galpha),qmsnburr2a(0.0001,mu=input$gmu, sigma=input$gsigma,alpha=input$gbeta))
+        } else{
+          x
+        }
+        
+             }else if(input$dist=="jfst"){
         qjfst(0.0001,mu=input$jmu, sigma=input$jsigma,alpha=input$jalpha,beta=input$jbeta)
       }
     }
@@ -108,7 +114,7 @@ function(input, output, session) {
       }else if(input$dist=="gmsnburr"){
         x<-qgmsnburr(0.9999,mu=input$gmu, sigma=input$gsigma,alpha=input$galpha,beta=input$gbeta)
         if(is.infinite(x)){
-          ifelse(input$galpha<input$gbeta,qmsnburr(0.9999,mu=input$gmu, sigma=input$gsigma,alpha=input$galpha),qmsnburr(0.9999,mu=input$gmu, sigma=input$gsigma,alpha=input$gbeta))
+         ifelse(input$galpha<input$gbeta,qmsnburr(0.9999,mu=input$gmu, sigma=input$gsigma,alpha=input$galpha),qmsnburr2a(0.9999,mu=input$gmu, sigma=input$gsigma,alpha=input$gbeta))
         } else{
           x
         }
@@ -121,12 +127,12 @@ function(input, output, session) {
   dtd_seq <- reactive({
     if(input$menu=="prob"){
       data_sequence(xmin(),xmax(), 100)
-    }else if(input$dist=="msnburr2a"){
-      data_sequence(xmin(),xmax(), 100)
-    }else if(input$dist=="gmsnburr"){
-      data_sequence(xmin(),xmax(), 100)
-    }else if(input$dist=="jfst"){
-      data_sequence(xmin(),xmax(), 100)
+    #}else if(input$dist=="msnburr2a"){
+    #  data_sequence(xmin(),xmax(), 100)
+    #}else if(input$dist=="gmsnburr"){
+    #  data_sequence(xmin(),xmax(), 100)
+    #}else if(input$dist=="jfst"){
+    #  data_sequence(xmin(),xmax(), 100)
     }
   })
   densn<- reactive({
@@ -232,15 +238,15 @@ function(input, output, session) {
   # Define sequence data
   dt_seqk <- reactive({
     if(input$menu=="char"){
-      if(input$dist=="msnburr"){
+     # if(input$dist=="msnburr"){
         data_sequence(min(datak()), max(datak()), 200)
-      }else if(input$dist=="msnburr2a"){
-        data_sequence(min(datak()), max(datak()),200)
-      }else if(input$dist=="gmsnburr"){
-        data_sequence(min(datak()), max(datak()),200)
-      }else if(input$dist=="jfst"){
-        data_sequence(min(datak()), max(datak()),200)
-      }
+      #}else if(input$dist=="msnburr2a"){
+      #  data_sequence(min(datak()), max(datak()),200)
+      #}else if(input$dist=="gmsnburr"){
+      #  data_sequence(min(datak()), max(datak()),200)
+      #}else if(input$dist=="jfst"){
+      #  data_sequence(min(datak()), max(datak()),200)
+      #}
     }
   })
   
@@ -310,9 +316,9 @@ function(input, output, session) {
 
   # Calculate density for the example data
   output$densityneo <- renderPlot({
-    ggplot(data.frame(Value = dt_seq()), aes(x = Value)) +
+    ggplot(data.frame(Value = dt_seq()), aes(x = Value,y=dens())) +
       geom_density(aes(x = data(), color="kernel"), fill = "lightblue",inherit.aes = FALSE) +
-      geom_line(aes(x=Value,y = dens(),color="pdf"), linewidth = 2, linetype = "solid") +    #geom_density(fill = "lightblue")+
+      geom_line(aes(color="pdf"), linewidth = 2, linetype = "solid") +    #geom_density(fill = "lightblue")+
       #geom_line(aes(y = densk()),color="red", size = 1.25, linetype = "solid") +
       scale_color_manual(values = c("pdf" = "red", "kernel" = "darkgreen")) +
       labs(color = "Density Function") +
@@ -331,11 +337,11 @@ function(input, output, session) {
   output$skewPlot <- renderPlotly({
     if(input$menu=="char"){
       if(input$kdist =="msnburr"){
-        alphab <- data_sequence(0.01,30,512)
-        #alphab <- seq(0.01, 30,length.out=100 )
+      #  alphab <- data_sequence(0.01,30,length.out=100)
+        alphab <- seq(0.01, 30,length.out=100 )
         yb <- sapply(alphab, msnburr_skewness)
         df<-data.frame(alphab,yb)
-        suppressWarnings(       plot_ly(df, x = ~alphab, y = ~yb, type = 'scatter', mode = 'lines',
+        p<-  plot_ly(data=df, x = ~alphab, y = ~yb, type = 'scatter', mode = 'lines',
                                         line = list(color = '#7ECBE3', width = 5),
                                         hovertemplate = paste('α : %{x:.4f}',
                                                               '<br>Skewness : %{y:.4f}<br>',
@@ -360,7 +366,8 @@ function(input, output, session) {
                                   '<br>Skewness : %{y:.4f}<br>',
                                   '<extra> </extra>' )
           )%>%
-          config(displayModeBar = FALSE))  # Menghilangkan mode bar plotly
+          config(displayModeBar = FALSE)# Menghilangkan mode bar plotly
+        suppressWarnings(p)
       }else if (input$kdist =="msnburr2a"){
         
         alphab2 <- seq(0.01, 30,length.out=100 )
@@ -468,7 +475,7 @@ function(input, output, session) {
                                 type = "scatter3d",
                                 mode='lines+markers',
                                 showlegend = FALSE,
-                                marker = list(color = 'red', size = 10, opacity = 5),
+                                marker = list(color = 'red', size = 5, opacity = 5),
                                 hovertemplate = paste('α : %{x:.4f}',
                                                       '<br> β : %{y:.4f}',
                                                       '<br>Skewness : %{z:.4f}<br>',
@@ -488,7 +495,7 @@ function(input, output, session) {
         alphab <- seq(0.01, 30,length.out=100 )
         ybk <- sapply(alphab, msnburr_kurtosis)
         df<-data.frame(alphab,ybk)
-        suppressWarnings(     plot_ly(df, x = ~alphab, y = ~ybk, type = 'scatter', mode = 'lines',
+        suppressWarnings( plot_ly(data=df, x = ~alphab, y = ~ybk, type = 'scatter', mode = 'lines',
                                       line = list(color = '#7ECBE3', width = 5),
                                       hovertemplate = paste('α : %{x:.4f}',
                                                             '<br>Excess-Kurtosis : %{y:.4f}<br>',
@@ -501,7 +508,7 @@ function(input, output, session) {
           ) %>%
           add_trace(
             x = input$kbalpha,
-            y = msnburr_kurtosis (input$kbalpha),
+            y = msnburr_kurtosis(input$kbalpha),
             type = "scatter",
             mode='lines+markers',
             showlegend = FALSE,
@@ -529,7 +536,7 @@ function(input, output, session) {
           ) %>%
           add_trace(
             x = input$kb2alpha,
-            y = msnburr2a_kurtosis (input$kb2alpha),
+            y = msnburr2a_kurtosis(input$kb2alpha),
             type = "scatter",
             mode='lines+markers',
             showlegend = FALSE,
@@ -571,7 +578,7 @@ function(input, output, session) {
             type = "scatter3d",
             mode='lines+markers',
             showlegend = FALSE,
-            marker = list(color = 'red', size = 10, opacity = 5),
+            marker = list(color = 'red', size = 5, opacity = 5),
             hovertemplate = paste('α : %{x:.4f}',
                                   '<br> β : %{y:.4f}',
                                   '<br>Excess-Kurtosis : %{z:.4f}<br>',
@@ -609,7 +616,7 @@ function(input, output, session) {
                                type = "scatter3d",
                                mode='lines+markers',
                                showlegend = FALSE,
-                               marker = list(color = 'red', size = 10, opacity = 5),
+                               marker = list(color = 'red', size = 5, opacity = 5),
                                hovertemplate = paste('α : %{x:.4f}',
                                                      '<br> κ : %{y:.4f}',
                                                      '<br>Kurtosis : %{z:.4f}<br>',

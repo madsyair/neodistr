@@ -102,32 +102,32 @@ fluidPage(
         
         conditionalPanel(
           condition = "input.kdist=='msnburr'",
-          sliderInput("kbmu", "μ", min = -10, max = 10, step = 0.01, value = 0),
-          sliderInput("kbsigma", "σ", min = 0.01, max = 10, step = 0.01, value = 1),
-          sliderInput("kbalpha", "α", min = 0.01, max = 30, step = 0.01, value = 1)
+          sliderInput("kbmu", "mu (μ)", min = -10, max = 10, step = 0.01, value = 0),
+          sliderInput("kbsigma", "sigma (σ)", min = 0.01, max = 10, step = 0.01, value = 1),
+          sliderInput("kbalpha", "alpha (α)", min = 0.01, max = 30, step=0.01, value = 1)
         ),
         
         conditionalPanel(
           condition = "input.kdist=='msnburr2a'",
-          sliderInput("kb2mu", "μ", min = -10, max = 10, step = 0.01, value = 0),
-          sliderInput("kb2sigma", "σ", min = 0.01, max = 10, step = 0.01, value = 1),
-          sliderInput("kb2alpha", "α", min = 0.01, max = 30, step = 0.01, value = 1)
+          sliderInput("kb2mu", "mu (μ)", min = -10, max = 10, step = 0.01, value = 0),
+          sliderInput("kb2sigma", "sigma (σ)", min = 0.01, max = 10, step = 0.01, value = 1),
+          sliderInput("kb2alpha", "alpha (α)", min = 0.01, max = 30, step = 0.01, value = 1)
         ),
         
         conditionalPanel(
           condition = "input.kdist=='gmsnburr'",
-          sliderInput("kgmu", "μ", min = -10, max = 10, step = 0.01, value = 0),
-          sliderInput("kgsigma", "σ", min = 0.01, max = 10, step = 0.01, value = 1),
-          sliderInput("kgalpha", "α", min = 0.01, max = 30, step = 0.01, value = 1),
-          sliderInput("kgbeta", "β", min = 0.01, max = 30, step = 0.01, value = 1)
+          sliderInput("kgmu", "mu (μ)", min = -10, max = 10, step = 0.01, value =0),
+          sliderInput("kgsigma", "sigma (σ)", min = 0.01, max = 10, step = 0.01,value =c(1)),
+          sliderInput("kgalpha", "alpha (α)", min = 0.01, max = 30, step = 0.01, value = c(1)),
+          sliderInput("kgbeta", "beta (β)", min = 0.01, max = 30, step = 0.01, value =c(1))
         ),
         
         conditionalPanel(
           condition = "input.kdist=='jfst'",
-          sliderInput("kjmu", "μ", min = -10, max = 10, step = 0.01, value = 0),
-          sliderInput("kjsigma", "σ", min = 0.01, max = 10, step = 0.01, value = 1),
-          sliderInput("kjalpha", "α", min = 2.1, max = 15, step = 0.01, value = 3),
-          sliderInput("kjbeta", "κ", min = 2.1, max = 15, step = 0.01, value = 3)
+          sliderInput("kjmu", "mu (μ)", min = -10, max = 10, step = 0.01, value = 0),
+          sliderInput("kjsigma", "sigma (σ)", min = 0.01, max = 10, step = 0.01, value = 1),
+          sliderInput("kjalpha", "alpha (α)", min = 2.1, max = 15, step = 0.01, value = 3),
+          sliderInput("kjbeta", "beta (β)", min = 2.1, max = 15, step = 0.01, value = 3)
         )
       )
     ),
