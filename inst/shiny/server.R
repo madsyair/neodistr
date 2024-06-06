@@ -81,9 +81,9 @@ function(input, output, session) {
     }
   })
   
- 
-   
-
+  
+  
+  
   
   xmin <- reactive({
     if(input$menu=="prob"){
@@ -129,7 +129,7 @@ function(input, output, session) {
       data_sequence(xmin(),xmax(), 100)
     }
   })
-    densn<- reactive({
+  densn<- reactive({
     if(input$menu=="prob"){
       if (input$dist=="msnburr"){
         (dmsnburr(dtd_seq(),mu=input$bmu, sigma=input$bsigma, alpha = input$balpha))
@@ -272,8 +272,8 @@ function(input, output, session) {
   
   tabletxt <- reactive({
     if(input$menu =="char"){
-        paste ("Table of Summary")
-     
+      paste ("Table of Summary")
+      
       
     }
   })
@@ -307,11 +307,12 @@ function(input, output, session) {
   })
   
   #--------------------------------------Density Plot Halaman Depan----------------------------------
+
+  # Calculate density for the example data
   output$densityneo <- renderPlot({
     ggplot(data.frame(Value = dt_seq()), aes(x = Value)) +
-      geom_line(aes(y = dens(),color="pdf"), linewidth = 2, linetype = "solid") +
-       geom_density(aes(x = data(), color="kernel"), fill = "lightblue",inherit.aes = FALSE) +
-      #geom_density(fill = "lightblue")+
+      geom_density(aes(x = data(), color="kernel"), fill = "lightblue",inherit.aes = FALSE) +
+      geom_line(aes(x=Value,y = dens(),color="pdf"), linewidth = 2, linetype = "solid") +    #geom_density(fill = "lightblue")+
       #geom_line(aes(y = densk()),color="red", size = 1.25, linetype = "solid") +
       scale_color_manual(values = c("pdf" = "red", "kernel" = "darkgreen")) +
       labs(color = "Density Function") +
@@ -324,7 +325,7 @@ function(input, output, session) {
       )
     
   })
-
+  
   
   # -------------------------------SKEWNESS PLOT----------------------------------------------------------
   output$skewPlot <- renderPlotly({
@@ -334,12 +335,12 @@ function(input, output, session) {
         #alphab <- seq(0.01, 30,length.out=100 )
         yb <- sapply(alphab, msnburr_skewness)
         df<-data.frame(alphab,yb)
- suppressWarnings(       plot_ly(df, x = ~alphab, y = ~yb, type = 'scatter', mode = 'lines',
-                line = list(color = '#7ECBE3', width = 5),
-                hovertemplate = paste('α : %{x:.4f}',
-                                      '<br>Skewness : %{y:.4f}<br>',
-                                      '<extra> </extra>' )
-                ) %>%
+        suppressWarnings(       plot_ly(df, x = ~alphab, y = ~yb, type = 'scatter', mode = 'lines',
+                                        line = list(color = '#7ECBE3', width = 5),
+                                        hovertemplate = paste('α : %{x:.4f}',
+                                                              '<br>Skewness : %{y:.4f}<br>',
+                                                              '<extra> </extra>' )
+        ) %>%
           #marker = list(color = 'red', size = 6, opacity = 0)) 
           layout(
             title = list(text = "Skewness Plot", font = list(family = "montserrat", size = 16, color = "#2C3E50")),
@@ -354,7 +355,7 @@ function(input, output, session) {
             #hoverinfo = 'text',
             #text = ~paste("α : ", df[,7], "<br>Skewness:", "%{y:$,.4f}"),
             showlegend = FALSE,
-            marker = list(color = 'red', size = 10, opacity = 4),
+            marker = list(color = 'red', size = 10, opacity = 0.4),
             hovertemplate = paste('α : %{x:.4f}',
                                   '<br>Skewness : %{y:.4f}<br>',
                                   '<extra> </extra>' )
@@ -365,11 +366,11 @@ function(input, output, session) {
         alphab2 <- seq(0.01, 30,length.out=100 )
         yb2 <- sapply(alphab2, msnburr2a_skewness)
         df<-data.frame(alphab2,yb2)
-  suppressWarnings(      plot_ly(df, x = ~alphab2, y = ~yb2, type = 'scatter', mode = 'lines',
-                line = list(color = '#000FFF', width = 5),
-                hovertemplate = paste('α : %{x:.4f}',
-                                      '<br>Skewness : %{y:.4f}<br>',
-                                      '<extra> </extra>' )
+        suppressWarnings(      plot_ly(df, x = ~alphab2, y = ~yb2, type = 'scatter', mode = 'lines',
+                                       line = list(color = '#000FFF', width = 5),
+                                       hovertemplate = paste('α : %{x:.4f}',
+                                                             '<br>Skewness : %{y:.4f}<br>',
+                                                             '<extra> </extra>' )
         )%>%
           #marker = list(color = 'red', size = 6, opacity = 0)) 
           layout(
@@ -401,12 +402,12 @@ function(input, output, session) {
           }
         }
         df<-data.frame(alphag,betag,z)
-       suppressWarnings( plot_ly(df, x = ~alphag, y = ~betag, z = ~z, type = "surface",
-                hovertemplate = paste('α : %{x:.4f}',
-                                      '<br> β : %{y:.4f}',
-                                      '<br>Skewness : %{z:.4f}<br>',
-                                      '<extra> </extra>' )
-                ) %>%
+        suppressWarnings( plot_ly(df, x = ~alphag, y = ~betag, z = ~z, type = "surface",
+                                  hovertemplate = paste('α : %{x:.4f}',
+                                                        '<br> β : %{y:.4f}',
+                                                        '<br>Skewness : %{z:.4f}<br>',
+                                                        '<extra> </extra>' )
+        ) %>%
           layout(
             title = list(text = "Skewness Plot", font = list(family = "montserrat", size = 16, color = "#2C3E50")),
             scene = list(
@@ -441,39 +442,39 @@ function(input, output, session) {
         #betajs <- rep(beta,length.out=50 )
         #betajs <- rep(input$kjbeta, length.out = 50)
         skew<-jfst_skewness(input$kjalpha,input$kjbeta)
-        zj <- matrix(, length(alphajs), length(alphajs))
+        zj <- matrix(,length(betajs), length(alphajs))
         for (i in 1:length(alphajs)) {
-        for (j in 1:length(alphajs)) {
-          suppressWarnings(zj[j,i] <- jfst_skewness(alphajs[i], betajs[i]))
-        }
+          for (j in 1:length(betajs)) {
+            suppressWarnings(zj[j,i] <- jfst_skewness(alphajs[i], betajs[j]))
+          }
         }
         df<-data.frame(alphajs,betajs,zj)
-     suppressWarnings(   plot_ly(df, x = ~alphajs, y = ~betajs, z = ~zj, type = "surface",
-                hovertemplate = paste('α : %{x:.4f}',
-                                      '<br> β : %{y:.4f}', 
-                                      '<br>Skewness : %{z:.4f}<br>',
-                                      '<extra> </extra>' )) %>%
-          layout(
-            title = list(text = "Skewness Plot", font = list(family = "montserrat", size = 16, color = "#2C3E50")),
-            scene = list(
-              xaxis = list(title = 'α'),
-              yaxis = list(title = ' β'),
-              zaxis = list(title = 'skewness')
-            ))%>%
-          add_trace(
-            x = input$kjalpha,
-            y = input$kjbeta,
-            z = skew,
-            type = "scatter3d",
-            mode='lines+markers',
-            showlegend = FALSE,
-            marker = list(color = 'red', size = 10, opacity = 5),
-            hovertemplate = paste('α : %{x:.4f}',
-                                  '<br> β : %{y:.4f}',
-                                  '<br>Skewness : %{z:.4f}<br>',
-                                  '<extra> </extra>' )
-          )%>%
-          config(displayModeBar = FALSE) ) # Menghilangkan mode bar plotly
+        suppressWarnings(   plot_ly(df, x = ~alphajs, y = ~betajs, z = ~zj, type = "surface",
+                                    hovertemplate = paste('α : %{x:.4f}',
+                                                          '<br> β : %{y:.4f}', 
+                                                          '<br>Skewness : %{z:.4f}<br>',
+                                                          '<extra> </extra>' )) %>%
+                              layout(
+                                title = list(text = "Skewness Plot", font = list(family = "montserrat", size = 16, color = "#2C3E50")),
+                                scene = list(
+                                  xaxis = list(title = 'α'),
+                                  yaxis = list(title = ' β'),
+                                  zaxis = list(title = 'skewness')
+                                ))%>%
+                              add_trace(
+                                x = input$kjalpha,
+                                y = input$kjbeta,
+                                z = skew,
+                                type = "scatter3d",
+                                mode='lines+markers',
+                                showlegend = FALSE,
+                                marker = list(color = 'red', size = 10, opacity = 5),
+                                hovertemplate = paste('α : %{x:.4f}',
+                                                      '<br> β : %{y:.4f}',
+                                                      '<br>Skewness : %{z:.4f}<br>',
+                                                      '<extra> </extra>' )
+                              )%>%
+                              config(displayModeBar = FALSE) ) # Menghilangkan mode bar plotly
       }
     }
   })
@@ -487,12 +488,12 @@ function(input, output, session) {
         alphab <- seq(0.01, 30,length.out=100 )
         ybk <- sapply(alphab, msnburr_kurtosis)
         df<-data.frame(alphab,ybk)
-   suppressWarnings(     plot_ly(df, x = ~alphab, y = ~ybk, type = 'scatter', mode = 'lines',
-                line = list(color = '#7ECBE3', width = 5),
-                hovertemplate = paste('α : %{x:.4f}',
-                                      '<br>Excess-Kurtosis : %{y:.4f}<br>',
-                                      '<extra> </extra>' )
-                ) %>%
+        suppressWarnings(     plot_ly(df, x = ~alphab, y = ~ybk, type = 'scatter', mode = 'lines',
+                                      line = list(color = '#7ECBE3', width = 5),
+                                      hovertemplate = paste('α : %{x:.4f}',
+                                                            '<br>Excess-Kurtosis : %{y:.4f}<br>',
+                                                            '<extra> </extra>' )
+        ) %>%
           layout(
             title = list(text = "Excess-Kurtosis Plot", font = list(family = "montserrat", size = 16, color = "#2C3E50")),
             xaxis = list(title = list(text = "α", font = list(family = "roboto", size = 20, color = "#2C3E50"))),
@@ -514,12 +515,12 @@ function(input, output, session) {
         alphab2 <- seq(0.01, 30,length.out=100 )
         yb2k <- sapply(alphab2, msnburr2a_kurtosis)
         df<-data.frame(alphab2,yb2k)
-     suppressWarnings(   plot_ly(df, x = ~alphab2, y = ~yb2k, type = 'scatter', mode = 'lines',
-                line = list(color = '#000FFF', width = 5),
-                hovertemplate = paste('α : %{x:.4f}',
-                                      '<br>Excess-Kurtois : %{y:.4f}<br>',
-                                      '<extra> </extra>' )
-                ) %>%
+        suppressWarnings(   plot_ly(df, x = ~alphab2, y = ~yb2k, type = 'scatter', mode = 'lines',
+                                    line = list(color = '#000FFF', width = 5),
+                                    hovertemplate = paste('α : %{x:.4f}',
+                                                          '<br>Excess-Kurtois : %{y:.4f}<br>',
+                                                          '<extra> </extra>' )
+        ) %>%
           
           layout(
             title = list(text = "Excess-Kurtosis Plot", font = list(family = "montserrat", size = 16, color = "#2C3E50")),
@@ -550,12 +551,12 @@ function(input, output, session) {
           }
         }
         df<-data.frame(alphag,betag,z)
-  suppressWarnings( plot_ly(df, x = ~alphag, y = ~betag, z = ~z, type = "surface",
-                hovertemplate = paste('α : %{x:.4f}',
-                                      '<br> β : %{y:.4f}',
-                                      '<br>Excess-Kurtosis : %{z:.4f}<br>',
-                                      '<extra> </extra>' )
-                ) %>%
+        suppressWarnings( plot_ly(df, x = ~alphag, y = ~betag, z = ~z, type = "surface",
+                                  hovertemplate = paste('α : %{x:.4f}',
+                                                        '<br> β : %{y:.4f}',
+                                                        '<br>Excess-Kurtosis : %{z:.4f}<br>',
+                                                        '<extra> </extra>' )
+        ) %>%
           layout(
             title = list(text = "Excess-Kurtosis plot", font = list(family = "montserrat", size = 16, color = "#2C3E50")),
             scene = list(
@@ -582,39 +583,39 @@ function(input, output, session) {
         alphast <- seq(2.1, 30,length.out=50 )
         betast <- seq(2.1, 30,length.out=50 )
         z <- matrix(0, length(alphast), length(betast))
-       
+        
         for (i in 1:length(alphast)) {
           for (j in 1 : length(betast)){
             suppressWarnings(z[j, i] <- jfst_kurtosis(alphast[i], betast[j]))
           }
         }
         df<-data.frame(alphast,betast,z)
-      suppressWarnings(  plot_ly(df, x = ~alphast, y = ~betast, z = ~z, type = "surface",
-                hovertemplate = paste('α : %{x:.4f}',
-                                      '<br> κ : %{y:.4f}', 
-                                      '<br>Excess-Kutrosis : %{z:.4f}<br>',
-                                      '<extra> </extra>' )) %>%
-          layout(
-            title = list(text = "Excess-Kurtosis Plot", font = list(family = "montserrat", size = 16, color = "#2C3E50")),
-            scene = list(
-              xaxis = list(title = 'α'),
-              yaxis = list(title = ' κ'),
-              zaxis = list(title = 'Excess-kurtosis')
-            ))%>%
-          add_trace(
-            x = input$kjalpha,
-            y = input$kjbeta,
-            z = jfst_kurtosis (input$kjalpha,input$kjbeta),
-            type = "scatter3d",
-            mode='lines+markers',
-            showlegend = FALSE,
-            marker = list(color = 'red', size = 10, opacity = 5),
-            hovertemplate = paste('α : %{x:.4f}',
-                                  '<br> κ : %{y:.4f}',
-                                  '<br>Kurtosis : %{z:.4f}<br>',
-                                  '<extra> </extra>' )
-          )%>%
-          config(displayModeBar = FALSE))  # Menghilangkan mode bar plotly
+        suppressWarnings(  plot_ly(df, x = ~alphast, y = ~betast, z = ~z, type = "surface",
+                                   hovertemplate = paste('α : %{x:.4f}',
+                                                         '<br> κ : %{y:.4f}', 
+                                                         '<br>Excess-Kutrosis : %{z:.4f}<br>',
+                                                         '<extra> </extra>' )) %>%
+                             layout(
+                               title = list(text = "Excess-Kurtosis Plot", font = list(family = "montserrat", size = 16, color = "#2C3E50")),
+                               scene = list(
+                                 xaxis = list(title = 'α'),
+                                 yaxis = list(title = ' κ'),
+                                 zaxis = list(title = 'Excess-kurtosis')
+                               ))%>%
+                             add_trace(
+                               x = input$kjalpha,
+                               y = input$kjbeta,
+                               z = jfst_kurtosis (input$kjalpha,input$kjbeta),
+                               type = "scatter3d",
+                               mode='lines+markers',
+                               showlegend = FALSE,
+                               marker = list(color = 'red', size = 10, opacity = 5),
+                               hovertemplate = paste('α : %{x:.4f}',
+                                                     '<br> κ : %{y:.4f}',
+                                                     '<br>Kurtosis : %{z:.4f}<br>',
+                                                     '<extra> </extra>' )
+                             )%>%
+                             config(displayModeBar = FALSE))  # Menghilangkan mode bar plotly
       }
     }
   })
@@ -623,64 +624,64 @@ function(input, output, session) {
   output$pdfPlot <- renderPlot({
     if(input$menu=="prob"){
       if(input$dist=="msnburr"){
- suppressWarnings( ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
-          geom_line(aes(x = Value,y = densn(),color="MSNburr"), linewidth = 2.25, linetype = "solid",inherit.aes = FALSE) +
-          geom_line(aes(x = Value,y = densnorm(),color="normal"), linewidth = 2, linetype = "dashed",inherit.aes = FALSE) +
-                    #coord_cartesian(xlim = c(lb(),ub()))+
-          labs(title = "Probability density Function (PDF)", x = "x", y = "density") +
- #         scale_color_manual(values = c("MSNburr" = "red", "normal" = "darkgreen")) +
-          labs(color = "Distribution") +
-           theme_minimal()+
-          
-          theme(
-            
-            plot.title = element_text(family = "montserrat",  size = 15, hjust = 0.5),
-            axis.title.x = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
-            axis.title.y = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
-            legend.position="bottom"
-          ))
+        suppressWarnings( ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
+                            geom_line(aes(x = Value,y = densn(),color="MSNburr"), linewidth = 2.25, linetype = "solid",inherit.aes = FALSE) +
+                            geom_line(aes(x = Value,y = densnorm(),color="normal"), linewidth = 2, linetype = "dashed",inherit.aes = FALSE) +
+                            #coord_cartesian(xlim = c(lb(),ub()))+
+                            labs(title = "Probability density Function (PDF)", x = "x", y = "density") +
+                            #         scale_color_manual(values = c("MSNburr" = "red", "normal" = "darkgreen")) +
+                            labs(color = "Distribution") +
+                            theme_minimal()+
+                            
+                            theme(
+                              
+                              plot.title = element_text(family = "montserrat",  size = 15, hjust = 0.5),
+                              axis.title.x = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
+                              axis.title.y = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
+                              legend.position="bottom"
+                            ))
       } else if (input$dist=="msnburr2a"){
-suppressWarnings(  ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
-          geom_line(aes(x = Value,y = densn(),color="MSNBurr-IIa"), linewidth = 2.25, linetype = "solid") +
-          geom_line(aes(x = Value,y = densnorm(),color="normal"), linewidth = 2, linetype = "dashed",inherit.aes = FALSE) +
-          labs(title = "Probability density Function (PDF)", x = "x", y = "density") +
-         # scale_color_manual(values = c( "normal" = "orange")) +
-          labs(color = "Distribution") +
-          theme_minimal()+
-          #xlim(lb(),ub())+
-          theme(
-            plot.title = element_text(family = "montserrat",  size = 15, hjust = 0.5),
-            axis.title.x = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
-            axis.title.y = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
-                                      legend.position="bottom"))
-          
+        suppressWarnings(  ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
+                             geom_line(aes(x = Value,y = densn(),color="MSNBurr-IIa"), linewidth = 2.25, linetype = "solid") +
+                             geom_line(aes(x = Value,y = densnorm(),color="normal"), linewidth = 2, linetype = "dashed",inherit.aes = FALSE) +
+                             labs(title = "Probability density Function (PDF)", x = "x", y = "density") +
+                             # scale_color_manual(values = c( "normal" = "orange")) +
+                             labs(color = "Distribution") +
+                             theme_minimal()+
+                             #xlim(lb(),ub())+
+                             theme(
+                               plot.title = element_text(family = "montserrat",  size = 15, hjust = 0.5),
+                               axis.title.x = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
+                               axis.title.y = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
+                               legend.position="bottom"))
+        
       } else if (input$dist =="gmsnburr"){
- suppressWarnings(ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
-          geom_line(aes(x = Value,y = densn(),color="GMSNBurr"), linewidth = 2.25, linetype = "solid",inherit.aes = FALSE) +
-          geom_line(aes(x = Value,y = densnorm(),color="normal"), linewidth = 2, linetype = "dashed",inherit.aes = FALSE) +
-            labs(title = "Probability density Function (PDF)", x = "x", y = "density") +
-          labs(color = "Distribution") +
-          theme_minimal()+
-          theme(
-            plot.title = element_text(family = "montserrat",  size = 15, hjust = 0.5),
-            axis.title.x = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
-            axis.title.y = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
-            legend.position="bottom"
-          ))
+        suppressWarnings(ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
+                           geom_line(aes(x = Value,y = densn(),color="GMSNBurr"), linewidth = 2.25, linetype = "solid",inherit.aes = FALSE) +
+                           geom_line(aes(x = Value,y = densnorm(),color="normal"), linewidth = 2, linetype = "dashed",inherit.aes = FALSE) +
+                           labs(title = "Probability density Function (PDF)", x = "x", y = "density") +
+                           labs(color = "Distribution") +
+                           theme_minimal()+
+                           theme(
+                             plot.title = element_text(family = "montserrat",  size = 15, hjust = 0.5),
+                             axis.title.x = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
+                             axis.title.y = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
+                             legend.position="bottom"
+                           ))
       }else if (input$dist == "jfst"){
- suppressWarnings( ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
-          geom_line(aes(x = Value,y = densn(),color="Jones-Faddy Skew-t"), size = 2.25, linetype = "solid") +
-          geom_line(aes(x = Value,y = densnorm(),color="Normal "), size = 2, linetype = "dashed") +
-          labs(title = "Probability density Function (PDF)", x = "x", y = "density") +
-          #xlim(lb(),ub())+
-          labs(color = "Distribution") +
-          theme_minimal()+
-          theme(
-            plot.title = element_text(family = "montserrat",  size = 15, hjust = 0.5),
-            axis.title.x = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
-            axis.title.y = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
-            legend.position="bottom"
-          ))
+        suppressWarnings( ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
+                            geom_line(aes(x = Value,y = densn(),color="Jones-Faddy Skew-t"), size = 2.25, linetype = "solid") +
+                            geom_line(aes(x = Value,y = densnorm(),color="Normal "), size = 2, linetype = "dashed") +
+                            labs(title = "Probability density Function (PDF)", x = "x", y = "density") +
+                            #xlim(lb(),ub())+
+                            labs(color = "Distribution") +
+                            theme_minimal()+
+                            theme(
+                              plot.title = element_text(family = "montserrat",  size = 15, hjust = 0.5),
+                              axis.title.x = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
+                              axis.title.y = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
+                              legend.position="bottom"
+                            ))
       }
     }
     
@@ -736,7 +737,7 @@ suppressWarnings(  ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin
   })
   
   
-
+  
   
 }
 

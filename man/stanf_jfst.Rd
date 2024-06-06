@@ -24,13 +24,12 @@ To determine probability function using Jones and Faddys Skew-t
 }
 \details{
 To determine the value of the probability density function of the Jones-Faddy’s Skew-t distribution :
-\deqn{f(y |\mu,\sigma,\beta,\alpha)= \frac{c}{\sigma} [{1+\frac{z}{({a+b+z^2})^\frac{1}{2}}}]^{a+\frac{1}{2}}
-[{1-\frac{z}{({a+b+z^2})^\frac{1}{2}}}]^{b+\frac{1}{2}}}
+\deqn{f(y |\mu,\sigma,\beta,\alpha)= \frac{c}{\sigma} [{1+\frac{z}{({\alpha+\beta+z^2})^\frac{1}{2}}}]^{a+\frac{1}{2}}
+[{1-\frac{z}{({\alpha+\beta+z^2})^\frac{1}{2}}}]^{\beta+\frac{1}{2}}}
 
 has: 
-\eqn{\sigma >0, \beta>0},
-\eqn{z = {y-\mu}}, \eqn{ c = [2^{(a+b-1)} (a+b)^\frac{1}{2} B(a,b)]^-1 }, 
-\eqn{ a = \beta^{-1}{[1+{\nu{(2 \beta +nu^2)^\frac{1}{2}}}]}}, \eqn{ b = \beta^{-1}{[1-{\nu{(2 \beta +nu^2)^\frac{1}{2}}}]}}
+\eqn{\sigma >0, \alpha>0,\beta>0},
+\eqn{z = {y-\mu}}, \eqn{ c = [2^{(\alpha+\beta-1)} (\alpha+\beta)^\frac{1}{2} B(\alpha,\beta)]^-1 },
 }
 \examples{
 {\dontrun{
@@ -39,7 +38,7 @@ library (rstan)
 
 # inputting data
 set.seed(400)
-dt <- neodistr::rjfst(100,mu=0, sigma=1, alpha = 0, beta = 0.2) # random generating JFST data
+dt <- neodistr::rjfst(100,mu=0, sigma=1, alpha = 2, beta = 2) # random generating JFST data
 dataf <- list(
  n = 100,
  y = dt
@@ -59,17 +58,17 @@ model <-"
     parameters{
       real mu;
       real <lower=0> sigma;
-      real alpha;
-      real <lower=0, upper=1>beta;
+      real <lower=0> alpha;
+      real <lower=0> beta;
     }
     model {
       for(i in 1 : n){
       y[i] ~ jfst(mu,sigma, alpha, beta);
       }
-      mu ~ cauchy (0,1);
-      sigma ~ cauchy (0, 2.5);
-      alpha ~ normal (0,1);
-      beta ~ lognormal (0,1);
+      mu ~ cauchy(0,1);
+      sigma ~ cauchy(0, 2.5);
+      alpha ~ lognormal(0,5);
+      beta ~ lognormal(0,5);
       
     }
 "
@@ -86,7 +85,7 @@ fit1 <- stan(
     iter = 10000,           # total number of iterations iterarions per chain
     cores = 2,              # number of cores (could use one per chain)
     control = list(         # control sampel behavior
-      adapt_delta = 0.999
+      adapt_delta = 0.99
     ),
     refresh = 1000          # progress has shown if refresh >=1, else no progress shown
 )
@@ -108,15 +107,15 @@ model_vector <-"
     parameters{
       real mu;
       real <lower=0> sigma;
-      real alpha;
-      real <lower=0, upper=1>beta;
+      real <lower=0> alpha;
+      real <lower=0>beta;
     }
     model {
       y ~ jfst(rep_vector(mu,n),sigma, alpha, beta);
       mu ~ cauchy (0,1);
       sigma ~ cauchy (0, 2.5);
-      alpha ~ normal (0,1);
-      beta ~ lognormal (0,1);
+      alpha ~ lognormal(0,5);
+      beta ~ lognormal(0,5);
       
     }
  "
@@ -133,7 +132,7 @@ fit2 <- stan(
     iter = 10000,                  # total number of iterations iterarions per chain
     cores = 2,                     # number of cores (could use one per chain)
     control = list(                # control sampel behavior
-      adapt_delta = 0.999
+      adapt_delta = 0.99
     ),
     refresh = 1000                 # progress has shown if refresh >=1, else no progress shown
 )

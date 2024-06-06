@@ -90,8 +90,8 @@ fluidPage(
           condition = "input.dist=='jfst'",
           sliderInput("jmu", "mu (μ)", min = -10, max = 10, step = 0.01, value = 0),
           sliderInput("jsigma", "sigma (σ)", min = 0.01, max = 15, step = 0.01, value = 1),
-          sliderInput("jalpha", "alpha (α)", min = 1, max = 15, step = 0.01, value = 0),
-          sliderInput("jbeta", "beta (β)", min = 1, max = 15, step = 0.01, value = 0.2)
+          sliderInput("jalpha", "alpha (α)", min = 1, max = 15, step = 0.01, value = 2),
+          sliderInput("jbeta", "beta (β)", min = 1, max = 15, step = 0.01, value = 2)
         )
       ),
       
