@@ -338,7 +338,7 @@ qr<-'
   real gmsnburr_quantile(real p, real mu, real sigma, real alpha, real beta){
   real omega;
   real lomega;
-  real zf;
+  //real zf;
   if (alpha<=0)
     reject("alpha<=0; found alpha =", alpha);
   if (beta<=0)
@@ -351,32 +351,39 @@ qr<-'
   lomega=-0.5*log(2*pi())+lbeta(alpha,beta)-beta*(log(beta)-log(alpha))+(alpha+beta)*log1p(beta/alpha);
   omega=exp(lomega);
   real ib=inv_inc_beta(alpha, beta,  p);
-  real s = (1/ib)-1;
+  real s = (alpha/beta)*((1/ib)-1);
  // zf <-qf(p,2*beta,2*alpha,lower.tail=!lower.tail,log.p=log.p);
-  return (mu-(sigma/omega)*(beta/alpha)*log(s));
+  return (mu-(sigma/omega)*log(s));
       
   }
   
   //gmsnburr rng
   real gmsnburr_rng(real mu, real sigma,real alpha,real beta) {
-    real lomega;
-    real omega;
-    real logzf;
-    real z1;
-    real z2;
+  // real lomega;
+//  real omega;
+  //  real logzf;
+  //  real z1;
+  //  real z2;
+  //   real rb;
+    // real z;
     if (alpha<=0)
       reject("alpha<=0; found alpha =", alpha);
     if (beta<=0)
       reject("beta<=0; found beta =", beta);
     if (sigma<=0)
       reject("sigma<=0; found sigma =", sigma);
-    lomega=-0.5*log(2*pi())+lbeta(alpha,beta)-beta*(log(beta)-log(alpha))+(alpha+beta)*log1p(beta/alpha);
-    omega=exp(lomega);
-    z1=chi_square_rng(2*alpha)/(2*alpha);
-    z2=chi_square_rng(2*beta)/(2*beta);
-    logzf=log(z2)-log(z1);
-    return (mu-(sigma/omega)*logzf);
-   // return gmsnburr_quantile(uniform_rng(0,1), mu, sigma, alpha, beta);
+  //  lomega=-0.5*log(2*pi())+lbeta(alpha,beta)-beta*(log(beta)-log(alpha))+(alpha+beta)*log1p(beta/alpha);
+  //  omega=exp(lomega);
+  //  rb=beta_rng(beta,alpha);
+  //  z=(alpha*rb)/(beta*(1-rb));
+  //  return (mu-(sigma/omega)*log(z))
+    
+    
+  // z1=chi_square_rng(2*alpha)/(2*alpha);
+   //z2=chi_square_rng(2*beta)/(2*beta);
+   //logzf=log(z2)-log(z1);
+  //  return (mu-(sigma/omega)*logzf);
+    return gmsnburr_quantile(uniform_rng(0,1), mu, sigma, alpha, beta);
   }'
 if(rng){
 paste0(dist,qr)
