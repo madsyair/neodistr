@@ -1,4 +1,4 @@
-#' Neonormal as Custom Distribution in brms 
+#' Neonormal as custom distribution family in brms 
 #' @name brms_custom_family
 #' @import brms 
 #' @param family distribution neo-normal option: "msnburr", "msnburr2a", "gmsnburr", and "jfst"
@@ -57,8 +57,8 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
       sigma <- brms::get_dpar(prep, "sigma") 
     #  summary_dist("msnburr",par=c(mu=mu,sigma=sigma,alpha=alpha))$Mean
       omega<-((1+1/alpha)^(1+alpha))/(sqrt(2*pi))
-      psi0a1<-psigamma(alpha1,deriv=0)
-      psi0a2<-psigamma(alpha2,deriv=0)
+      psi0a1<-psigamma(alpha,deriv=0)
+      psi0a2<-psigamma(1,deriv=0)
       mean<-mu+(sigma/omega)*(psi0a1-psi0a2-log(alpha))
       }
     
@@ -104,8 +104,8 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
       
 #      summary_dist("msnburr2a",par=c(mu=mu,sigma=sigma,alpha=alpha))$Mean
       omega<-((1+1/alpha)^(1+alpha))/(sqrt(2*pi))
-      psi0a1<-psigamma(alpha1,deriv=0)
-      psi0a2<-psigamma(alpha2,deriv=0)
+      psi0a1<-psigamma(1,deriv=0)
+      psi0a2<-psigamma(alpha,deriv=0)
       mean<-mu+(sigma/omega)*(psi0a1-psi0a2+log(alpha))
       
     }
@@ -151,8 +151,8 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
       beta <- brms::get_dpar(prep, "beta") 
   #    summary_dist("gmsnburr",par=c(mu=mu,sigma=sigma,alpha=alpha,beta=beta))$Mean
       omega=(beta(alpha,beta)*((alpha/beta)^-beta)*((1+beta/alpha)^(alpha+beta)))/(sqrt(2*pi))
-      psi0a1<-psigamma(alpha1,deriv=0)
-      psi0a2<-psigamma(alpha2,deriv=0)
+      psi0a1<-psigamma(alpha,deriv=0)
+      psi0a2<-psigamma(beta,deriv=0)
          mu+(sigma/omega)*(psi0a1-psi0a2-log(alpha)+log(beta))
         }
     neonormal_family <- function(vectorize=TRUE) {
