@@ -477,12 +477,18 @@ b=beta;
 // RNG --> Random Number Generator (RNG)
   real jfst_rng(real mu, real sigma, real alpha, real beta)
   {
-  
-    real u;
-    real v;
-    u=chi_square_rng(2*alpha); 
-    v=chi_square_rng(2*beta);
-    return (sqrt(alpha+beta)*(u-v))/(2*sqrt(u*v));
+  //real rb;
+  //real t;
+  //  real u;
+   // real v;
+  //  u=chi_square_rng(2*alpha); 
+  //  v=chi_square_rng(2*beta);
+  //return (sqrt(alpha+beta)*(u-v))/(2*sqrt(u*v));
+  //    rb=beta_rng(alpha,beta);
+  //  t=sqrt(alpha+beta)*(2*rb-1)/(2*sqrt(rb*(1-rb)));
+  //  return  mu + sigma * t;
+  //p = uniform_rng(0,1);
+    return jfst_quantile(uniform_rng(0,1),mu,sigma, alpha, beta);
   }
   '
 if(rng){
