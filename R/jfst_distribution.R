@@ -94,7 +94,7 @@ b<-beta
 #' pjfst(4, mu=0, sigma=1, alpha=2, beta=2)
 pjfst <- function(q,mu=0, sigma=1,alpha=0, beta=2,lower.tail=TRUE, log.p=FALSE){
   
-  if(is.na(alpha)|is.na(beta)|is.na(mu)|is.na(sigma)){
+  if(is.na(alpha) | is.na(beta) | is.na(mu) | is.na(sigma)){
     stop("mu, sigma,alpha, or beta must be not missing value")
   }
   if (any(sigma <= 0)) 
@@ -112,23 +112,22 @@ pjfst <- function(q,mu=0, sigma=1,alpha=0, beta=2,lower.tail=TRUE, log.p=FALSE){
   #    b <- (nu - lam)/2
   a<-alpha
   b<-beta
-    z = (q-mu)/sigma
-    rz =  z / sqrt(a + b + (z*z))
-    rz[is.infinite(z)]<-ifelse(z[is.infinite(z)]<0,-1,1)
-    r <- 0.5 * (1+rz)
+    z <- (q-mu)/sigma
+    rz <-  z / sqrt(a + b + (z*z))
+    rz[is.infinite(z)] <- ifelse(z[is.infinite(z)] < 0,-1,1)
+    r <- 0.5 * (1 + rz)
     p <- pbeta(r,a,b)
-    if(lower.tail){
+    if (lower.tail) {
       p <- p
     }else{
-      p <- 1-p
+      p <- 1 - p
     }
     
-    if(log.p){
+    if (log.p) { 
       p <- log(p)
     }else{
-      p <-p
+      p <- p
     }
-    #p<-pST5(q, mu=mu, sigma=sigma, nu=alpha, tau=beta,log.p=log.p)
     return(p)
   
   
@@ -183,7 +182,7 @@ qjfst<-function(p,mu=0,sigma=1, alpha = 2, beta=2,lower.tail=TRUE,log.p=FALSE){
 #' hist(r, xlab = 'jfst random number', ylab = 'Frequency', 
 #' main = 'Distribution of jfst Random Number ')
 rjfst <- function(n,mu=0, sigma=1, alpha=2, beta=2){
-.<-rchisq<-NULL 
+#.<-rbeta<-NULL 
    if(is.na(alpha)|is.na(beta)|is.na(mu)|is.na(sigma)){
     stop("mu, sigma,alpha, or beta must be not missing value")
   }
@@ -192,11 +191,13 @@ rjfst <- function(n,mu=0, sigma=1, alpha=2, beta=2){
   if (any(beta < 0)) 
     stop(paste("beta must be positive", "\n", ""))  
     n <- ceiling(n)
-    u<-rchisq(n,2*alpha)
-    v<-rchisq(n,2*beta)
-    t<-sqrt(alpha+beta)*(u-v)/(2*sqrt(u*v))
-    r = mu + sigma * t
-#    r <- qjfst(p, mu=mu, sigma=sigma, alpha=alpha, beta=beta)
+  #  u<-rchisq(n,2*alpha)
+  #  v<-rchisq(n,2*beta)
+  #  t<-sqrt(alpha+beta)*(u-v)/(2*sqrt(u*v))
+  #  rb<-rbeta(n,alpha,beta)
+   # t<-sqrt(alpha+beta)*(2*rb-1)/(2*sqrt(rb*(1-rb)))
+   # r = mu + sigma * t
+   r <- qjfst(runif(n), mu=mu, sigma=sigma, alpha=alpha, beta=beta)
     #x<-rST5(n, mu=mu, sigma=sigma, nu=alpha, tau=beta)
     return(r)
   
