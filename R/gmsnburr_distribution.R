@@ -39,7 +39,9 @@
 #' and  \eqn{\omega(\alpha,\beta) = {\frac{B(\alpha,\beta)}{\sqrt(2\pi)}}{{1+{\frac{\beta}{\alpha}}}^{\alpha+\beta}}{\frac{\beta}{\alpha}}^{-\beta}}
 #'
 #' @references
-#' Choir, A. S. (2020). Distribusi Neonormal Baru dan Karakteristiknya. Institut Teknologi Sepuluh Nopember.
+#' Choir, A. S. (2020). The New Neo-Normal Distributions and their Properties. Disertation. Institut Teknologi Sepuluh Nopember.
+#'
+#' Iriawan, N. (2000). Computationally Intensive Approaches to Inference in Neo-Normal Linear Models. Curtin University of Technology.
 #' 
 #' @examples
 #' library("neodistr")
