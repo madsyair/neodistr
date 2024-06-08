@@ -46,7 +46,6 @@
 #' @examples
 #' library("neodistr")
 #' dgmsnburr(0, mu=0, sigma=1, alpha=1,beta=1)
-
 dgmsnburr<-function(x,mu=0,sigma=1,alpha=1,beta=1, log=FALSE){
   
 
@@ -156,14 +155,34 @@ rgmsnburr<-function(n,mu=0,sigma=1,alpha=1,beta=1){
     stop(paste("alpha must be positive", "\n", ""))
   if (any(beta < 0)) 
     stop(paste("beta must be positive", "\n", ""))
-   lomega=-0.5*log(2*pi)+lbeta(alpha,beta)-beta*(log(beta)-log(alpha))+(alpha+beta)*log1p(beta/alpha)
+  lomega=-0.5*log(2*pi)+lbeta(alpha,beta)-beta*(log(beta)-log(alpha))+(alpha+beta)*log1p(beta/alpha)
   omega=exp(lomega)
   zf <-rf(n,2*beta,2*alpha)
   #z1=rchisq(n,2*alpha)/(2*alpha);
   #z2=rchisq(n,2*beta)/(2*beta);
   #logzf=log(z2)-log(z1);
   #return(mu-(sigma/omega)*logzf)
- return (mu-(sigma/omega)*log(zf))
+  return (mu-(sigma/omega)*log(zf))
+  
+  
+}
+
+rgmsnburr_old<-function(n,mu=0,sigma=1,alpha=1,beta=1){
+  .<-rbeta<-NULL
+  if(is.na(alpha)|is.na(beta)|is.na(mu)|is.na(sigma)){
+    stop("mu, sigma,alpha, or beta must be not missing value")
+  }
+  if (any(sigma < 0)) 
+    stop(paste("sigma must be positive", "\n", ""))
+  if (any(alpha < 0)) 
+    stop(paste("alpha must be positive", "\n", ""))
+  if (any(beta < 0)) 
+    stop(paste("beta must be positive", "\n", ""))
+  lomega<--0.5*log(2*pi)+lbeta(alpha,beta)-beta*(log(beta)-log(alpha))+(alpha+beta)*log1p(beta/alpha)
+  omega<-exp(lomega)
+  rb<-rbeta(n,beta,alpha)
+  z<-(alpha*rb)/(beta*(1-rb))
+  return (mu-(sigma/omega)*log(z))
   
   
 }
