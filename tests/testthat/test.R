@@ -709,7 +709,7 @@ test_that("Checking p = F(F^-1(p))", {
     expect_equal(pp[i], cdf_msnburr2a(quan_msnburr2a(pp[i], 0, 1, 1), 0, 1, 1))
   }
   for(i in 1:length(pp)){
-  expect_equal(pp[i], cdf_gmsnburr(quan_gmsnburr(pp[i], 0, 1, 1, 1), 0, 1, 1, 1))
+  expect_equal(pp[i], cdf_gmsnburr(quan_gmsnburr(pp[i], 0, 1, 1, 1.5), 0, 1, 1, 1.5))
   expect_equal(pp[i], cdf_jfst(quan_jfst(pp[i], 0, 1, 2, 2), 0, 1, 2, 2))
   }
   expect_equal(pp, cdf0_msnburr(quan_msnburr(pp, 0, 1, 1), 0, 1, 1))
