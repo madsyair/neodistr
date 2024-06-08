@@ -183,7 +183,8 @@ qjfst<-function(p,mu=0,sigma=1, alpha = 2, beta=2,lower.tail=TRUE,log.p=FALSE){
 #' hist(r, xlab = 'jfst random number', ylab = 'Frequency', 
 #' main = 'Distribution of jfst Random Number ')
 rjfst <- function(n,mu=0, sigma=1, alpha=2, beta=2){
-  if(is.na(alpha)|is.na(beta)|is.na(mu)|is.na(sigma)){
+.<-rchisq<-NULL 
+   if(is.na(alpha)|is.na(beta)|is.na(mu)|is.na(sigma)){
     stop("mu, sigma,alpha, or beta must be not missing value")
   }
   if (any(sigma < 0)) 
@@ -191,8 +192,11 @@ rjfst <- function(n,mu=0, sigma=1, alpha=2, beta=2){
   if (any(beta < 0)) 
     stop(paste("beta must be positive", "\n", ""))  
     n <- ceiling(n)
-    p <- runif(n)
-    r <- qjfst(p, mu=mu, sigma=sigma, alpha=alpha, beta=beta)
+    u<-rchisq(n,2*alpha)
+    v<-rchisq(n,2*beta)
+    t<-sqrt(alpha+beta)*(u-v)/(2*sqrt(u*v))
+    r = mu + sigma * t
+#    r <- qjfst(p, mu=mu, sigma=sigma, alpha=alpha, beta=beta)
     #x<-rST5(n, mu=mu, sigma=sigma, nu=alpha, tau=beta)
     return(r)
   

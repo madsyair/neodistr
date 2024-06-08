@@ -477,11 +477,12 @@ b=beta;
 // RNG --> Random Number Generator (RNG)
   real jfst_rng(real mu, real sigma, real alpha, real beta)
   {
-    real p;
-    real r;
-    p = uniform_rng(0,1);
-    r =jfst_quantile(p,mu,sigma, alpha, beta);
-    return r;
+  
+    real u;
+    real v;
+    u=chi_square_rng(2*alpha); 
+    v=chi_square_rng(2*beta);
+    return (sqrt(alpha+beta)*(u-v))/(2*sqrt(u*v));
   }
   '
 if(rng){
