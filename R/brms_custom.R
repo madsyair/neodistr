@@ -224,9 +224,22 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
   stanvars_family <- stanvar(scode = stan_funs_family, block = "functions")
   
   
-  return(list(custom_family=custom_neonormal,stanvars_family=stanvars_family))
+  return(list(custom_family = custom_neonormal,stanvars_family = stanvars_family,name = family))
   
   
 }
 
+#' @rdname neonormalfamily
+#' @export
+msnburr <- function(vectorize=TRUE) brms_custom_family(family="msnburr",vectorize=vectorize)
+#' @rdname neonormalfamily
+#' @export
+msnburr2a <- function(vectorize=TRUE) brms_custom_family(family="msnburr2a",vectorize=vectorize)
+#' @rdname neonormalfamily
+#' @export
+gmsnburr <- function(vectorize=TRUE) brms_custom_family(family="gmsnburr",vectorize=vectorize)
+#' @rdname neonormalfamily
+#' @export
+
+jfst <- function(vectorize=TRUE) brms_custom_family(family="jfst",vectorize=vectorize)
 

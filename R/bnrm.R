@@ -7,8 +7,8 @@
 #'   \code{\link{brmsformula}}.
 #' @param data An object of class \code{data.frame} (or one that can be coerced
 #'   to that class) containing data of all variables used in the model.
-#' @param family the neo-normal distribution as response in  regression:"msnburr","msnburr2a","gmsnburr","jfst"
-#' @param vectorize logical; if TRUE,  Stan code of family distribution is vectorize 
+#' @param family the neo-normal distribution as response in  regression:msnburr(),msnburr2a(),gmsnburr(),jfst()
+#'       default argument in family is vectorize=TRUE. if not vectorize, give argument vectorize=FALSE, example:msnburr(vectorize=FALSE)
 #' @param prior One or more \code{brmsprior} objects created by
 #'   \code{\link{set_prior}} or related functions and combined using the
 #'   \code{c} method or the \code{+} operator. See also \code{\link[brms:default_prior.default]{default_prior}}
@@ -211,7 +211,7 @@
 #'   data<-data.frame(y,x)
 #'   fit <- bnrm(
 #'     y ~ x, data = data,
-#'     family = "msnburr")
+#'     family = msnburr())
 #'   summary(fit)
 #'   expose_functions(fit, vectorize = TRUE)
 #'   pp <- posterior_predict(fit)
@@ -221,35 +221,36 @@
 #' @import brms
 #' @export
 
-bnrm <- function(formula, data, family = "msnburr", prior = NULL,
-                data2 = NULL, 
-                sample_prior = "no",  knots = NULL,
-                drop_unused_levels = TRUE, stanvars = NULL, 
-                fit = NA, save_pars = getOption("brms.save_pars", NULL),
-                init = NULL, chains = 4, iter = 2000,
-                warmup = floor(iter / 2), thin = 1,
-                cores = getOption("mc.cores", 1),
-                threads = getOption("brms.threads", NULL),
-                opencl = getOption("brms.opencl", NULL),
-                normalize = getOption("brms.normalize", TRUE),
-                control=list(
-                  adapt_delta=0.9
-                ),
-                algorithm = getOption("brms.algorithm", "sampling"),
-                backend = getOption("brms.backend", "rstan"),
-                future = getOption("future", FALSE), silent = 1,
-                seed = NA, save_model = NULL, stan_model_args = list(),
-                file = NULL, file_compress = TRUE,
-                file_refit = getOption("brms.file_refit", "never"),
-                empty = FALSE, rename = TRUE,vectorize=TRUE, ...){
+bnrm <- function(formula, data, family = msnburr(), prior = NULL,
+                  data2 = NULL, 
+                  sample_prior = "no",  knots = NULL,
+                  drop_unused_levels = TRUE, stanvars = NULL, 
+                  fit = NA, save_pars = getOption("brms.save_pars", NULL),
+                  init = NULL, chains = 4, iter = 2000,
+                  warmup = floor(iter / 2), thin = 1,
+                  cores = getOption("mc.cores", 1),
+                  threads = getOption("brms.threads", NULL),
+                  opencl = getOption("brms.opencl", NULL),
+                  normalize = getOption("brms.normalize", TRUE),
+                  control=list(
+                    adapt_delta=0.9
+                  ),
+                  algorithm = getOption("brms.algorithm", "sampling"),
+                  backend = getOption("brms.backend", "rstan"),
+                  future = getOption("future", FALSE), silent = 1,
+                  seed = NA, save_model = NULL, stan_model_args = list(),
+                  file = NULL, file_compress = TRUE,
+                  file_refit = getOption("brms.file_refit", "never"),
+                  empty = FALSE, rename = TRUE, ...){
   prior <- NULL
-  prior <- switch(family,
+  fname <- family$name
+  prior <- switch(fname,
                   "msnburr" = {
                     if (!is.null(prior)) {
                       if (length(which(prior$class == "alpha")) > 0) {
                         prior
                       } else {
-                      c(prior, set_prior("lognormal(1,1)", class = "alpha",lb=0))
+                        c(prior, set_prior("lognormal(1,1)", class = "alpha",lb=0))
                       }
                     }
                   },
@@ -258,7 +259,7 @@ bnrm <- function(formula, data, family = "msnburr", prior = NULL,
                       if (length(which(prior$class == "alpha")) > 0) {
                         prior
                       } else {
-                         c(prior, set_prior("lognormal(1,1)", class = "alpha",lb=0))
+                        c(prior, set_prior("lognormal(1,1)", class = "alpha",lb=0))
                       }
                     }
                   },
@@ -269,14 +270,14 @@ bnrm <- function(formula, data, family = "msnburr", prior = NULL,
                       } else {
                         if (length(which(prior$class == "alpha")) == 0){
                           c(prior, set_prior("lognormal(1,1)", class = "alpha",lb=0))
-                          }else{
-                        if (length(which(prior$class == "beta")) == 0)
-                          c(prior, set_prior("lognormal(1,1)", class = "beta",lb=0))
+                        }else{
+                          if (length(which(prior$class == "beta")) == 0)
+                            c(prior, set_prior("lognormal(1,1)", class = "beta",lb=0))
                         }
                       }
                     } else {
                       c(set_prior("lognormal(1,1)", class = "alpha",lb=0), set_prior("lognormal(1,1)", class = "beta",lb=0))
-                    
+                      
                     }
                   },
                   "jfst" = {
@@ -297,33 +298,33 @@ bnrm <- function(formula, data, family = "msnburr", prior = NULL,
                     }
                   }
   )
-     
-    cust_dist<-brms_custom_family(family=family,vectorize=vectorize)
-    if(is.null(stanvars)){
-      stanvars <- cust_dist$stanvars_family
-    }else{
-      stanvars <- cust_dist$stanvars_family+stanvars
-    }
-    brm(formula, data = data,
-     family = cust_dist$custom_family, stanvars = stanvars,
-prior=prior,data2 = data2, 
-sample_prior = sample_prior,  knots = knots,
-drop_unused_levels = drop_unused_levels,  
-fit = fit,
-save_pars = save_pars,
-init = init,  chains = chains, iter = iter,
-warmup = warmup, thin = thin,
-cores = cores,
-threads = threads,
-opencl = opencl,
-normalize = normalize,
-control = control,
-algorithm = algorithm,
-backend = backend,
-future = future, silent = silent,
-seed = seed, save_model = save_model, stan_model_args = stan_model_args,
-file = file, file_compress = file_compress,
-file_refit = file_refit,
-empty = empty, rename = rename
-)
- }
+  
+  
+  if(is.null(stanvars)){
+    stanvars <- family$stanvars_family
+  }else{
+    stanvars <- family$stanvars_family+stanvars
+  }
+  brm(formula, data = data,
+      family = family$custom_family, stanvars = stanvars,
+      prior=prior,data2 = data2, 
+      sample_prior = sample_prior,  knots = knots,
+      drop_unused_levels = drop_unused_levels,  
+      fit = fit,
+      save_pars = save_pars,
+      init = init,  chains = chains, iter = iter,
+      warmup = warmup, thin = thin,
+      cores = cores,
+      threads = threads,
+      opencl = opencl,
+      normalize = normalize,
+      control = control,
+      algorithm = algorithm,
+      backend = backend,
+      future = future, silent = silent,
+      seed = seed, save_model = save_model, stan_model_args = stan_model_args,
+      file = file, file_compress = file_compress,
+      file_refit = file_refit,
+      empty = empty, rename = rename
+  )
+}

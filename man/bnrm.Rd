@@ -7,7 +7,7 @@
 bnrm(
   formula,
   data,
-  family = "msnburr",
+  family = msnburr(),
   prior = NULL,
   data2 = NULL,
   sample_prior = "no",
@@ -38,7 +38,6 @@ bnrm(
   file_refit = getOption("brms.file_refit", "never"),
   empty = FALSE,
   rename = TRUE,
-  vectorize = TRUE,
   ...
 )
 }
@@ -52,7 +51,8 @@ fitted. The details of model specification are explained in
 \item{data}{An object of class \code{data.frame} (or one that can be coerced
 to that class) containing data of all variables used in the model.}
 
-\item{family}{the neo-normal distribution as response in  regression:"msnburr","msnburr2a","gmsnburr","jfst"}
+\item{family}{the neo-normal distribution as response in  regression:msnburr(),msnburr2a(),gmsnburr(),jfst()
+default argument in family is vectorize=TRUE. if not vectorize, give argument vectorize=FALSE, example:msnburr(vectorize=FALSE)}
 
 \item{prior}{One or more \code{brmsprior} objects created by
 \code{\link{set_prior}} or related functions and combined using the
@@ -249,8 +249,6 @@ Stan model outside of \pkg{brms} and want to feed it back into the package.}
 
 \item{rename}{For internal use only.}
 
-\item{vectorize}{logical; if TRUE,  Stan code of family distribution is vectorize}
-
 \item{...}{Further arguments passed to Stan.
 For \code{backend = "rstan"} the arguments are passed to
 \code{\link[rstan]{sampling}} or \code{\link[rstan]{vb}}.
@@ -278,7 +276,7 @@ Fit a neo-normal model that using brm function in brms package.All options in th
   data<-data.frame(y,x)
   fit <- bnrm(
     y ~ x, data = data,
-    family = "msnburr")
+    family = msnburr())
   summary(fit)
   expose_functions(fit, vectorize = TRUE)
   pp <- posterior_predict(fit)
