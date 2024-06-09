@@ -24,7 +24,7 @@ Description: Density, distribution function, quantile function
     Rigby, R. A., Stasinopoulos, M. D., Heller, G. Z., & Bastiani, F. D. (2019) <doi:10.1201/9780429298547>.
 License: GPL-3 | file LICENSE
 Depends: R (>= 3.6.0),shinythemes,plotly,brms
-Imports: rstan (>= 2.32.6), stats,Rmpfr,ggplot2,shiny
+Imports: rstan, stats,Rmpfr,ggplot2,shiny
 Suggests: kableExtra,knitr, testthat
 Encoding: UTF-8
 NeedsCompilation: no
