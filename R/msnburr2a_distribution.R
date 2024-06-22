@@ -33,10 +33,10 @@
 #' 
 #' The MSNBurr-IIa distribution with parameters \eqn{\mu}, \eqn{\sigma}, and \eqn{\alpha}
 #' has density:
-#' \deqn{f(y |\mu,\sigma,\alpha) = \frac{\omega}{\sigma} \exp(\omega{\frac{y-\mu}{\sigma}}) {(1+\frac{\exp(\omega{(\frac{y-\mu}{\sigma})})}{\alpha})^{-(\alpha+1)}}}
-#' with \eqn{-\infty < y < \infty, -\infty < \mu< \infty, \sigma>0, \alpha>0, 
-#' \omega = \frac{1}{\sqrt(2\pi)} {(1+\frac{1}{\alpha})^{\alpha+1}}}
-#' 
+#' \deqn{f(y |\mu,\sigma,\alpha)=\frac{\omega}{\sigma}\exp{\left(\omega{\left(\frac{y-\mu}{\sigma}\right)}\right)}{{\left(1+\frac{\exp{\left(\omega{(\frac{y-\mu}{\sigma})}\right)}}{\alpha}\right)}^{-(\alpha+1)}}}
+#' where \eqn{-\infty < y < \infty, -\infty < \mu< \infty, \sigma>0, \alpha>0, 
+#' \omega = \frac{1}{\sqrt{2\pi}} {\left(1+\frac{1}{\alpha}\right)^{\alpha+1}}}
+#
 
 #' @references 
 #' Choir, A. S. (2020). The New Neo-Normal DDistributions and their Properties. Disertation. Institut Teknologi Sepuluh Nopember.
@@ -151,7 +151,7 @@ qmsnburr2a<-function(p,mu=0,sigma=1,alpha=1,lower.tail=TRUE,log.p=FALSE){
 #' hist(r, xlab = 'MSNBurr random number', ylab = 'Frequency', 
 #' main = 'Distribution of MSNBurr-IIa Random Number ')
 rmsnburr2a<-function(n,mu=0,sigma=1,alpha=1){
-  .<-runif<-NULL
+  runif<-NULL
   ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
   ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
   ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
