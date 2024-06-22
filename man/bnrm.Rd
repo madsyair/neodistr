@@ -264,7 +264,7 @@ An object of class \code{brmsfit}, which contains the posterior
 Neo-normal model using brms
 }
 \details{
-Fit a neo-normal model that using brm function in brms package.All options in this functions follow brm function, except family and vectorize
+Fit a neo-normal model that using brm function in brms package.All arguments in this functions follow arguments of brm function, except family
 }
 \examples{
 \dontrun{
