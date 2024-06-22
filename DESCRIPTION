@@ -24,8 +24,10 @@ Description: Density, distribution function, quantile function
     Rigby, R. A., Stasinopoulos, M. D., Heller, G. Z., & Bastiani, F. D. (2019) <doi:10.1201/9780429298547>.
 License: GPL-3 | file LICENSE
 Depends: R (>= 3.6.0),shinythemes,plotly,brms
-Imports: rstan, stats,Rmpfr,ggplot2,shiny
+Imports: rstan , stats,Rmpfr,ggplot2,shiny
 Suggests: kableExtra,knitr, testthat
+URL: https://github.com/madsyair/neodistr
+BugReports: https://github.com/madsyair/neodistr/issues
 Encoding: UTF-8
 NeedsCompilation: no
 Packaged: 2019-02-28 09:55:35 UTC; madsyair
