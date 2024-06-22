@@ -1,8 +1,7 @@
 #' GMSNBurr distribution
 #' @export
-#' @importFrom stats rchisq
+#' @importFrom stats rchisq runif
 #' @name gmsnburr
-#' @importFrom stats runif
 #' @param x,q vector of quantiles. 
 #' @param p vectors of probabilities.
 #' @param n number of observations.
@@ -34,9 +33,9 @@
 #' 
 #' The GMSNBurr distribution with parameters \eqn{\mu}, \eqn{\sigma},\eqn{\alpha}, and \eqn{\beta}
 #' has density:
-#' \deqn{f(y |\mu,\sigma,\alpha,\beta) = \ {\frac{\omega}{\sigma}}{{\frac{\alpha}{\beta}}^\beta} {\frac{\exp^{-\beta \omega {\frac{y-\mu}{\sigma}}} {1+{\frac{\beta}{\alpha}} \exp^{-\omega {\frac{y-\mu}{\sigma}}}}}{B(\alpha,\beta)}}}
-#' with \eqn{-\infty<y<\infty,  -\infty<\mu<\infty, \omega>0, \sigma>0, \alpha>0, \beta>0} 
-#' and  \eqn{\omega(\alpha,\beta) = {\frac{B(\alpha,\beta)}{\sqrt(2\pi)}}{{1+{\frac{\beta}{\alpha}}}^{\alpha+\beta}}{\frac{\beta}{\alpha}}^{-\beta}}
+#' \deqn{f(y |\mu,\sigma,\alpha,\beta) =  {\frac{\omega}{{B(\alpha,\beta)}\sigma}}{{\left(\frac{\beta}{\alpha}\right)}^\beta} {{\exp{\left(-\beta \omega {\left(\frac{y-\mu}{\sigma}\right)}\right)} {{\left(1+{\frac{\beta}{\alpha}} {\exp{\left(-\omega {\left(\frac{y-\mu}{\sigma}\right)}\right)}}\right)}^{-(\alpha+\beta)}}}}}
+#' where \eqn{-\infty<y<\infty,  -\infty<\mu<\infty,  \sigma>0, \alpha>0, \beta>0} 
+#' and  \eqn{\omega = {\frac{B(\alpha,\beta)}{\sqrt{2\pi}}}{{\left(1+{\frac{\beta}{\alpha}}\right)}^{\alpha+\beta}}{\left(\frac{\beta}{\alpha}\right)}^{-\beta}}
 #'
 #' @references
 #' Choir, A. S. (2020). The New Neo-Normal Distributions and their Properties. Disertation. Institut Teknologi Sepuluh Nopember.
@@ -47,8 +46,6 @@
 #' library("neodistr")
 #' dgmsnburr(0, mu=0, sigma=1, alpha=1,beta=1)
 dgmsnburr<-function(x,mu=0,sigma=1,alpha=1,beta=1, log=FALSE){
-  
-
   ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
   ifelse(is.na(beta),stop(" alpha,must be not missing value"),NA)
   ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
@@ -80,7 +77,7 @@ dgmsnburr<-function(x,mu=0,sigma=1,alpha=1,beta=1, log=FALSE){
 #' @examples
 #' pgmsnburr(4, mu=0, sigma=1, alpha=1, beta=1)
 pgmsnburr<-function(q,mu=0,sigma=1,alpha=1, beta=1,lower.tail=TRUE,log.p=FALSE){
-  .<-pbeta<-NULL
+  pbeta<-NULL
   ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
   ifelse(is.na(beta),stop(" alpha,must be not missing value"),NA)
   ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
@@ -104,8 +101,8 @@ pgmsnburr<-function(q,mu=0,sigma=1,alpha=1, beta=1,lower.tail=TRUE,log.p=FALSE){
 #' @rdname gmsnburr
 #' @examples
 #' qgmsnburr(0.4, mu=0, sigma=1, alpha=1, beta=1)
-qgmsnburr<-function(p,mu=0,sigma=1,alpha=1,beta=1,lower.tail=TRUE,log.p=FALSE){
-  .<-qf<-NULL
+qgmsnburr<-function(p,mu=0,sigma=1,alpha=1,beta=1,lower.tail=TRUE, log.p=FALSE){
+  qf<-NULL
   ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
   ifelse(is.na(beta),stop(" alpha,must be not missing value"),NA)
   ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
@@ -140,6 +137,7 @@ qgmsnburr<-function(p,mu=0,sigma=1,alpha=1,beta=1,lower.tail=TRUE,log.p=FALSE){
   zf <-qf(p,2*beta,2*alpha,lower.tail=!lower.tail,log.p=log.p)
   return (mu-(sigma/omega)*log(zf))
 }
+
 #' @export
 #' @rdname gmsnburr
 #' @examples
@@ -147,8 +145,8 @@ qgmsnburr<-function(p,mu=0,sigma=1,alpha=1,beta=1,lower.tail=TRUE,log.p=FALSE){
 #' head(r)
 #' hist(r, xlab = 'GMSNBurr random number', ylab = 'Frequency', 
 #' main = 'Distribution of GMSNBurr Random Number ')
-rgmsnburr<-function(n,mu=0,sigma=1,alpha=1,beta=1){
-  .<-rf<-NULL
+rgmsnburr<-function(n, mu=0, sigma=1, alpha=1, beta=1){
+  rf<-NULL
   ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
   ifelse(is.na(beta),stop(" alpha,must be not missing value"),NA)
   ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
@@ -172,10 +170,12 @@ rgmsnburr<-function(n,mu=0,sigma=1,alpha=1,beta=1){
 }
 
 rgmsnburr_old<-function(n,mu=0,sigma=1,alpha=1,beta=1){
-  .<-rbeta<-NULL
-  if(is.na(alpha)|is.na(beta)|is.na(mu)|is.na(sigma)){
-    stop("mu, sigma,alpha, or beta must be not missing value")
-  }
+  rbeta<-NULL
+  ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(beta),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
+ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
+  
   if (any(sigma < 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(alpha < 0)) 
