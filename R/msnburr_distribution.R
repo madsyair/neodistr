@@ -1,6 +1,7 @@
 #' MSNBurr Distribution
 #' @name msnburr
 #' @export
+#' @importFrom Rmpfr log1mexp log1pexp 
 #' @param x,q vector of quantiles. 
 #' @param p vectors of probabilities.
 #' @param n number of observations.
@@ -15,7 +16,6 @@
 #' @description
 #' To calculate density function, distribution funcion, quantile function, and  build data from random generator function 
 #' for the MSNBurr Distribution. 
-#' 
 #' @keywords distribution
 #' @concept Univariate
 #' @concept Continuous
@@ -53,8 +53,8 @@ dmsnburr<-function(x,mu=0,sigma=1,alpha=1,log=FALSE){
   ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
   ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
   ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
- 
-   if (any(sigma < 0)) 
+  
+  if (any(sigma < 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(alpha < 0)) 
     stop(paste("alpha must be positive", "\n", ""))
@@ -65,14 +65,14 @@ dmsnburr<-function(x,mu=0,sigma=1,alpha=1,log=FALSE){
   
   lp<-log(omega)-log(sigma)+zo-(alpha+1)*log1pexp(zoa)
   lp[(is.infinite(zo))]<--Inf
- 
+  
   if(log){
     return(lp)
   }else{
     return(exp(lp))
   }
-
-
+  
+  
   
 }
 
@@ -94,19 +94,19 @@ pmsnburr<-function(q,mu=0,sigma=1,alpha=1,lower.tail=TRUE,log.p=FALSE){
   qs<--alpha*log1pexp(zoa)
   if (lower.tail==TRUE) {
     if(log.p==TRUE){
-     return(qs)
+      return(qs)
     }else{
-     return(exp(qs))
+      return(exp(qs))
     }
   }  else {
     if(log.p==TRUE){
-    return(log1mexp(qs))
+      return(log1mexp(qs))
     }else{
-    return(exp(log1mexp(qs)))
+      return(exp(log1mexp(qs)))
     }
   }
-
-
+  
+  
 }
 
 #' @export
@@ -152,7 +152,7 @@ qmsnburr<-function(p,mu=0,sigma=1,alpha=1,lower.tail=TRUE,log.p=FALSE)
 #'hist(r, xlab = 'MSNBurr random number', ylab = 'Frequency', 
 #'main = 'Distribution of MSNBurr Random Number ')
 rmsnburr<-function(n,mu=0,sigma=1,alpha=1){
-  .<-runif<-NULL
+  runif<-NULL
   ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
   ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
   ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
@@ -164,4 +164,3 @@ rmsnburr<-function(n,mu=0,sigma=1,alpha=1){
   return (mu-(sigma/omega)*(log(alpha)+log((runif(n,0,1)^(-1/alpha))-1)))
   
 }
-
