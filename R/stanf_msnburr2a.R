@@ -2,8 +2,7 @@
 #' @name stanf_msnburr2a
 #'
 #' @description
-#' To write the probability distribution function code of MSNBurr-IIa distribution in Stan format.
-#' This distribution will be optimal for accommodating right-skewed data.
+#' Stan code of MSNBurr-IIa distribution for custom distribution in stan
 #'
 #' @param vectorize logical; if TRUE, Vectorize Stan code of MSNBurr-IIa distribution are given 
 #' The default value of this parameter is TRUE
@@ -18,12 +17,12 @@
 #' random deviates.
 #' 
 #'@details
-#' To determine the value of the probability density function of the MSNBurr-IIa Distribution:
-#' \deqn{f(y |\mu,\sigma,\alpha) = \frac{\omega(\alpha)}{\sigma} \exp(\omega(\alpha){\frac{y-\mu}{\sigma}}) {(1+\frac{\exp(\omega(\alpha){(\frac{y-\mu}{\sigma})})}{\alpha})^{-(\alpha+1)}}}
-#' 
-#' has \eqn{-\infty < y < \infty, -\infty < \mu< \infty, \sigma>0, \alpha>0, 
-#' \omega = \frac{1}{\sqrt(2\pi)} {(1+\frac{1}{\alpha})^{\alpha+1}}}
-#' 
+#'  MSNBurr-IIa Distribution has density function:
+#' \deqn{f(y |\mu,\sigma,\alpha)=\frac{\omega}{\sigma}\exp{\left(\omega{\left(\frac{y-\mu}{\sigma}\right)}\right)}{{\left(1+\frac{\exp{\left(\omega{(\frac{y-\mu}{\sigma})}\right)}}{\alpha}\right)}^{-(\alpha+1)}}}
+#' where \eqn{-\infty < y < \infty, -\infty < \mu< \infty, \sigma>0, \alpha>0, 
+#' \omega = \frac{1}{\sqrt{2\pi}} {\left(1+\frac{1}{\alpha}\right)^{\alpha+1}}}
+#'This function gives stan code  of log density, cumulative distribution, log of cumulatif distribution, log complementary cumulative distribution, quantile, random number of MSNBurr-IIa distribution 
+
 
 #' @references 
 #' Choir, A. S. (2020). The New Neo-Normal DDistributions and their Properties. Disertation. Institut Teknologi Sepuluh Nopember.
