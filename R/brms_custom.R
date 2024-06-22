@@ -41,14 +41,14 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
       sigma <- brms::get_dpar(prep, "sigma")
       alpha <- brms::get_dpar(prep, "alpha")      
       y <- prep$data$Y[i]
-      msnburr_lpdf(y, mu, sigma, alpha)
+      dmsnburr(y, mu=mu, sigma=sigma, alpha=alpha,log=TRUE)
     }
     posterior_predict_msnburr <- function(i, prep, ...) {
       .<-msnburr_rng<-NULL
       mu <- brms::get_dpar(prep, "mu", i = i)
       sigma <- brms::get_dpar(prep, "sigma")
       alpha <- brms::get_dpar(prep, "alpha")   
-      msnburr_rng(mu, sigma,alpha)
+      rmsnburr(1,mu, sigma,alpha)
     }
    
     posterior_epred_msnburr <- function(prep) {
@@ -88,14 +88,14 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
       sigma <- brms::get_dpar(prep, "sigma")
       alpha <- brms::get_dpar(prep, "alpha")      
       y <- prep$data$Y[i]
-      msnburr2a_lpdf(y, mu, sigma, alpha)
+      dmsnburr2a(y, mu, sigma, alpha,log=TRUE)
     }
     posterior_predict_msnburr2a <- function(i, prep, ...) {
       .<-msnburr2a_rng<-NULL
       mu <- brms::get_dpar(prep, "mu", i = i)
       sigma <- brms::get_dpar(prep, "sigma")
       alpha <- brms::get_dpar(prep, "alpha")   
-      msnburr2a_rng(mu, sigma,alpha)
+      rmsnburr2a(1,mu, sigma,alpha)
     }
     posterior_epred_msnburr2a <- function(prep)  {
       mu <- brms::get_dpar(prep, "mu")
@@ -134,7 +134,7 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
       alpha <- brms::get_dpar(prep, "alpha")     
       beta <- brms::get_dpar(prep, "beta")   
       y <- prep$data$Y[i]
-      gmsnburr_lpdf(y, mu, sigma, alpha,beta)
+      dgmsnburr(y, mu, sigma, alpha,beta,log=TRUE)
     }
     posterior_predict_gmsnburr <- function(i, prep, ...) {
       .<-gmsnburr_rng<-NULL
@@ -142,7 +142,7 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
       sigma <- brms::get_dpar(prep, "sigma")
       alpha <- brms::get_dpar(prep, "alpha")  
       beta <- brms::get_dpar(prep, "beta")  
-      gmsnburr_rng(mu, sigma,alpha,beta)
+      rgmsnburr(1,mu, sigma,alpha,beta)
     }
     posterior_epred_gmsnburr <- function(prep) { 
       mu <- brms::get_dpar(prep, "mu")
@@ -162,7 +162,7 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
         dpars = c("mu", "sigma","alpha","beta"),
         links = c("identity","log","log","log"),
         type = "real",
-        lb=c(NA,0,0,0),
+        lb=c(NA,0,0.01,0.01),
         ub=c(NA,NA,NA,NA),
         #        vars="vreal",
         loop=loop,
@@ -182,7 +182,7 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
       alpha <- brms::get_dpar(prep, "alpha")     
       beta <- brms::get_dpar(prep, "beta")   
       y <- prep$data$Y[i]
-      jfst_lpdf(y, mu, sigma, alpha,beta)
+      djfst(y, mu, sigma, alpha,beta,log=TRUE)
     }
     posterior_predict_jfst <- function(i, prep, ...) {
       .<-jfst_rng<-NULL
@@ -190,7 +190,7 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
       sigma <- brms::get_dpar(prep, "sigma")
       alpha <- brms::get_dpar(prep, "alpha")  
       beta <- brms::get_dpar(prep, "beta")  
-      jfst_rng(mu, sigma,alpha,beta)
+      rjfst(1,mu, sigma,alpha,beta)
     }
     posterior_epred_jfst <- function(prep) {
       mu <- brms::get_dpar(prep, "mu")
