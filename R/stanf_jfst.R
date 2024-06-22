@@ -4,7 +4,7 @@
 
 #' @name stanf_jfst
 #' @description
-#' To determine probability function using Jones and Faddys Skew-t
+#' Stan code of JFST distribution for custom distribution in stan
 #' @param vectorize logical; if TRUE, Vectorize Stan code of Jones and faddy distribution are given 
 #' The default value of this parameter is TRUE
 #' @param rng logical; if TRUE,  Stan code of quantile and 
@@ -16,17 +16,17 @@
 #' random numbers.
 #' @author Anisa' Faoziah and Achmad Syahrul Choir
 #' @details
-#' To determine the value of the probability density function of the Jones-Faddy’s Skew-t distribution :
-#' \deqn{f(y |\mu,\sigma,\beta,\alpha)= \frac{c}{\sigma} [{1+\frac{z}{({\alpha+\beta+z^2})^\frac{1}{2}}}]^{a+\frac{1}{2}}
-#' [{1-\frac{z}{({\alpha+\beta+z^2})^\frac{1}{2}}}]^{\beta+\frac{1}{2}}}
-#' 
-#' has: 
-#' \eqn{\sigma >0, \alpha>0,\beta>0},
-#' \eqn{z = {y-\mu}}, \eqn{ c = [2^{(\alpha+\beta-1)} (\alpha+\beta)^\frac{1}{2} B(\alpha,\beta)]^-1 }, 
-#' 
-##' 
+#'  Jones-Faddy’s Skew-t distribution has density:
+#' \deqn{f(y |\mu,\sigma,\beta,\alpha)= \frac{c}{\sigma} {\left[{1+\frac{z}{\sqrt{\alpha+\beta+z^2}}}\right]}^{\alpha+\frac{1}{2}}
+#' {\left[{1-\frac{z}{\sqrt{\alpha+\beta+z^2}}}\right]}^{\beta+\frac{1}{2}}}
+#' where \eqn{-\infty<y<\infty,  -\infty<\mu<\infty,  \sigma>0, \alpha>0, \beta>0,} 
+#' \eqn{z =\frac{y-\mu}{\sigma} }, \eqn{ c = {\left[2^{\left(\alpha+\beta-1\right)} {\left(\alpha+\beta\right)^{\frac{1}{2}}} B(a,b)\right]}^{-1} },
+#'  
+#' This function gives stan code  of log density, cumulative distribution, log of cumulatif distribution, log complementary cumulative distribution,
+#'  quantile, random number of Jones-Faddy's Skew-t distribution
 #' @references 
 #' Jones, M.C. and Faddy, M. J. (2003) A skew extension of the t distribution, with applications. Journal of the Royal Statistical Society, Series B, 65, pp 159-174
+#'
 #' Rigby, R.A. and Stasinopoulos, M.D. and Heller, G.Z. and De Bastiani, F. (2019) Distributions for Modeling Location, Scale, and Shape: Using GAMLSS in R.CRC Press
 #' @examples{\dontrun{
 #' library (neodistr)
