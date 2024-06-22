@@ -203,7 +203,6 @@
 #' 
 #' @examples
 #' \dontrun{
-#'   library(brms)
 #'   library(neodistr)
 #'   x<-runif(100)
 #'   e<-rmsnburr(100,0,1,0.8)
@@ -213,7 +212,6 @@
 #'     y ~ x, data = data,
 #'     family = msnburr())
 #'   summary(fit)
-#'   expose_functions(fit, vectorize = TRUE)
 #'   pp <- posterior_predict(fit)
 #'   ppe <- posterior_epred(fit)
 #'   loo(fit)
@@ -269,10 +267,10 @@ bnrm <- function(formula, data, family = msnburr(), prior = NULL,
                         prior
                       } else {
                         if (length(which(prior$class == "alpha")) == 0){
-                          c(prior, set_prior("lognormal(1,1)", class = "alpha",lb=0))
+                          c(prior, set_prior("lognormal(0,1)", class = "alpha",lb=0))
                         }else{
                           if (length(which(prior$class == "beta")) == 0)
-                            c(prior, set_prior("lognormal(1,1)", class = "beta",lb=0))
+                            c(prior, set_prior("lognormal(0,1)", class = "beta",lb=0))
                         }
                       }
                     } else {
