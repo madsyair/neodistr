@@ -49,9 +49,9 @@ MSNBurr-IIa Distribution
 
 The MSNBurr-IIa distribution with parameters \eqn{\mu}, \eqn{\sigma}, and \eqn{\alpha}
 has density:
-\deqn{f(y |\mu,\sigma,\alpha) = \frac{\omega}{\sigma} \exp(\omega{\frac{y-\mu}{\sigma}}) {(1+\frac{\exp(\omega{(\frac{y-\mu}{\sigma})})}{\alpha})^{-(\alpha+1)}}}
-with \eqn{-\infty < y < \infty, -\infty < \mu< \infty, \sigma>0, \alpha>0, 
-\omega = \frac{1}{\sqrt(2\pi)} {(1+\frac{1}{\alpha})^{\alpha+1}}}
+\deqn{f(y |\mu,\sigma,\alpha)=\frac{\omega}{\sigma}\exp{\left(\omega{\left(\frac{y-\mu}{\sigma}\right)}\right)}{{\left(1+\frac{\exp{\left(\omega{(\frac{y-\mu}{\sigma})}\right)}}{\alpha}\right)}^{-(\alpha+1)}}}
+where \eqn{-\infty < y < \infty, -\infty < \mu< \infty, \sigma>0, \alpha>0, 
+\omega = \frac{1}{\sqrt{2\pi}} {\left(1+\frac{1}{\alpha}\right)^{\alpha+1}}}
 }
 \examples{
 library("neodistr")

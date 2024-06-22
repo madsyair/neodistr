@@ -66,9 +66,9 @@ GMSNBurr Distribution
 
 The GMSNBurr distribution with parameters \eqn{\mu}, \eqn{\sigma},\eqn{\alpha}, and \eqn{\beta}
 has density:
-\deqn{f(y |\mu,\sigma,\alpha,\beta) = \ {\frac{\omega}{\sigma}}{{\frac{\alpha}{\beta}}^\beta} {\frac{\exp^{-\beta \omega {\frac{y-\mu}{\sigma}}} {1+{\frac{\beta}{\alpha}} \exp^{-\omega {\frac{y-\mu}{\sigma}}}}}{B(\alpha,\beta)}}}
-with \eqn{-\infty<y<\infty,  -\infty<\mu<\infty, \omega>0, \sigma>0, \alpha>0, \beta>0} 
-and  \eqn{\omega(\alpha,\beta) = {\frac{B(\alpha,\beta)}{\sqrt(2\pi)}}{{1+{\frac{\beta}{\alpha}}}^{\alpha+\beta}}{\frac{\beta}{\alpha}}^{-\beta}}
+\deqn{f(y |\mu,\sigma,\alpha,\beta) =  {\frac{\omega}{{B(\alpha,\beta)}\sigma}}{{\left(\frac{\beta}{\alpha}\right)}^\beta} {{\exp{\left(-\beta \omega {\left(\frac{y-\mu}{\sigma}\right)}\right)} {{\left(1+{\frac{\beta}{\alpha}} {\exp{\left(-\omega {\left(\frac{y-\mu}{\sigma}\right)}\right)}}\right)}^{-(\alpha+\beta)}}}}}
+where \eqn{-\infty<y<\infty,  -\infty<\mu<\infty,  \sigma>0, \alpha>0, \beta>0} 
+and  \eqn{\omega = {\frac{B(\alpha,\beta)}{\sqrt{2\pi}}}{{\left(1+{\frac{\beta}{\alpha}}\right)}^{\alpha+\beta}}{\left(\frac{\beta}{\alpha}\right)}^{-\beta}}
 }
 \examples{
 library("neodistr")

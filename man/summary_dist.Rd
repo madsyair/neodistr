@@ -14,18 +14,18 @@ The default value of this parameter is "FALSE "msnburr"}
 \item{par}{list values of each parameter, based on the chosen distribution. The default value is "par=c(alpha=1,mu=0,sigma=1)"}
 }
 \value{
-The table of media, mean, mode,  variance, skewness, and exceed kurtosis,
+media, mean, mode,  variance, skewness, and excess kurtosis of neo-normal distributions
 }
 \description{
 To display a summary of calculations for a specific neo-normal distribution, 
-including the mean, variance, skewness, and exceed.kurtosis.
+including the mean,median, mode, variance, skewness, and excess.kurtosis.
 }
 \examples{
 summary_dist (family="msnburr2a", par=c(mu=0,sigma=1,alpha=4))
 
 }
 \references{
-Choir, A. S. (2020). The New Neo-Normal DDistributions and their Properties. Disertation. Institut Teknologi Sepuluh Nopember.
+Choir, A. S. (2020). The New Neo-Normal Distributions and their Properties. Disertation. Institut Teknologi Sepuluh Nopember.
 Jones, M.C. and Faddy, M. J. (2003) A skew extension of the t distribution, with applications. Journal of the Royal Statistical Society, Series B, 65, pp 159-174
 Rigby, R.A. and Stasinopoulos, M.D. and Heller, G.Z. and De Bastiani, F. 
 (2020) Distributions for Modeling Location, Scale, and Shape: 

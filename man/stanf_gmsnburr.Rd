@@ -16,19 +16,19 @@ The default value of this parameter is TRUE}
 }
 \value{
 \code{msnburr_lpdf} gives the stans's code of log of density, \code{msnburr_cdf} gives the stans's code of distribution
-function, \code{gmsnburr_lcdf} gives the stans's code of log of distribution function, \code{gmsnburr_lccdf} gives the stans's code of complement of log ditribution function (1-msnburr_lcdf),
+function, \code{gmsnburr_lcdf} gives the stans's code of log of distribution function, \code{gmsnburr_lccdf} gives the stans's code of complement of log ditribution function (1-gmsnburr_lcdf),
  and \code{gmsnburr_rng} the stans's code of generates random numbers.
 }
 \description{
-To write the probability distribution function code of GMSNBurr distribution in Stan format.
-This distribution will be optimal for accommodating left and right skewed data.
+Stan code of GMSNBurr distribution for custom distribution in stan
 }
 \details{
-To determine the value of the probability density function of the GMSNBurr Distribution:
-\deqn{f(y |\mu,\sigma,\alpha,\beta) = \ {\frac{\omega}{\sigma}}{{\frac{\alpha}{\beta}}^\beta} {\frac{\exp^{-\beta \omega {\frac{y-\mu}{\sigma}}} {1+{\frac{\beta}{\alpha}} \exp^{-\omega {\frac{y-\mu}{\sigma}}}}}{B(\alpha,\beta)}}}
+GMSNBurr Distribution has density:
+\deqn{f(y |\mu,\sigma,\alpha,\beta) =  {\frac{\omega}{{B(\alpha,\beta)}\sigma}}{{\left(\frac{\beta}{\alpha}\right)}^\beta} {{\exp{\left(-\beta \omega {\left(\frac{y-\mu}{\sigma}\right)}\right)} {{\left(1+{\frac{\beta}{\alpha}} {\exp{\left(-\omega {\left(\frac{y-\mu}{\sigma}\right)}\right)}}\right)}^{-(\alpha+\beta)}}}}}
+where \eqn{-\infty<y<\infty,  -\infty<\mu<\infty,  \sigma>0, \alpha>0, \beta>0} 
+and  \eqn{\omega = {\frac{B(\alpha,\beta)}{\sqrt{2\pi}}}{{\left(1+{\frac{\beta}{\alpha}}\right)}^{\alpha+\beta}}{\left(\frac{\beta}{\alpha}\right)}^{-\beta}}
 
-Has \eqn{-\infty<y<\infty,  -\infty<\mu<\infty, \omega>0, \sigma>0, \alpha>0, \beta>0} 
-and  \eqn{\omega(\alpha,\beta) = {\frac{B(\alpha,\beta)}{\sqrt(2\pi)}}{{1+{\frac{\beta}{\alpha}}}^{\alpha+\beta}}{\frac{\beta}{\alpha}}^{-\beta}}
+This function gives stan code  of log density, cumulative distribution, log of cumulatif distribution, log complementary cumulative distribution, quantile, random number of GMSNBurr distribution
 }
 \examples{
 {\dontrun{

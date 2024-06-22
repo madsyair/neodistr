@@ -68,14 +68,10 @@ Jones-Faddy's Skew-t Distribution
 
 The Jones-Faddy's Skew-t distribution with parameters \eqn{\mu}, \eqn{\sigma},\eqn{\alpha}, and \eqn{\beta}
 has density:
-\deqn{f(y |\mu,\sigma,\beta,\alpha)= \frac{c}{\sigma} [{1+\frac{z}{({a+b+z^2})^\frac{1}{2}}}]^{a+\frac{1}{2}}
-[{1-\frac{z}{({a+b+z^2})^\frac{1}{2}}}]^{b+\frac{1}{2}}}
-with: 
-\eqn{\sigma >0, \beta>0},
-
-\eqn{z = {y-\mu}}, \eqn{ c = [2^{(a+b-1)} (a+b)^\frac{1}{2} B(a,b)]^-1 },
- 
-\eqn{ a = \beta^{-1}{[1+{\nu{(2 \beta +nu^2)^\frac{1}{2}}}]}}, \eqn{ b = \beta^{-1}{[1-{\nu{(2 \beta +nu^2)^\frac{1}{2}}}]}}
+\deqn{f(y |\mu,\sigma,\beta,\alpha)= \frac{c}{\sigma} {\left[{1+\frac{z}{\sqrt{\alpha+\beta+z^2}}}\right]}^{\alpha+\frac{1}{2}}
+{\left[{1-\frac{z}{\sqrt{\alpha+\beta+z^2}}}\right]}^{\beta+\frac{1}{2}}}
+where \eqn{-\infty<y<\infty,  -\infty<\mu<\infty,  \sigma>0, \alpha>0, \beta>0,} 
+\eqn{z =\frac{y-\mu}{\sigma} }, \eqn{ c = {\left[2^{\left(\alpha+\beta-1\right)} {\left(\alpha+\beta\right)^{\frac{1}{2}}} B(a,b)\right]}^{-1} },
 }
 \examples{
 djfst(4, mu=0, sigma=1, alpha=2, beta=2)
@@ -90,6 +86,7 @@ main = 'Distribution of jfst Random Number ')
 Jones, M.C. and Faddy, M. J. (2003) A skew extension of the t distribution,
   with applications. Journal of the Royal Statistical Society, 
   Series B, 65, pp 159-174
+  
  Rigby, R.A. and Stasinopoulos, M.D. and Heller, G.Z. and De Bastiani, F. 
   (2019) Distributions for Modeling Location, Scale, 
   and Shape: Using GAMLSS in R.CRC Press

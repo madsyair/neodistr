@@ -13,7 +13,7 @@ brms_custom_family(family = "msnburr", vectorize = TRUE)
 The default value of this parameter is TRUE}
 }
 \value{
-custom_family is an object of class customfamily of brms and stanvars_family is stanvars object, the stan's code of function of neo-normal distributions (lpdf,cdf,lcdf,lccdf,quantile and rng)
+custom_family is an object of class custom family of brms and stanvars_family is stanvars object (the Stan code of function of neo-normal distributions (lpdf,cdf,lcdf,lccdf,quantile and rng))
 }
 \description{
 Neonormal as custom distribution family in brms

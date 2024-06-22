@@ -21,15 +21,15 @@ function, \code{msnburr_lcdf} gives the log of distribution function, \code{msnb
 random deviates.
 }
 \description{
-To write the probability distribution function code of MSNBurr distribution in Stan format.
-This distribution will be optimal for accommodating left-skewed data.
+Stan code of MSNBurr distribution for custom distribution in stan
 }
 \details{
-To determine the value of the probability density function of the MSNBurr Distribution:
-\deqn{f(y |\mu,\sigma,\alpha) = \frac{-\omega(\alpha)}{\sigma} \exp(-\omega(\alpha){\frac{y-\mu}{\sigma}}) {(1+\frac{\exp(-\omega(\alpha){(\frac{y-\mu}{\sigma})})}{\alpha})^{(\alpha+1)}}}
+MSNBurr Distribution has density:
+\deqn{f(y |\mu,\sigma,\alpha)=\frac{\omega}{\sigma}\exp{\left(-\omega{\left(\frac{y-\mu}{\sigma}\right)}\right)}{{\left(1+\frac{\exp{\left(-\omega{(\frac{y-\mu}{\sigma})}\right)}}{\alpha}\right)}^{-(\alpha+1)}}}
+where \eqn{-\infty < y < \infty, -\infty < \mu< \infty, \sigma>0, \alpha>0, 
+\omega = \frac{1}{\sqrt{2\pi}} {\left(1+\frac{1}{\alpha}\right)^{\alpha+1}}}
 
-with \eqn{-\infty < y < \infty, -\infty < \mu< \infty, \sigma>0, \alpha>0, 
-\omega = \frac{1}{\sqrt(2\pi)} {(1+\frac{1}{\alpha})^{\alpha+1}}}
+This function gives stan code  of log density, cumulative distribution, log of cumulatif distribution, log complementary cumulative distribution, quantile, random number of MSNBurr distribution
 }
 \examples{
 {\dontrun{
