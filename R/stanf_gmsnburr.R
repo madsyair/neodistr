@@ -1,4 +1,4 @@
-#' GMSNBurr Distribution
+#' Stan function of GMSNBurr Distribution
 #' @name stanf_gmsnburr
 #'
 #' @description

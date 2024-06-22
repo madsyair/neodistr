@@ -1,4 +1,4 @@
-#' MSNBurr-IIa Distribution
+#' Stan function of MSNBurr-IIa Distribution
 #' @name stanf_msnburr2a
 #'
 #' @description

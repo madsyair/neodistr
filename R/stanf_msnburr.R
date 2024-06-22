@@ -1,4 +1,4 @@
-#' Distribution MSNBurr
+#' Stan function of MSNBurr Distribution
 #'
 #' @name stanf_msnburr
 #' @description
