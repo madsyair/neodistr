@@ -4,7 +4,7 @@
 #' @param family distribution neo-normal option: "msnburr", "msnburr2a", "gmsnburr", and "jfst"
 #' @param vectorize logical; if TRUE,  Stan code of family distribution is vectorize 
 #' The default value of this parameter is TRUE
-#' @return custom_family is an object of class customfamily of brms and stanvars_family is stanvars object, the stan's code of function of neo-normal distributions (lpdf,cdf,lcdf,lccdf,quantile and rng) 
+#' @return custom_family is an object of class custom family of brms and stanvars_family is stanvars object (the Stan code of function of neo-normal distributions (lpdf,cdf,lcdf,lccdf,quantile and rng)) 
 #' @author Achmad Syahrul Choir
 #' @examples
 #' \dontrun{
@@ -228,17 +228,13 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
   
 }
 
-#' @rdname neonormalfamily
+
 #' @export
 msnburr <- function(vectorize=TRUE) brms_custom_family(family="msnburr",vectorize=vectorize)
-#' @rdname neonormalfamily
 #' @export
 msnburr2a <- function(vectorize=TRUE) brms_custom_family(family="msnburr2a",vectorize=vectorize)
-#' @rdname neonormalfamily
 #' @export
 gmsnburr <- function(vectorize=TRUE) brms_custom_family(family="gmsnburr",vectorize=vectorize)
-#' @rdname neonormalfamily
 #' @export
-
 jfst <- function(vectorize=TRUE) brms_custom_family(family="jfst",vectorize=vectorize)
 
