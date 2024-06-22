@@ -11,8 +11,6 @@
 #'@importFrom ggplot2 ggplot aes
 #'@author Anisa' Faoziah and Achmad Syahrul Choir
 
-# Kode yang menggunakan plotly
-
 
 #'@author Anisa' Faoziah and Achmad Syahrul Choir
 #'@export
