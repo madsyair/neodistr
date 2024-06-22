@@ -188,7 +188,7 @@
 #'
 #' @author Achmad Syahrul Choir
 #'
-#' @details Fit a neo-normal model that using brm function in brms package.All options in this functions follow brm function, except family and vectorize
+#' @details Fit a neo-normal model that using brm function in brms package.All arguments in this functions follow arguments of brm function, except family 
 #'
 #' @references
 #' Buerkner,P-C (2017). brms: An R Package for Bayesian Multilevel
