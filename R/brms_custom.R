@@ -21,7 +21,6 @@
 #'     prior=c(set_prior("cauchy(0,5)",class="alpha"),set_prior("cauchy(0,1)",class="sigma"))
 #'   )
 #'   summary(fit)
-#'   expose_functions(fit, vectorize = TRUE)
 #'   pp <- posterior_predict(fit)
 #'   ppe <- posterior_epred(fit)
 #'   loo(fit)
