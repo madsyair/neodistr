@@ -15,9 +15,9 @@ random number generation of GMSNBurr distribution are given
 The default value of this parameter is TRUE}
 }
 \value{
-\code{msnburr_lpdf} gives the log of density, \code{msnburr_cdf} gives the distribution
-function, \code{gmsnburr_lcdf} gives the log of distribution function, \code{gmsnburr_lccdf} gives the complement of log ditribution function (1-msnburr_lcdf),
- and \code{gmsnburr_rng} generates random deviates.
+\code{msnburr_lpdf} gives the stans's code of log of density, \code{msnburr_cdf} gives the stans's code of distribution
+function, \code{gmsnburr_lcdf} gives the stans's code of log of distribution function, \code{gmsnburr_lccdf} gives the stans's code of complement of log ditribution function (1-msnburr_lcdf),
+ and \code{gmsnburr_rng} the stans's code of generates random numbers.
 }
 \description{
 To write the probability distribution function code of GMSNBurr distribution in Stan format.

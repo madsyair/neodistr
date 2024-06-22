@@ -2,7 +2,7 @@
 % Please edit documentation in R/stanf_jfst.R
 \name{stanf_jfst}
 \alias{stanf_jfst}
-\title{Distribution Jones and Faddys Skew-t}
+\title{Jones and Faddys Skew-t Distribution}
 \usage{
 stanf_jfst(vectorize = TRUE, rng = TRUE)
 }
@@ -15,9 +15,9 @@ random number generation of Jones and faddy distribution are given
 The default value of this parameter is TRUE}
 }
 \value{
-\code{jfst_lpdf} gives the log of density, \code{jfst_cdf} gives the distribution
-function, \code{jfst_lcdf} gives the log of distribution function and \code{jfst_rng} generates
-random deviates.
+\code{jfst_lpdf} gives stan's code of the log of density, \code{jfst_cdf} gives stan's code of the distribution
+function, \code{jfst_lcdf} gives stan's code of the log of distribution function and \code{jfst_rng} gives stan's code of generates
+random numbers.
 }
 \description{
 To determine probability function using Jones and Faddys Skew-t

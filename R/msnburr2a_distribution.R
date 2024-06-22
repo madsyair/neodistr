@@ -48,9 +48,9 @@
 #' main = "Right Skew MSNBurr-IIa Density ",ylab="density")
 dmsnburr2a<-function(x,mu=0,sigma=1,alpha=1,log=FALSE){
  
-  if(is.na(alpha)|is.na(mu)|is.na(sigma)){
-    stop("mu, sigma, or alpha,must be not missing value")
-  }
+  ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
   if (any(sigma < 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(alpha < 0)) 
@@ -76,9 +76,9 @@ dmsnburr2a<-function(x,mu=0,sigma=1,alpha=1,log=FALSE){
 #' p=pmsnburr2a(4, mu=0, sigma=1, alpha=1)
 #' p
 pmsnburr2a<-function(q,mu=0,sigma=1,alpha=1,lower.tail=TRUE,log.p=FALSE){
-  if(is.na(alpha)|is.na(mu)|is.na(sigma)){
-    stop("mu, sigma, or alpha,must be not missing value")
-  }
+  ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
   if (any(sigma < 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(alpha < 0)) 
@@ -111,9 +111,9 @@ pmsnburr2a<-function(q,mu=0,sigma=1,alpha=1,lower.tail=TRUE,log.p=FALSE){
 #' q
 #' qmsnburr2a(0.5, mu=0, sigma=1, alpha=1)
 qmsnburr2a<-function(p,mu=0,sigma=1,alpha=1,lower.tail=TRUE,log.p=FALSE){
-  if(is.na(alpha)|is.na(mu)|is.na(sigma)){
-    stop("mu, sigma, or alpha,must be not missing value")
-  }
+  ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
   if (any(sigma < 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(alpha < 0)) 
@@ -152,9 +152,9 @@ qmsnburr2a<-function(p,mu=0,sigma=1,alpha=1,lower.tail=TRUE,log.p=FALSE){
 #' main = 'Distribution of MSNBurr-IIa Random Number ')
 rmsnburr2a<-function(n,mu=0,sigma=1,alpha=1){
   .<-runif<-NULL
-  if(is.na(alpha)|is.na(mu)|is.na(sigma)){
-    stop("mu, sigma, or alpha,must be not missing value")
-  }
+  ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
   if (any(sigma < 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(alpha < 0)) 

@@ -1,6 +1,6 @@
 # These functions is translated from ST5 in gamlss.dist that was written by Bob Rigby and Mikis Stasinopoulos
 
-#' Distribution Jones and Faddys Skew-t
+#' Jones and Faddys Skew-t Distribution 
 
 #' @name stanf_jfst
 #' @description
@@ -11,9 +11,9 @@
 #' random number generation of Jones and faddy distribution are given 
 #' The default value of this parameter is TRUE
 #' @return
-#' \code{jfst_lpdf} gives the log of density, \code{jfst_cdf} gives the distribution
-#' function, \code{jfst_lcdf} gives the log of distribution function and \code{jfst_rng} generates
-#' random deviates.
+#' \code{jfst_lpdf} gives stan's code of the log of density, \code{jfst_cdf} gives stan's code of the distribution
+#' function, \code{jfst_lcdf} gives stan's code of the log of distribution function and \code{jfst_rng} gives stan's code of generates
+#' random numbers.
 #' @author Anisa' Faoziah and Achmad Syahrul Choir
 #' @details
 #' To determine the value of the probability density function of the Jones-Faddy’s Skew-t distribution :

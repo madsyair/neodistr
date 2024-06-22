@@ -268,7 +268,6 @@ Fit a neo-normal model that using brm function in brms package.All options in th
 }
 \examples{
 \dontrun{
-  library(brms)
   library(neodistr)
   x<-runif(100)
   e<-rmsnburr(100,0,1,0.8)
@@ -278,7 +277,6 @@ Fit a neo-normal model that using brm function in brms package.All options in th
     y ~ x, data = data,
     family = msnburr())
   summary(fit)
-  expose_functions(fit, vectorize = TRUE)
   pp <- posterior_predict(fit)
   ppe <- posterior_epred(fit)
   loo(fit)

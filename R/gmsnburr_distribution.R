@@ -49,9 +49,10 @@
 dgmsnburr<-function(x,mu=0,sigma=1,alpha=1,beta=1, log=FALSE){
   
 
-  if(is.na(alpha)|is.na(beta)|is.na(mu)|is.na(sigma)){
-    stop("mu, sigma,alpha, or beta must be not missing value")
-  }
+  ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(beta),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
   if (any(sigma < 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(alpha < 0)) 
@@ -80,9 +81,10 @@ dgmsnburr<-function(x,mu=0,sigma=1,alpha=1,beta=1, log=FALSE){
 #' pgmsnburr(4, mu=0, sigma=1, alpha=1, beta=1)
 pgmsnburr<-function(q,mu=0,sigma=1,alpha=1, beta=1,lower.tail=TRUE,log.p=FALSE){
   .<-pbeta<-NULL
-  if(is.na(alpha)|is.na(beta)|is.na(mu)|is.na(sigma)){
-    stop("mu, sigma,alpha, or beta must be not missing value")
-  }
+  ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(beta),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
   if (any(sigma < 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(alpha < 0)) 
@@ -104,9 +106,10 @@ pgmsnburr<-function(q,mu=0,sigma=1,alpha=1, beta=1,lower.tail=TRUE,log.p=FALSE){
 #' qgmsnburr(0.4, mu=0, sigma=1, alpha=1, beta=1)
 qgmsnburr<-function(p,mu=0,sigma=1,alpha=1,beta=1,lower.tail=TRUE,log.p=FALSE){
   .<-qf<-NULL
-  if(is.na(alpha)|is.na(beta)|is.na(mu)|is.na(sigma)){
-    stop("mu, sigma,alpha, or beta must be not missing value")
-  }
+  ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(beta),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
   if (any(sigma < 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(alpha < 0)) 
@@ -146,9 +149,10 @@ qgmsnburr<-function(p,mu=0,sigma=1,alpha=1,beta=1,lower.tail=TRUE,log.p=FALSE){
 #' main = 'Distribution of GMSNBurr Random Number ')
 rgmsnburr<-function(n,mu=0,sigma=1,alpha=1,beta=1){
   .<-rf<-NULL
-  if(is.na(alpha)|is.na(beta)|is.na(mu)|is.na(sigma)){
-    stop("mu, sigma,alpha, or beta must be not missing value")
-  }
+  ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(beta),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
   if (any(sigma < 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(alpha < 0)) 
