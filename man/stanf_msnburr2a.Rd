@@ -2,7 +2,7 @@
 % Please edit documentation in R/stanf_msnburr2a.R
 \name{stanf_msnburr2a}
 \alias{stanf_msnburr2a}
-\title{MSNBurr-IIa Distribution}
+\title{Stan function of MSNBurr-IIa Distribution}
 \usage{
 stanf_msnburr2a(vectorize = TRUE, rng = TRUE)
 }

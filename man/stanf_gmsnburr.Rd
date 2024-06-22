@@ -2,7 +2,7 @@
 % Please edit documentation in R/stanf_gmsnburr.R
 \name{stanf_gmsnburr}
 \alias{stanf_gmsnburr}
-\title{GMSNBurr Distribution}
+\title{Stan function of GMSNBurr Distribution}
 \usage{
 stanf_gmsnburr(vectorize = TRUE, rng = TRUE)
 }
