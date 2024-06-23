@@ -176,7 +176,7 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
     stan_funs_family<-stanf_jfst(vectorize=vectorize)
     log_lik_jfst <- function(i, prep) {
       .<-jfst_lpdf<-NULL
-      mu <- brms::get_dpar(prep, "mu")
+      mu <- brms::get_dpar(prep, "mu", i = i)
       sigma <- brms::get_dpar(prep, "sigma")
       alpha <- brms::get_dpar(prep, "alpha")     
       beta <- brms::get_dpar(prep, "beta")   
