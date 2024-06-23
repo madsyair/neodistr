@@ -30,10 +30,10 @@
 #' 
 #' The MSNBurr distribution with parameters \eqn{\mu}, \eqn{\sigma},and \eqn{\alpha}
 #' has density:
-#' \deqn{f(y |\mu,\sigma,\alpha)=\frac{-\omega}{\sigma}\exp(-\omega{\frac{y-\mu}{\sigma}}){(1+\frac{\exp(-\omega{(\frac{y-\mu}{\sigma})})}{\alpha})^{(\alpha+1)}}}
-#' with \eqn{-\infty < y < \infty, -\infty < \mu< \infty, \sigma>0, \alpha>0, 
-#' \omega = \frac{1}{\sqrt(2\pi)} {(1+\frac{1}{\alpha})^{\alpha+1}}}
-#' 
+#' \deqn{f(x |\mu,\sigma,\alpha)=\frac{\omega}{\sigma}\exp{\left(\omega{\left(\frac{x-\mu}{\sigma}\right)}\right)}{{\left(1+\frac{\exp{\left(\omega{(\frac{x-\mu}{\sigma})}\right)}}{\alpha}\right)}^{-(\alpha+1)}}}
+#' where \eqn{-\infty < x < \infty, -\infty < \mu< \infty, \sigma>0, \alpha>0, 
+#' \omega = \frac{1}{\sqrt{2\pi}} {\left(1+\frac{1}{\alpha}\right)^{\alpha+1}}}
+' 
 
 #' @references 
 #' Iriawan, N. (2000). Computationally Intensive Approaches to Inference in Neo-Normal Linear Models. Curtin University of Technology.
@@ -50,9 +50,9 @@
 
 
 dmsnburr<-function(x,mu=0,sigma=1,alpha=1,log=FALSE){
-  ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(alpha),stop(" alpha must be not missing value"),NA)
+  ifelse(is.na(mu),stop(" mu must be not missing value"),NA)
+  ifelse(is.na(sigma),stop("sigma  must be not missing value"),NA)
   
   if (any(sigma < 0)) 
     stop(paste("sigma must be positive", "\n", ""))
@@ -81,9 +81,9 @@ dmsnburr<-function(x,mu=0,sigma=1,alpha=1,log=FALSE){
 #' @examples
 #' pmsnburr(7, mu=0, sigma=1, alpha=1)
 pmsnburr<-function(q,mu=0,sigma=1,alpha=1,lower.tail=TRUE,log.p=FALSE){
-  ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(alpha),stop(" alpha must be not missing value"),NA)
+  ifelse(is.na(mu),stop(" mu must be not missing value"),NA)
+  ifelse(is.na(sigma),stop("sigma  must be not missing value"),NA)
   if (any(sigma < 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(alpha < 0)) 
@@ -115,9 +115,9 @@ pmsnburr<-function(q,mu=0,sigma=1,alpha=1,lower.tail=TRUE,log.p=FALSE){
 #' qmsnburr(0.6, mu=0, sigma=1, alpha=1)
 qmsnburr<-function(p,mu=0,sigma=1,alpha=1,lower.tail=TRUE,log.p=FALSE)
 {
-  ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(alpha),stop(" alpha must be not missing value"),NA)
+  ifelse(is.na(mu),stop(" mu must be not missing value"),NA)
+  ifelse(is.na(sigma),stop("sigma  must be not missing value"),NA)
   if (any(sigma < 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(alpha < 0)) 
@@ -153,9 +153,9 @@ qmsnburr<-function(p,mu=0,sigma=1,alpha=1,lower.tail=TRUE,log.p=FALSE)
 #'main = 'Distribution of MSNBurr Random Number ')
 rmsnburr<-function(n,mu=0,sigma=1,alpha=1){
   runif<-NULL
-  ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(alpha),stop(" alpha must be not missing value"),NA)
+  ifelse(is.na(mu),stop(" mu must be not missing value"),NA)
+  ifelse(is.na(sigma),stop("sigma  must be not missing value"),NA)
   if (any(sigma < 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(alpha < 0)) 

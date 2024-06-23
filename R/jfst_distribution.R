@@ -36,10 +36,10 @@
 #' 
 #' The Jones-Faddy's Skew-t distribution with parameters \eqn{\mu}, \eqn{\sigma},\eqn{\alpha}, and \eqn{\beta}
 #' has density:
-#' \deqn{f(y |\mu,\sigma,\beta,\alpha)= \frac{c}{\sigma} {\left[{1+\frac{z}{\sqrt{\alpha+\beta+z^2}}}\right]}^{\alpha+\frac{1}{2}}
+#' \deqn{f(x |\mu,\sigma,\beta,\alpha)= \frac{c}{\sigma} {\left[{1+\frac{z}{\sqrt{\alpha+\beta+z^2}}}\right]}^{\alpha+\frac{1}{2}}
 #' {\left[{1-\frac{z}{\sqrt{\alpha+\beta+z^2}}}\right]}^{\beta+\frac{1}{2}}}
 #' where \eqn{-\infty<y<\infty,  -\infty<\mu<\infty,  \sigma>0, \alpha>0, \beta>0,} 
-#' \eqn{z =\frac{y-\mu}{\sigma} }, \eqn{ c = {\left[2^{\left(\alpha+\beta-1\right)} {\left(\alpha+\beta\right)^{\frac{1}{2}}} B(a,b)\right]}^{-1} },
+#' \eqn{z =\frac{x-\mu}{\sigma} }, \eqn{ c = {\left[2^{\left(\alpha+\beta-1\right)} {\left(\alpha+\beta\right)^{\frac{1}{2}}} B(a,b)\right]}^{-1} },
 #'  
 #' 
 #' @references 
@@ -55,10 +55,10 @@
 #' @examples
 #' djfst(4, mu=0, sigma=1, alpha=2, beta=2)
 djfst<- function(x,mu=0, sigma=1,alpha=0, beta=2, log=FALSE){
-  ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(beta),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(alpha),stop(" alpha must be not missing value"),NA)
+  ifelse(is.na(beta),stop(" beta must be not missing value"),NA)
+  ifelse(is.na(mu),stop(" mu must be not missing value"),NA)
+  ifelse(is.na(sigma),stop(" sigma must be not missing value"),NA)
   if (any(sigma <= 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(alpha <= 0)) 
@@ -93,10 +93,10 @@ b<-beta
 #' pjfst(4, mu=0, sigma=1, alpha=2, beta=2)
 pjfst <- function(q,mu=0, sigma=1,alpha=0, beta=2,lower.tail=TRUE, log.p=FALSE){
   
-  ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(beta),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(alpha),stop(" alpha must be not missing value"),NA)
+  ifelse(is.na(beta),stop(" beta must be not missing value"),NA)
+  ifelse(is.na(mu),stop(" mu must be not missing value"),NA)
+  ifelse(is.na(sigma),stop(" sigma must be not missing value"),NA)
   if (any(sigma <= 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(alpha <= 0)) 
@@ -138,10 +138,10 @@ pjfst <- function(q,mu=0, sigma=1,alpha=0, beta=2,lower.tail=TRUE, log.p=FALSE){
 #' @examples
 #' qjfst(0.4, mu=0, sigma=1, alpha=2, beta=2)
 qjfst<-function(p,mu=0,sigma=1, alpha = 2, beta=2,lower.tail=TRUE,log.p=FALSE){
-  ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(beta),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(alpha),stop(" alpha must be not missing value"),NA)
+  ifelse(is.na(beta),stop(" beta must be not missing value"),NA)
+  ifelse(is.na(mu),stop(" mu must be not missing value"),NA)
+  ifelse(is.na(sigma),stop(" sigma must be not missing value"),NA)
   if (any(sigma <= 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(alpha <= 0)) 
@@ -184,10 +184,10 @@ qjfst<-function(p,mu=0,sigma=1, alpha = 2, beta=2,lower.tail=TRUE,log.p=FALSE){
 #' main = 'Distribution of jfst Random Number ')
 rjfst <- function(n,mu=0, sigma=1, alpha=2, beta=2){
 #.<-rbeta<-NULL 
-  ifelse(is.na(alpha),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(beta),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(mu),stop(" alpha,must be not missing value"),NA)
-  ifelse(is.na(sigma),stop(" alpha,must be not missing value"),NA)
+  ifelse(is.na(alpha),stop(" alpha must be not missing value"),NA)
+  ifelse(is.na(beta),stop(" beta must be not missing value"),NA)
+  ifelse(is.na(mu),stop(" mu must be not missing value"),NA)
+  ifelse(is.na(sigma),stop(" sigma must be not missing value"),NA)
   if (any(sigma < 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   if (any(beta < 0)) 
