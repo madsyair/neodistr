@@ -33,8 +33,7 @@
 #' \deqn{f(x |\mu,\sigma,\alpha)=\frac{\omega}{\sigma}\exp{\left(\omega{\left(\frac{x-\mu}{\sigma}\right)}\right)}{{\left(1+\frac{\exp{\left(\omega{(\frac{x-\mu}{\sigma})}\right)}}{\alpha}\right)}^{-(\alpha+1)}}}
 #' where \eqn{-\infty < x < \infty, -\infty < \mu< \infty, \sigma>0, \alpha>0, 
 #' \omega = \frac{1}{\sqrt{2\pi}} {\left(1+\frac{1}{\alpha}\right)^{\alpha+1}}}
-' 
-
+#'
 #' @references 
 #' Iriawan, N. (2000). Computationally Intensive Approaches to Inference in Neo-Normal Linear Models. Curtin University of Technology.
 #' 

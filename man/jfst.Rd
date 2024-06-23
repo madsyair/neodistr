@@ -68,10 +68,10 @@ Jones-Faddy's Skew-t Distribution
 
 The Jones-Faddy's Skew-t distribution with parameters \eqn{\mu}, \eqn{\sigma},\eqn{\alpha}, and \eqn{\beta}
 has density:
-\deqn{f(y |\mu,\sigma,\beta,\alpha)= \frac{c}{\sigma} {\left[{1+\frac{z}{\sqrt{\alpha+\beta+z^2}}}\right]}^{\alpha+\frac{1}{2}}
+\deqn{f(x |\mu,\sigma,\beta,\alpha)= \frac{c}{\sigma} {\left[{1+\frac{z}{\sqrt{\alpha+\beta+z^2}}}\right]}^{\alpha+\frac{1}{2}}
 {\left[{1-\frac{z}{\sqrt{\alpha+\beta+z^2}}}\right]}^{\beta+\frac{1}{2}}}
 where \eqn{-\infty<y<\infty,  -\infty<\mu<\infty,  \sigma>0, \alpha>0, \beta>0,} 
-\eqn{z =\frac{y-\mu}{\sigma} }, \eqn{ c = {\left[2^{\left(\alpha+\beta-1\right)} {\left(\alpha+\beta\right)^{\frac{1}{2}}} B(a,b)\right]}^{-1} },
+\eqn{z =\frac{x-\mu}{\sigma} }, \eqn{ c = {\left[2^{\left(\alpha+\beta-1\right)} {\left(\alpha+\beta\right)^{\frac{1}{2}}} B(a,b)\right]}^{-1} },
 }
 \examples{
 djfst(4, mu=0, sigma=1, alpha=2, beta=2)
