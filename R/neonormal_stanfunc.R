@@ -26,7 +26,7 @@
 # 
 # examples neonormal_stanfunc(family="gmsnburr", func="pdf")
 
-#' @importFrom rstan expose_stan_functions
+#' @importFrom rstan expose_stan_functions stanc
 neonormal_stanfunc<-function(family="gmsnburr",func="pdf",vectorize=TRUE){
 .<-msnburr_lpdf<-msnburr2a_lpdf<-jfst_lpdf<-gmsnburr_lpdf<-NULL
 .<-gmsnburr_cdf<-msnburr_cdf<-msnburr2a_cdf<-jfst_cdf<-NULL
@@ -44,11 +44,12 @@ neonormal_stanfunc<-function(family="gmsnburr",func="pdf",vectorize=TRUE){
    )
   
     func_code<-paste(c("functions{",fc,"}"),collapse="\n")
-   stanfile<-paste0("neonormal.stan")
-    write(func_code,stanfile)
-    neonormal_function <- rstan::expose_stan_functions(stanfile)
+   #stanfile<-paste0("neonormal.stan")
+   # write(func_code,stanfile)
+ 
+    neonormal_function <- rstan::expose_stan_functions(stanc(model_code = func_code))
    # neonormal_function <- rstan::expose_stan_functions(func_code)
-       if (file.exists(stanfile)) file.remove(stanfile)
+     #  if (file.exists(stanfile)) file.remove(stanfile)
     if(func == "pdf"){
       pdf<-switch(family,
         "gmsnburr" = function(y, mu, sigma,alpha,beta) {
