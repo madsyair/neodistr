@@ -44,11 +44,11 @@ neonormal_stanfunc<-function(family="gmsnburr",func="pdf",vectorize=TRUE){
    )
   
     func_code<-paste(c("functions{",fc,"}"),collapse="\n")
-   # stanfile<-paste0("neonormal.stan")
-  #  write(func_code,stanfile)
-   # neonormal_function <- rstan::expose_stan_functions(stanfile)
-    neonormal_function <- rstan::expose_stan_functions(func_code)
-              if (file.exists(stanfile)) file.remove(stanfile)
+   stanfile<-paste0("neonormal.stan")
+    write(func_code,stanfile)
+    neonormal_function <- rstan::expose_stan_functions(stanfile)
+   # neonormal_function <- rstan::expose_stan_functions(func_code)
+       if (file.exists(stanfile)) file.remove(stanfile)
     if(func == "pdf"){
       pdf<-switch(family,
         "gmsnburr" = function(y, mu, sigma,alpha,beta) {

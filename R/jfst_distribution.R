@@ -38,7 +38,7 @@
 #' has density:
 #' \deqn{f(x |\mu,\sigma,\beta,\alpha)= \frac{c}{\sigma} {\left[{1+\frac{z}{\sqrt{\alpha+\beta+z^2}}}\right]}^{\alpha+\frac{1}{2}}
 #' {\left[{1-\frac{z}{\sqrt{\alpha+\beta+z^2}}}\right]}^{\beta+\frac{1}{2}}}
-#' where \eqn{-\infty<y<\infty,  -\infty<\mu<\infty,  \sigma>0, \alpha>0, \beta>0,} 
+#' where \eqn{-\infty<x<\infty,  -\infty<\mu<\infty,  \sigma>0, \alpha>0, \beta>0,} 
 #' \eqn{z =\frac{x-\mu}{\sigma} }, \eqn{ c = {\left[2^{\left(\alpha+\beta-1\right)} {\left(\alpha+\beta\right)^{\frac{1}{2}}} B(a,b)\right]}^{-1} },
 #'  
 #' 
