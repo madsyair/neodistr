@@ -1,12 +1,14 @@
-#' Statistical Descriptive Summary in Neo-normal Distribution
+#'  Summaries of Neo-normal Distribution
 
 
 #' @name summary_dist
 #' @param family identify the type of Neo-normal distribution to be used. There are four categories of neo-normal distributions,
-#' which encompass MSNBurr, MSNBurr-IIa, GMSNBurr, and Jones-Faddy's Skew-t Distribution. 
-#' The default value of this parameter is "FALSE "msnburr"
+#' which encompass "msnburr" for MSNBurr , "msnburr2a" for MSNBurr-IIa, "gmsnburr" for GMSNBurr, and "jfst" for Jones-Faddy's Skew-t Distribution. 
+#' The default value of this parameter is  "msnburr"
 #'
-#' @param par list values of each parameter, based on the chosen distribution. The default value is "par=c(alpha=1,mu=0,sigma=1)"
+#' @param par list values of each parameter, based on the chosen distribution. The default value is "par=c(alpha=1,mu=0,sigma=1)" for MSNBurr parameter
+#' parameter of MSNBurr and MSNBurr-IIa are mu, sigma, alpha
+#' parameter of GMSNBurr and JFST are mu, sigma, alpha, beta
 #'
 #' @description
 #' To display a summary of calculations for a specific neo-normal distribution, 
