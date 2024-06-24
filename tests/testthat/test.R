@@ -1,5 +1,5 @@
 library(neodistr)
-library (testthat)
+library(testthat)
 # Vector
 #pdf_msnburr <- neonormal_stanfunc(family ="msnburr", func = "pdf",vectorize = TRUE )
 #cdf_msnburr <- neonormal_stanfunc(family ="msnburr", func = "cdf",vectorize = TRUE )

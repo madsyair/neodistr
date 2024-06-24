@@ -54,7 +54,7 @@
 #' @rdname jfst
 #' @examples
 #' djfst(4, mu=0, sigma=1, alpha=2, beta=2)
-djfst<- function(x,mu=0, sigma=1,alpha=0, beta=2, log=FALSE){
+djfst<- function(x,mu=0, sigma=1,alpha=2, beta=2, log=FALSE){
   ifelse(is.na(alpha),stop(" alpha must be not missing value"),NA)
   ifelse(is.na(beta),stop(" beta must be not missing value"),NA)
   ifelse(is.na(mu),stop(" mu must be not missing value"),NA)
@@ -91,7 +91,7 @@ b<-beta
 #' @rdname jfst
 #' @examples
 #' pjfst(4, mu=0, sigma=1, alpha=2, beta=2)
-pjfst <- function(q,mu=0, sigma=1,alpha=0, beta=2,lower.tail=TRUE, log.p=FALSE){
+pjfst <- function(q,mu=0, sigma=1,alpha=2, beta=2,lower.tail=TRUE, log.p=FALSE){
   
   ifelse(is.na(alpha),stop(" alpha must be not missing value"),NA)
   ifelse(is.na(beta),stop(" beta must be not missing value"),NA)

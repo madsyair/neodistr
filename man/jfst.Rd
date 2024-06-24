@@ -8,13 +8,13 @@
 \alias{rjfst}
 \title{Jones Faddy's Skew-t Distribution}
 \usage{
-djfst(x, mu = 0, sigma = 1, alpha = 0, beta = 2, log = FALSE)
+djfst(x, mu = 0, sigma = 1, alpha = 2, beta = 2, log = FALSE)
 
 pjfst(
   q,
   mu = 0,
   sigma = 1,
-  alpha = 0,
+  alpha = 2,
   beta = 2,
   lower.tail = TRUE,
   log.p = FALSE
