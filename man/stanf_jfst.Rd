@@ -33,7 +33,7 @@ This function gives stan code  of log density, cumulative distribution, log of c
  quantile, random number of Jones-Faddy's Skew-t distribution
 }
 \examples{
-{\dontrun{
+\donttest{
 library (neodistr)
 library (rstan)
 
@@ -122,7 +122,7 @@ model_vector <-"
  "
  
  # Merge stan model code and selected neo-normal stan function
-fit_code <- paste (c(func_code_vector,model_vector,"\n"), collapse = "\n")
+fit_code_vector <- paste (c(func_code_vector,model_vector,"\n"), collapse = "\n")
 
 # Create the model using Stan Function
 fit2 <- stan(
@@ -140,7 +140,6 @@ fit2 <- stan(
 
 # Showing the estimation result of the parameters that were executed using the Stan file
 print(fit2, pars = c("mu", "sigma", "alpha", "beta", "lp__"), probs=c(.025,.5,.975))
- }
  }
 }
 \references{

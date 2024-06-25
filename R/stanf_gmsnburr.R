@@ -23,7 +23,8 @@
 #' 
 #' @references 
 #' Choir, A. S. (2020). The New Neo-Normal DDistributions and their Properties. Disertation. Institut Teknologi Sepuluh Nopember.
-#' @examples {\dontrun{
+#' @examples 
+#' \donttest{
 #' library(neodistr)
 #' library(rstan)
 #' #inputting data
@@ -119,7 +120,6 @@
 #' 
 #' # Showing the estimation results of the parameters 
 #' print(fit2, pars=c("mu", "sigma", "alpha","beta",  "lp__"), probs=c(.025,.5,.975))
-#' }
 #' }
 #' @export
 stanf_gmsnburr<-function(vectorize =TRUE,rng=TRUE){

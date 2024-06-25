@@ -32,7 +32,7 @@ where \eqn{-\infty < y < \infty, -\infty < \mu< \infty, \sigma>0, \alpha>0,
 This function gives stan code  of log density, cumulative distribution, log of cumulatif distribution, log complementary cumulative distribution, quantile, random number of MSNBurr distribution
 }
 \examples{
-{\dontrun{
+\donttest{
 library (neodistr)
 library(rstan)
 #inputting data
@@ -120,7 +120,6 @@ fit2 <- stan(
 # Showing the estimation results of the parameters that were executed using the Stan file
 print(fit2, pars=c("mu", "sigma", "alpha",  "lp__"), probs=c(.025,.5,.975))
 
-}
 }
 }
 \references{

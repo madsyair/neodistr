@@ -19,7 +19,7 @@ custom_family is an object of class custom family of brms and stanvars_family is
 Neonormal as custom distribution family in brms
 }
 \examples{
-\dontrun{
+\donttest{
   library(brms)
   library(neodistr)
   x<-runif(100)

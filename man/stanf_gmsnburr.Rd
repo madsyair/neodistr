@@ -31,7 +31,7 @@ and  \eqn{\omega = {\frac{B(\alpha,\beta)}{\sqrt{2\pi}}}{{\left(1+{\frac{\beta}{
 This function gives stan code  of log density, cumulative distribution, log of cumulatif distribution, log complementary cumulative distribution, quantile, random number of GMSNBurr distribution
 }
 \examples{
-{\dontrun{
+\donttest{
 library(neodistr)
 library(rstan)
 #inputting data
@@ -127,7 +127,6 @@ fit2 <- stan(
 
 # Showing the estimation results of the parameters 
 print(fit2, pars=c("mu", "sigma", "alpha","beta",  "lp__"), probs=c(.025,.5,.975))
-}
 }
 }
 \references{

@@ -266,7 +266,7 @@ Neo-normal model using brms
 Fit a neo-normal model that using brm function in brms package.All arguments in this functions follow arguments of brm function, except family
 }
 \examples{
-\dontrun{
+\donttest{
   library(neodistr)
   x<-runif(100)
   e<-rmsnburr(100,0,1,0.8)

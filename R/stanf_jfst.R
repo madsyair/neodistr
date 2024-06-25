@@ -28,7 +28,8 @@
 #' Jones, M.C. and Faddy, M. J. (2003) A skew extension of the t distribution, with applications. Journal of the Royal Statistical Society, Series B, 65, pp 159-174
 #'
 #' Rigby, R.A. and Stasinopoulos, M.D. and Heller, G.Z. and De Bastiani, F. (2019) Distributions for Modeling Location, Scale, and Shape: Using GAMLSS in R.CRC Press
-#' @examples{\dontrun{
+#' @examples
+#' \donttest{
 #' library (neodistr)
 #' library (rstan)
 #' 
@@ -117,7 +118,7 @@
 #'  "
 #'  
 #'  # Merge stan model code and selected neo-normal stan function
-#' fit_code <- paste (c(func_code_vector,model_vector,"\n"), collapse = "\n")
+#' fit_code_vector <- paste (c(func_code_vector,model_vector,"\n"), collapse = "\n")
 #' 
 #' # Create the model using Stan Function
 #' fit2 <- stan(
@@ -135,7 +136,6 @@
 #' 
 #' # Showing the estimation result of the parameters that were executed using the Stan file
 #' print(fit2, pars = c("mu", "sigma", "alpha", "beta", "lp__"), probs=c(.025,.5,.975))
-#'  }
 #'  }
 
 #' @export

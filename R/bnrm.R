@@ -201,7 +201,7 @@
 #'
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'   library(neodistr)
 #'   x<-runif(100)
 #'   e<-rmsnburr(100,0,1,0.8)
@@ -215,7 +215,9 @@
 #'   ppe <- posterior_epred(fit)
 #'   loo(fit)
 #'   }
+
 #' @import brms
+#' @importFrom brms set_prior
 #' @export
 
 bnrm <- function(formula, data, family = msnburr(), prior = NULL,
