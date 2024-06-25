@@ -275,7 +275,7 @@ bnrm <- function(formula, data, family = msnburr(), prior = NULL,
                         }
                       }
                     } else {
-                      c(set_prior("lognormal(1,1)", class = "alpha",lb=0), set_prior("lognormal(1,1)", class = "beta",lb=0))
+                      c(set_prior("lognormal(0,1)", class = "alpha",lb=0), set_prior("lognormal(0,1)", class = "beta",lb=0))
                       
                     }
                   },
