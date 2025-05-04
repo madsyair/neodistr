@@ -7,7 +7,7 @@
 #'   \code{\link[brms]{brmsformula}}.
 #' @param data An object of class \code{data.frame} (or one that can be coerced
 #'   to that class) containing data of all variables used in the model.
-#' @param family the neo-normal distribution as response in  regression:msnburr(),msnburr2a(),gmsnburr(),jfst()
+#' @param family the neo-normal distribution as response in  regression:msnburr(),msnburr2a(),gmsnburr(),jfst(), fossep(), jsep()
 #'       default argument in family is vectorize=TRUE. if not vectorize, give argument vectorize=FALSE, example:msnburr(vectorize=FALSE)
 #' @param prior One or more \code{brmsprior} objects created by
 #'   \code{\link[brms]{set_prior}} or related functions and combined using the
@@ -190,7 +190,7 @@
 #' @details Fit a neo-normal model that using brm function in brms package.All arguments in this functions follow arguments of brm function, except family 
 #'
 #' @references
-#' Buerkner,P-C (2017). brms: An R Package for Bayesian Multilevel
+#' Burkner,P-C (2017). brms: An R Package for Bayesian Multilevel
 #' Models Using Stan. \emph{Journal of Statistical Software}, 80(1), 1-28.
 #' \code{doi:10.18637/jss.v080.i01}
 #'
@@ -280,6 +280,40 @@ bnrm <- function(formula, data, family = msnburr(), prior = NULL,
                     }
                   },
                   "jfst" = {
+                    if (!is.null(prior)) {
+                      if (length(which(prior$class == "alpha")) > 0 & length(which(prior$class == "beta")) > 0) {
+                        prior
+                      } else {
+                        if (length(which(prior$class == "alpha")) == 0){
+                          c(prior, set_prior("lognormal(1,1)", class = "alpha",lb=0))
+                        }else{
+                          if (length(which(prior$class == "beta")) == 0)
+                            c(prior, set_prior("lognormal(1,1)", class = "beta",lb=0))
+                        }
+                      }
+                    } else {
+                      c(set_prior("lognormal(1,1)", class = "alpha",lb=0), set_prior("lognormal(1,1)", class = "beta",lb=0))
+                      
+                    }
+                  },
+                  "fossep" = {
+                    if (!is.null(prior)) {
+                      if (length(which(prior$class == "alpha")) > 0 & length(which(prior$class == "beta")) > 0) {
+                        prior
+                      } else {
+                        if (length(which(prior$class == "alpha")) == 0){
+                          c(prior, set_prior("lognormal(1,1)", class = "alpha",lb=0))
+                        }else{
+                          if (length(which(prior$class == "beta")) == 0)
+                            c(prior, set_prior("lognormal(1,1)", class = "beta",lb=0))
+                        }
+                      }
+                    } else {
+                      c(set_prior("lognormal(1,1)", class = "alpha",lb=0), set_prior("lognormal(1,1)", class = "beta",lb=0))
+                      
+                    }
+                  },
+                    "jsep" = {
                     if (!is.null(prior)) {
                       if (length(which(prior$class == "alpha")) > 0 & length(which(prior$class == "beta")) > 0) {
                         prior

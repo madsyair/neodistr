@@ -19,8 +19,15 @@ msnburr2a_skewness <- function(alpha){
 gmsnburr_skewness <- function(alpha, beta) {
   neodistr::summary_dist(family = "gmsnburr", par = c(mu = 0, sigma = 1, alpha = alpha, beta = beta))$Skewness
 }
+
 jfst_skewness <- function(alpha,beta){
   neodistr::summary_dist(family = "jfst", par = c(mu = 0, sigma = 1, alpha = alpha, beta=beta))$Skewness
+}
+fossep_skewness <- function(alpha,beta){
+  neodistr::summary_dist(family = "fossep", par = c(mu = 0, sigma = 1, alpha = alpha, beta=beta))$Skewness
+}
+jsep_skewness <- function(alpha,beta){
+  neodistr::summary_dist(family = "jsep", par = c(mu = 0, sigma = 1, alpha = alpha, beta=beta))$Skewness
 }
 
 msnburr_kurtosis <- function(alpha){
@@ -34,6 +41,12 @@ gmsnburr_kurtosis <- function(alpha,beta){
 }
 jfst_kurtosis <- function(alpha, beta){
   neodistr::summary_dist(family = "jfst", par = c(mu = 0, sigma = 1, alpha = alpha, beta=beta))$`Excess-Kurtosis`
+}
+fossep_kurtosis <- function(alpha, beta){
+  neodistr::summary_dist(family = "fossep", par = c(mu = 0, sigma = 1, alpha = alpha, beta=beta))$`Excess-Kurtosis`
+}
+jsep_kurtosis <- function(alpha, beta){
+  neodistr::summary_dist(family = "jsep", par = c(mu = 0, sigma = 1, alpha = alpha, beta=beta))$`Excess-Kurtosis`
 }
 
 jfst_alpha <- function(a,b){
@@ -62,6 +75,10 @@ function(input, output, session) {
         rgmsnburr(input$num_samples, mu=input$gmu, sigma=input$gsigma, alpha=input$galpha, beta=input$gbeta )
       }else if(input$dist=="jfst"){
         (rjfst(input$num_samples,mu=input$jmu, sigma=input$jsigma, alpha=input$jalpha, beta=input$jbeta))
+      }else if(input$dist=="fossep"){
+        (rfossep(input$num_samples,mu=input$fmu, sigma=input$fsigma, alpha=input$falpha, beta=input$fbeta))
+      }else if(input$dist=="jsep"){
+        (rjsep(input$num_samples,mu=input$s4mu, sigma=input$s4sigma, alpha=input$s4alpha, beta=input$s4beta))
       }
     }
   })
@@ -69,21 +86,21 @@ function(input, output, session) {
   # membuat data sequential dari random sample
   dt_seq <- reactive({
     if(input$menu=="prob"){
-   #   if(input$dist=="msnburr"){
-  #      data_sequence(min(data()), max(data()), input$num_samples)
-   #   }else if(input$dist=="msnburr2a"){
-  #      data_sequence(min(data()), max(data()),input$num_samples)
-  #    }else if(input$dist=="gmsnburr"){
-        data_sequence(min(data()), max(data()),input$num_samples)
-   #   }else if(input$dist=="jfst"){
-    #    data_sequence(min(data()), max(data()),input$num_samples)
-     # }
+      # if(input$dist=="msnburr"){
+          data_sequence(min(data()), max(data()), input$num_samples)
+      # }else if(input$dist=="msnburr2a"){
+      #   data_sequence(min(data()), max(data()),input$num_samples)
+      # }else if(input$dist=="gmsnburr"){
+      #    data_sequence(min(data()), max(data()),input$num_samples)
+      # }else if(input$dist=="jfst"){
+      #   data_sequence(min(data()), max(data()),input$num_samples)
+      # }else if(input$dist=="fossep"){
+      #   data_sequence(min(data()), max(data()),input$num_samples)
+      # }else if(input$dist=="jsep"){
+      #   data_sequence(min(data()), max(data()),input$num_samples)
+      # }
     }
   })
-  
-  
-  
-  
   
   xmin <- reactive({
     if(input$menu=="prob"){
@@ -98,9 +115,12 @@ function(input, output, session) {
         } else{
           x
         }
-        
-             }else if(input$dist=="jfst"){
+      }else if(input$dist=="jfst"){
         qjfst(0.0001,mu=input$jmu, sigma=input$jsigma,alpha=input$jalpha,beta=input$jbeta)
+      }else if(input$dist=="fossep"){
+        qfossep(0.0001,mu=input$fmu, sigma=input$fsigma,alpha=input$falpha,beta=input$fbeta)
+      }else if(input$dist=="jsep"){
+        qjsep(0.0001,mu=input$s4mu, sigma=input$s4sigma,alpha=input$s4alpha,beta=input$s4beta)
       }
     }
   }  )
@@ -120,6 +140,10 @@ function(input, output, session) {
         }
       }else if(input$dist=="jfst"){
         qjfst(0.9999,mu=input$jmu, sigma=input$jsigma,alpha=input$jalpha,beta=input$jbeta)
+      }else if(input$dist=="fossep"){
+        qfossep(0.9999,mu=input$fmu, sigma=input$fsigma,alpha=input$falpha,beta=input$fbeta)
+      }else if(input$dist=="jsep"){
+        qjsep(0.9999,mu=input$s4mu, sigma=input$s4sigma,alpha=input$s4alpha,beta=input$s4beta)
       }
     }
   }  )
@@ -133,8 +157,13 @@ function(input, output, session) {
     #  data_sequence(xmin(),xmax(), 100)
     #}else if(input$dist=="jfst"){
     #  data_sequence(xmin(),xmax(), 100)
+    #}else if(input$dist=="fossep"){
+    #  data_sequence(xmin(),xmax(), 100)
+    #}else if(input$dist=="jsep"){
+    #  data_sequence(xmin(),xmax(), 100)
     }
   })
+  
   densn<- reactive({
     if(input$menu=="prob"){
       if (input$dist=="msnburr"){
@@ -145,6 +174,10 @@ function(input, output, session) {
         (dgmsnburr(dtd_seq(),mu=input$gmu, sigma=input$gsigma, alpha=input$galpha, beta=input$gbeta))
       }else if (input$dist=="jfst"){
         (djfst(dtd_seq(),mu=input$jmu, sigma=input$jsigma, alpha=input$jalpha, beta=input$jbeta))
+      }else if (input$dist=="fossep"){
+        (dfossep(dtd_seq(),mu=input$fmu, sigma=input$fsigma, alpha=input$falpha, beta=input$fbeta))
+      }else if (input$dist=="jsep"){
+        (djsep(dtd_seq(),mu=input$s4mu, sigma=input$s4sigma, alpha=input$s4alpha, beta=input$s4beta))
       }
     }
   })
@@ -160,6 +193,12 @@ function(input, output, session) {
         (pgmsnburr(dtd_seq(),mu=input$gmu, sigma=input$gsigma, alpha=input$galpha, beta=input$gbeta))
       }else if (input$dist=="jfst"){
         (pjfst(dtd_seq(),mu=input$jmu, sigma=input$jsigma, alpha=input$jalpha, beta=input$jbeta))
+      }else if (input$dist=="fossep"){
+        (pfossep(dtd_seq(),mu=input$fmu, sigma=input$fsigma, alpha=input$falpha, beta=input$fbeta))
+      }else if (input$dist=="jsep"){
+        (pjsep(dtd_seq(),mu=input$s4mu, sigma=input$s4sigma, alpha=input$s4alpha, beta=input$s4beta))
+      }else if (input$dist=="jsep"){
+        (pjsep(dtd_seq(),mu=input$s4mu, sigma=input$s4sigma, alpha=input$s4alpha, beta=input$s4beta))
       }
     }
   })
@@ -177,6 +216,10 @@ function(input, output, session) {
         dnorm(dtd_seq(),input$gmu, input$gsigma)
       }else if (input$dist=="jfst"){
         dnorm(dtd_seq(),input$jmu, input$jsigma)
+      }else if (input$dist=="fossep"){
+        dnorm(dtd_seq(),input$fmu, input$fsigma)
+      }else if (input$dist=="jsep"){
+        dnorm(dtd_seq(),input$s4mu, input$s4sigma)
       }
     }
   })
@@ -192,6 +235,10 @@ function(input, output, session) {
         (dgmsnburr(dt_seq(),mu=input$gmu, sigma=input$gsigma, alpha=input$galpha, beta=input$gbeta))
       }else if (input$dist=="jfst"){
         (djfst(dt_seq(),mu=input$jmu, sigma=input$jsigma, alpha=input$jalpha, beta=input$jbeta))
+      }else if (input$dist=="fossep"){
+        (dfossep(dt_seq(),mu=input$fmu, sigma=input$fsigma, alpha=input$falpha, beta=input$fbeta))
+      }else if (input$dist=="jsep"){
+        (djsep(dt_seq(),mu=input$s4mu, sigma=input$s4sigma, alpha=input$s4alpha, beta=input$s4beta))
       }
     }
   })
@@ -211,6 +258,10 @@ function(input, output, session) {
         neodistr::summary_dist(family="gmsnburr", par=c(mu=input$kgmu, sigma=input$kgsigma, alpha=input$kgalpha, beta=input$kgbeta))
       }else if (input$kdist=="jfst"){
         neodistr::summary_dist(family="jfst", par=c(mu=input$kjmu, sigma=input$kjsigma, alpha=input$kjalpha, beta=input$kjbeta))
+      }else if (input$kdist=="fossep"){
+        neodistr::summary_dist(family="fossep", par=c(mu=input$kfmu, sigma=input$kfsigma, alpha=input$kfalpha, beta=input$kfbeta))
+      }else if (input$kdist=="jsep"){
+        neodistr::summary_dist(family="jsep", par=c(mu=input$ks4mu, sigma=input$ks4sigma, alpha=input$ks4alpha, beta=input$ks4beta))
       }
     }
   })
@@ -231,6 +282,10 @@ function(input, output, session) {
         rgmsnburr(200, mu=input$kgmu, sigma=input$kgsigma, alpha=input$kgalpha, beta=input$kgbeta )
       }else if(input$kdist=="jfst"){
         (rjfst(200,mu=input$kjmu, sigma=input$kjsigma, alpha=input$kjalpha, beta=input$kjbeta))
+      }else if(input$kdist=="fossep"){
+        (rfossep(200,mu=input$kfmu, sigma=input$kfsigma, alpha=input$kfalpha, beta=input$kfbeta))
+      }else if(input$kdist=="jsep"){
+        (rjsep(200,mu=input$ks4mu, sigma=input$ks4sigma, alpha=input$ks4alpha, beta=input$ks4beta))
       }
     }
   })
@@ -245,6 +300,10 @@ function(input, output, session) {
       #}else if(input$dist=="gmsnburr"){
       #  data_sequence(min(datak()), max(datak()),200)
       #}else if(input$dist=="jfst"){
+      #  data_sequence(min(datak()), max(datak()),200)
+      #}else if(input$dist=="fossep"){
+      #  data_sequence(min(datak()), max(datak()),200)
+      #}else if(input$dist=="jsep"){
       #  data_sequence(min(datak()), max(datak()),200)
       #}
     }
@@ -262,6 +321,10 @@ function(input, output, session) {
         paste ("GMSNBurr Distribution")
       }else if (input$dist =="jfst"){
         paste ("Jones-Faddy Skew-t Distribution")
+      }else if (input$dist =="fossep"){
+        paste ("Fernandez-Osiewalski-Steel Skew Exponential Power Distribution")
+      }else if (input$dist =="jsep"){
+        paste ("Jones Skew Exponential Power Distribution")
       }
     }else if (input$menu=="char"){
       if(input$kdist == "msnburr"){
@@ -272,6 +335,10 @@ function(input, output, session) {
         paste ("GMSNBurr Distribution")
       }else if (input$kdist =="jfst"){
         paste ("Jones-Faddy Skew-t Distribution")
+      }else if (input$kdist =="fossep"){
+        paste ("Fernandez-Osiewalski-Steel Skew Exponential Power Distribution")
+      }else if (input$kdist =="jsep"){
+        paste ("Jones Skew Exponential Power Distribution")
       }
     }
   })
@@ -293,7 +360,12 @@ function(input, output, session) {
       paste ("GMSNBurr distribution")
     }else if (input$dist =="jfst"){
       paste (" Jones-Faddy Skew-t distribution ")
+    }else if (input$dist =="fossep"){
+      paste ("Fernandez-Osiewalski-Steel Skew Exponential Power Distribution")
+    }else if (input$dist =="jsep"){
+      paste ("Jones Skew Exponential Power Distribution")
     }
+    
     
   })
   #-----------------------output----------------------------------------------------------------
@@ -312,7 +384,7 @@ function(input, output, session) {
     summ()
   })
   
-  #--------------------------------------Density Plot Halaman Depan----------------------------------
+  #--------------------------------------Density Plot in frontpage----------------------------------
 
   # Calculate density for the example data
   output$densityneo <- renderPlot({
@@ -449,7 +521,7 @@ function(input, output, session) {
         #betajs <- rep(beta,length.out=50 )
         #betajs <- rep(input$kjbeta, length.out = 50)
         skew<-jfst_skewness(input$kjalpha,input$kjbeta)
-        zj <- matrix(,length(betajs), length(alphajs))
+        zj <- matrix(0,length(betajs), length(alphajs))
         for (i in 1:length(alphajs)) {
           for (j in 1:length(betajs)) {
             suppressWarnings(zj[j,i] <- jfst_skewness(alphajs[i], betajs[j]))
@@ -471,6 +543,80 @@ function(input, output, session) {
                               add_trace(
                                 x = input$kjalpha,
                                 y = input$kjbeta,
+                                z = skew,
+                                type = "scatter3d",
+                                mode='lines+markers',
+                                showlegend = FALSE,
+                                marker = list(color = 'red', size = 5, opacity = 5),
+                                hovertemplate = paste('α : %{x:.4f}',
+                                                      '<br> β : %{y:.4f}',
+                                                      '<br>Skewness : %{z:.4f}<br>',
+                                                      '<extra> </extra>' )
+                              )%>%
+                              config(displayModeBar = FALSE) ) # Menghilangkan mode bar plotly
+      } else if (input$kdist=="fossep"){
+        alphaf <- seq(1.5, 2.0,length.out=20)
+        betaf <- seq(0.8, 1.1,length.out=20)
+        skew<- fossep_skewness(input$kfalpha,input$kfbeta)
+        zf <- matrix(0, length(betaf), length(alphaf))
+        for (i in 1:length(alphaf)) {
+          for (j in 1:length(betaf)) {
+            suppressWarnings(zf[j,i] <- fossep_skewness(alphaf[i], betaf[j]))
+          }
+        }
+        df<-data.frame(alphaf,betaf,zf)
+        suppressWarnings(   plot_ly(df, x = ~alphaf, y = ~betaf, z = ~zf, type = "surface",
+                                    hovertemplate = paste('α : %{x:.4f}',
+                                                          '<br> β : %{y:.4f}',
+                                                          '<br>Skewness : %{z:.4f}<br>',
+                                                          '<extra> </extra>' )) %>%
+                              layout(
+                                title = list(text = "Skewness Plot", font = list(family = "montserrat", size = 16, color = "#2C3E50")),
+                                scene = list(
+                                  xaxis = list(title = 'α'),
+                                  yaxis = list(title = ' β'),
+                                  zaxis = list(title = 'Skewness', range = c(-5, 5))
+                                ))%>%
+                              add_trace(
+                                x = input$kfalpha,
+                                y = input$kfbeta,
+                                z = skew,
+                                type = "scatter3d",
+                                mode='lines+markers',
+                                showlegend = FALSE,
+                                marker = list(color = 'red', size = 5, opacity = 5),
+                                hovertemplate = paste('α : %{x:.4f}',
+                                                      '<br> β : %{y:.4f}',
+                                                      '<br>Skewness : %{z:.4f}<br>',
+                                                      '<extra> </extra>' )
+                              )%>%
+                              config(displayModeBar = FALSE) ) # Menghilangkan mode bar plotly
+      }else if (input$kdist=="jsep"){
+        alphas4 <- seq(1,15, length.out=50)
+        betas4 <- seq(1,15, length.out=50)
+        skew<- jsep_skewness(input$ks4alpha,input$ks4beta)
+        zs4 <- matrix(0, length(betas4), length(alphas4))
+        for (i in 1:length(alphas4)) {
+          for (j in 1:length(betas4)) {
+            suppressWarnings(zs4[j,i] <- jsep_skewness(alphas4[i], betas4[j]))
+          }
+        }
+        df<-data.frame(alphas4,betas4,zs4)
+        suppressWarnings(   plot_ly(df, x = ~alphas4, y = ~betas4, z = ~zs4, type = "surface",
+                                    hovertemplate = paste('α : %{x:.4f}',
+                                                          '<br> β : %{y:.4f}', 
+                                                          '<br>Skewness : %{z:.4f}<br>',
+                                                          '<extra> </extra>' )) %>%
+                              layout(
+                                title = list(text = "Skewness Plot", font = list(family = "montserrat", size = 16, color = "#2C3E50")),
+                                scene = list(
+                                  xaxis = list(title = 'α'),
+                                  yaxis = list(title = ' β'),
+                                  zaxis = list(title = 'skewness')
+                                ))%>%
+                              add_trace(
+                                x = input$ks4alpha,
+                                y = input$ks4beta,
                                 z = skew,
                                 type = "scatter3d",
                                 mode='lines+markers',
@@ -623,6 +769,80 @@ function(input, output, session) {
                                                      '<extra> </extra>' )
                              )%>%
                              config(displayModeBar = FALSE))  # Menghilangkan mode bar plotly
+      } else if(input$kdist=="fossep"){
+        alphafo <- seq(1.5, 2.0,length.out=20)
+        betafo <- seq(0.8, 1.1,length.out=20)
+        z <- matrix(0, length(alphafo), length(betafo))
+        
+        for (i in 1:length(alphafo)) {
+          for (j in 1 : length(betafo)){
+            suppressWarnings(z[j, i] <- fossep_kurtosis(alphafo[i], betafo[j]))
+          }
+        }
+        df<-data.frame(alphafo,betafo,z)
+        suppressWarnings(  plot_ly(df, x = ~alphafo, y = ~betafo, z = ~z, type = "surface",
+                                   hovertemplate = paste('α : %{x:.4f}',
+                                                         '<br> κ : %{y:.4f}', 
+                                                         '<br>Excess-Kutrosis : %{z:.4f}<br>',
+                                                         '<extra> </extra>' )) %>%
+                             layout(
+                               title = list(text = "Excess-Kurtosis Plot", font = list(family = "montserrat", size = 16, color = "#2C3E50")),
+                               scene = list(
+                                 xaxis = list(title = 'α'),
+                                 yaxis = list(title = ' κ'),
+                                 zaxis = list(title = 'Excess-kurtosis')
+                               ))%>%
+                             add_trace(
+                               x = input$kfalpha,
+                               y = input$kfbeta,
+                               z = fossep_kurtosis (input$kfalpha,input$kfbeta),
+                               type = "scatter3d",
+                               mode='lines+markers',
+                               showlegend = FALSE,
+                               marker = list(color = 'red', size = 5, opacity = 5),
+                               hovertemplate = paste('α : %{x:.4f}',
+                                                     '<br> κ : %{y:.4f}',
+                                                     '<br>Kurtosis : %{z:.4f}<br>',
+                                                     '<extra> </extra>' )
+                             )%>%
+                             config(displayModeBar = FALSE))  # Menghilangkan mode bar plotly
+      }else if(input$kdist=="jsep"){
+        alphas4 <- seq(1, 15, length.out=100)
+        betas4 <- seq(1, 15, length.out=100)
+        z <- matrix(0, length(alphas4), length(betas4))
+        
+        for (i in 1:length(alphas4)) {
+          for (j in 1 : length(betas4)){
+            suppressWarnings(z[j, i] <- jsep_kurtosis(alphas4[i], betas4[j]))
+          }
+        }
+        df<-data.frame(alphas4,betas4,z)
+        suppressWarnings(  plot_ly(df, x = ~alphas4, y = ~betas4, z = ~z, type = "surface",
+                                   hovertemplate = paste('α : %{x:.4f}',
+                                                         '<br> κ : %{y:.4f}', 
+                                                         '<br>Excess-Kutrosis : %{z:.4f}<br>',
+                                                         '<extra> </extra>' )) %>%
+                             layout(
+                               title = list(text = "Excess-Kurtosis Plot", font = list(family = "montserrat", size = 16, color = "#2C3E50")),
+                               scene = list(
+                                 xaxis = list(title = 'α'),
+                                 yaxis = list(title = ' κ'),
+                                 zaxis = list(title = 'Excess-kurtosis')
+                               ))%>%
+                             add_trace(
+                               x = input$ks4alpha,
+                               y = input$ks4beta,
+                               z = jsep_kurtosis (input$ks4alpha,input$ks4beta),
+                               type = "scatter3d",
+                               mode='lines+markers',
+                               showlegend = FALSE,
+                               marker = list(color = 'red', size = 5, opacity = 5),
+                               hovertemplate = paste('α : %{x:.4f}',
+                                                     '<br> κ : %{y:.4f}',
+                                                     '<br>Kurtosis : %{z:.4f}<br>',
+                                                     '<extra> </extra>' )
+                             )%>%
+                             config(displayModeBar = FALSE))  # Menghilangkan mode bar plotly
       }
     }
   })
@@ -689,6 +909,34 @@ function(input, output, session) {
                               axis.title.y = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
                               legend.position="bottom"
                             ))
+      }else if (input$dist == "fossep"){
+        suppressWarnings( ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
+                            geom_line(aes(x = Value,y = densn(),color="Fernandez-Osiewalski-Steel Skew Exponential Power"), size = 2.25, linetype = "solid") +
+                            geom_line(aes(x = Value,y = densnorm(),color="Normal "), size = 2, linetype = "dashed") +
+                            labs(title = "Probability density Function (PDF)", x = "x", y = "density") +
+                            #xlim(lb(),ub())+
+                            labs(color = "Distribution") +
+                            theme_minimal()+
+                            theme(
+                              plot.title = element_text(family = "montserrat",  size = 15, hjust = 0.5),
+                              axis.title.x = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
+                              axis.title.y = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
+                              legend.position="bottom"
+                            ))
+      }else if (input$dist == "jsep"){
+        suppressWarnings( ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
+                            geom_line(aes(x = Value,y = densn(),color="Jones Skew Exponential Power"), size = 2.25, linetype = "solid") +
+                            geom_line(aes(x = Value,y = densnorm(),color="Normal "), size = 2, linetype = "dashed") +
+                            labs(title = "Probability density Function (PDF)", x = "x", y = "density") +
+                            #xlim(lb(),ub())+
+                            labs(color = "Distribution") +
+                            theme_minimal()+
+                            theme(
+                              plot.title = element_text(family = "montserrat",  size = 15, hjust = 0.5),
+                              axis.title.x = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
+                              axis.title.y = element_text(family = "roboto", size = 14,  color = "#2C3E50"),
+                              legend.position="bottom"
+                            ))
       }
     }
     
@@ -737,6 +985,26 @@ function(input, output, session) {
             axis.title.x = element_text(family = "roboto", size = 14, color = "#2C3E50"),
             axis.title.y = element_text(family = "roboto", size = 14, color = "#2C3E50"),
           )
+      }else if (input$dist =="fossep"){
+        ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
+          geom_line(aes(y = cumn()),color="#050A30", linewidth = 2.25, linetype = "solid") +
+          labs(title = "Cumulative distribution function (CDF)", x = "x", y = "density") +
+          theme_minimal()+
+          theme(
+            plot.title = element_text(family = "montserrat",  size = 15, hjust = 0.5),
+            axis.title.x = element_text(family = "roboto", size = 14, color = "#2C3E50"),
+            axis.title.y = element_text(family = "roboto", size = 14, color = "#2C3E50"),
+          )
+      }else if (input$dist =="jsep"){
+        ggplot(data.frame(Value = dtd_seq()), aes(x = Value,xmin=xmin(),xmax=xmax())) +
+          geom_line(aes(y = cumn()),color="#050A30", linewidth = 2.25, linetype = "solid") +
+          labs(title = "Cumulative distribution function (CDF)", x = "x", y = "density") +
+          theme_minimal()+
+          theme(
+            plot.title = element_text(family = "montserrat",  size = 15, hjust = 0.5),
+            axis.title.x = element_text(family = "roboto", size = 14, color = "#2C3E50"),
+            axis.title.y = element_text(family = "roboto", size = 14, color = "#2C3E50"),
+          )
       }
     }
     
@@ -747,5 +1015,3 @@ function(input, output, session) {
   
   
 }
-
-

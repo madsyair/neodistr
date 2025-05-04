@@ -7,7 +7,7 @@
 brms_custom_family(family = "msnburr", vectorize = TRUE)
 }
 \arguments{
-\item{family}{distribution neo-normal option: "msnburr", "msnburr2a", "gmsnburr", and "jfst"}
+\item{family}{distribution neo-normal option: "msnburr", "msnburr2a", "gmsnburr", "jfst", and "fossep"}
 
 \item{vectorize}{logical; if TRUE,  Stan code of family distribution is vectorize 
 The default value of this parameter is TRUE}

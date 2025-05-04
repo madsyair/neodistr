@@ -1,0 +1,179 @@
+---
+title: "Neo-normal Distribution Family for MCMC Models in Stan"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Neo-normal Distribution Family for MCMC Models in Stan}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+The **neodistr** package provides neo-normal distribution function for Bayesian modeling.
+This vignette explains how to use it with stan code, especially demonstrates how to fit Bayesian models using the fossep distributions, as one of the neo-normal distribution.
+
+## Load Required Package
+
+```{r}
+set.seed(400)
+library(rstan)
+library(neodistr)
+library(bayesplot)
+library(loo)
+```
+
+
+## Installation
+
+### Install from CRAN
+
+```{r}
+#install.packages("neodistr")
+```
+
+### Or from GitHub
+
+```{r}
+#devtools::install_github("madsyair/neodistr")
+```
+
+## Usage Example
+
+Include data simulation, modeling, estimation, and evaluation.
+
+### Data Simulation
+
+```{r}
+set.seed(400)
+dt <- neodistr::rfossep(100,mu=0, sigma=1, alpha = 1, beta = 2) # simulated data form fossep distribution
+data_list <- list(
+ n = 100,
+ y = dt
+ )
+```
+
+### Modeling 
+
+```{r}
+func_code_vector<-paste(c("functions{",neodistr::stanf_fossep(vectorize=TRUE),"}"),collapse="\n")
+stan_model_fossep <-"
+data{
+  int<lower=1> n;
+  vector[n] y;
+}
+parameters{
+  real mu;
+  real<lower=0> sigma;
+  real<lower=0> alpha;
+  real<lower=0> beta;
+}
+model {
+ y ~ fossep(rep_vector(mu, n), sigma, alpha, beta);
+  mu ~ normal(0,1);
+  sigma ~ cauchy(0, 2.5);
+  alpha ~ gamma(2,1);
+  beta ~ gamma(2,1);
+    
+}
+generated quantities {
+  vector[n] log_lik;
+  
+  for (i in 1:n) {
+    log_lik[i] = fossep_lpdf(rep_vector(y[i], 1) | rep_vector(mu, 1), sigma, alpha, beta);
+  }
+}
+"
+```
+
+### Estimation
+
+```{r}
+stan_fossep<- paste (c(func_code_vector,stan_model_fossep,"\n"), collapse = "\n") # merge Stan model 
+fit <- stan(
+    model_code = stan_fossep,      # Stan Program
+    data = data_list,              # named list data
+    chains = 2,                    # number of markov chains
+    warmup = 1000,                 # total number of warmup iterarions per chain
+    iter = 3000,                   # total number of iterations iterarions per chain
+    cores = 1,                     # number of cores (could use one per chain)
+    control = list(                # control sampel behavior
+      adapt_delta = 0.9
+    ),
+    refresh = 1000                 # progress has shown if refresh >=1, else no progress shown
+)
+```
+
+### Evaluation
+
+**R-hat checking**
+```{r}
+print(fit, pars = c("sigma", "alpha", "beta"), probs = c(0.025, 0.5, 0.975))
+```
+
+**Traceplot**
+
+```{r}
+traceplot(fit, pars = c("mu", "sigma", "alpha", "beta")) + theme_bw()
+```
+
+**Posterior Predictive Check**
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+**Leave-One-out Cross-Validation (LOO-cv)**
+
+```{r}
+loo(fit)
+```
+
+```{r}
+loo(fit, moment_match = TRUE)
+```
+
+## Conclusion
+
+The **R-hat** values for all parameters are close to 1.00, indicating that the Markov Chains have converged.
+If R-hat were greater than 1.1, it would suggest issues with convergence, requiring more iterations or better tuning.
+
+The **traceplot** shows well-mixed chains with no visible patterns or drifts, confirming good mixing.
+If chains were separated or trending, it might indicate poor convergence, requiring adjustments such as increasing adapt_delta or warmup.
+
+The **posterior predictive** distribution overlaps well with the observed data, suggesting that the model is capable of generating realistic samples.
+If there were significant mismatches, it would indicate model misspecification, requiring reconsideration of priors, likelihood functions, or additional predictors.
+
+Higher **elpd_loo** → better predictive performance.
+Lower **looic** → better balance between fit and complexity.
+**p_loo** should be smaller than the number of parameters or data; if too large → potential overfitting or misspecification.
+High Pareto-k → LOO estimates may be unreliable.
+
+**Moment matching** corrects the importance sampling weights for problematic observations in LOO-CV without requiring a full model refit. When moment_match = TRUE, the algorithm identifies observations with high Pareto k values (e.g., > 0.7) and adjusts their importance sampling estimates by recalculating log posterior densities.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

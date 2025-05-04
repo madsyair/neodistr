@@ -3,7 +3,7 @@
 # 
 #  To call PDF, CDF,  CCDF, and RNG function for each distribution using Stan
 #  
-#  @param family To identify the type of distribution to be used (family = "gmsnburr", "msnburr", "msnburr2a", "jfst")
+#  @param family To identify the type of distribution to be used (family = "gmsnburr", "msnburr", "msnburr2a", "jfst", "fossep")
 #  @param func  Choose the function to be used (func = "PDF", "CDF", "CCDF", "RNG")
 # 
 #         @return \code{neonormal_stanfunc(family="gmsnburr", func="pdf")} gives the Probabillity Density Function  from GMSNBUrr distribution
@@ -22,16 +22,25 @@
 #          \code{neonormal_stanfunc(family="jfst", func="cdf")} gives the Cumulative Density Function from Jones-Faddys Skew-t distriburion
 #          \code{neonormal_stanfunc(family="jfst", func="ccdf")} gives the Complementary Cumulative Density Function from Jones-Faddys Skew-t distriburion
 #          \code{neonormal_stanfunc(family="jfst", func="rng")} gives the random number generator from Jones-Faddys-Skew-t distriburion
+#          \code{neonormal_stanfunc(family="fossep", func="pdf")} gives the Probabillity Density Function from Fernandez-Osiewalski-Steel Skew Exponential Power distriburion
+#          \code{neonormal_stanfunc(family="fossep", func="cdf")} gives the Cumulative Density Function from Fernandez-Osiewalski-Steel Skew Exponential Power distriburion
+#          \code{neonormal_stanfunc(family="fossep", func="ccdf")} gives the Complementary Cumulative Density Function from Fernandez-Osiewalski-Steel Skew Exponential Power distriburion
+#          \code{neonormal_stanfunc(family="jsep", func="pdf")} gives the Probabillity Density Function from Jones Skew Exponential Power distribution
+#          \code{neonormal_stanfunc(family="jsep", func="cdf")} gives the Cumulative Density Function from Jones Skew Exponential Power distribution
+#          \code{neonormal_stanfunc(family="jsep", func="ccdf")} gives the Complementary Cumulative Density Function from Jones Skew Exponential Power distribution
 #          
 # 
 # examples neonormal_stanfunc(family="gmsnburr", func="pdf")
 
 #' @importFrom rstan expose_stan_functions stanc
 neonormal_stanfunc<-function(family="gmsnburr",func="pdf",vectorize=TRUE){
-.<-msnburr_lpdf<-msnburr2a_lpdf<-jfst_lpdf<-gmsnburr_lpdf<-NULL
-.<-gmsnburr_cdf<-msnburr_cdf<-msnburr2a_cdf<-jfst_cdf<-NULL
-.<-gmsnburr_lcdf<-msnburr_lcdf<-msnburr2a_lcdf<-jfst_lcdf<-NULL
-.<-gmsnburr_lccdf<-msnburr_lccdf<-msnburr2a_lccdf<-jfst_lccdf<-NULL
+  if (interactive() || identical(Sys.getenv("NOT_CRAN"), "true")) {
+
+  
+.<-msnburr_lpdf<-msnburr2a_lpdf<-jfst_lpdf<-gmsnburr_lpdf<-fossep_lpdf<-jsep_lpdf<-NULL
+.<-gmsnburr_cdf<-msnburr_cdf<-msnburr2a_cdf<-jfst_cdf<-fossep_cdf<-jsep_cdf<-NULL
+.<-gmsnburr_lcdf<-msnburr_lcdf<-msnburr2a_lcdf<-jfst_lcdf<-fossep_lcdf<-jsep_lcdf<-NULL
+.<-gmsnburr_lccdf<-msnburr_lccdf<-msnburr2a_lccdf<-jfst_lccdf<-fossep_lccdf<-jsep_lccdf<-NULL
 .<-gmsnburr_rng<-msnburr_rng<-msnburr2a_rng<-jfst_rng<-NULL
 .<-gmsnburr_quantile<-msnburr_quantile<-msnburr2a_quantile<-jfst_quantile<-NULL
     
@@ -40,7 +49,9 @@ neonormal_stanfunc<-function(family="gmsnburr",func="pdf",vectorize=TRUE){
                 "gmsnburr"  = stanf_gmsnburr(vectorize),
                 "msnburr"   = stanf_msnburr(vectorize),
                 "msnburr2a" = stanf_msnburr2a(vectorize),
-                "jfst"      = stanf_jfst(vectorize)               
+                "jfst"      = stanf_jfst(vectorize),
+                "fossep"    = stanf_fossep(vectorize),
+                "jsep"      = stanf_jsep(vectorize)
    )
   
     func_code<-paste(c("functions{",fc,"}"),collapse="\n")
@@ -85,6 +96,23 @@ neonormal_stanfunc<-function(family="gmsnburr",func="pdf",vectorize=TRUE){
               pdf[i] <-exp(sapply(y[i], FUN=jfst_lpdf, mu=mu, sigma=sigma,alpha=alpha,beta=beta))
             }
           return(pdf)
+        },
+        
+        "fossep"=function(y,mu,sigma,alpha,beta){
+          n<-length(y)
+          pdf<-rep(0,n)
+          for(i in 1:n){
+            pdf[i] <-exp(sapply(y[i], FUN=fossep_lpdf, mu=mu, sigma=sigma,alpha=alpha,beta=beta))
+          }
+          return(pdf)
+        },
+        "jsep"=function(y,mu,sigma,alpha,beta){
+          n<-length(y)
+          pdf<-rep(0,n)
+          for(i in 1:n){
+            pdf[i] <-exp(sapply(y[i], FUN=jsep_lpdf, mu=mu, sigma=sigma,alpha=alpha,beta=beta))
+          }
+          return(pdf)
         }
        )
       }else if(func=="cdf")
@@ -126,6 +154,28 @@ neonormal_stanfunc<-function(family="gmsnburr",func="pdf",vectorize=TRUE){
            cdf[i]<- sapply(y[i], FUN= jfst_cdf, mu=mu, sigma=sigma, alpha=alpha,beta=beta)
           }
           return(cdf)
+       },
+       
+       "fossep"=function(y, mu, sigma, alpha,beta){
+         n<- length(y)
+         cdf<-rep(0,n)
+         for (i in 1:n){
+           cdf[i]<- sapply(y[i], FUN= fossep_cdf, mu=mu, sigma=sigma, alpha=alpha,beta=beta)
+         }
+         return(cdf)
+       },
+       "jsep"=function(y, mu, sigma, alpha,beta){
+         n<- length(y)
+         cdf<-rep(0,n)
+         for (i in 1:n){
+           if (is.infinite(y[i]) && y[i] > 0) {
+             cdf[i] <- 1  # CDF(Inf) = 1
+           } else if (is.infinite(y[i]) && y[i] < 0) {
+             cdf[i] <- 0  # CDF(-Inf) = 0
+           }else
+             cdf[i]<- sapply(y[i], FUN= jsep_cdf, mu=mu, sigma=sigma, alpha=alpha,beta=beta)
+           }
+         return(cdf)
        }
       
         )
@@ -170,6 +220,23 @@ neonormal_stanfunc<-function(family="gmsnburr",func="pdf",vectorize=TRUE){
                         lcdf[i]<- sapply(y[i], FUN= jfst_lcdf, mu=mu, sigma=sigma, alpha=alpha,beta=beta)
                       }
                       return(lcdf)
+                    },
+                    
+                    "fossep"=function(y, mu, sigma, alpha,beta){
+                      n<- length(y)
+                      lcdf<-rep(0,n)
+                      for (i in 1:n){
+                        lcdf[i]<- sapply(y[i], FUN= fossep_lcdf, mu=mu, sigma=sigma, alpha=alpha,beta=beta)
+                      }
+                      return(lcdf)
+                    },
+                    "jsep"=function(y, mu, sigma, alpha,beta){
+                      n<- length(y)
+                      lcdf<-rep(0,n)
+                      for (i in 1:n){
+                        lcdf[i]<- sapply(y[i], FUN= jsep_lcdf, mu=mu, sigma=sigma, alpha=alpha,beta=beta)
+                      }
+                      return(lcdf)
                     }
         )
         
@@ -212,6 +279,23 @@ neonormal_stanfunc<-function(family="gmsnburr",func="pdf",vectorize=TRUE){
                 ccdf[i]<-exp(sapply(y[i], FUN =jfst_lccdf, mu=mu, sigma=sigma,  alpha=alpha,beta=beta ))
             }
             return(ccdf)
+        },
+       
+        "fossep" = function(y, mu, sigma, alpha, beta){
+          n<- length(y)
+          ccdf<-rep(0,n)
+          for(i in 1:n){
+            ccdf[i]<-exp(sapply(y[i], FUN =fossep_lccdf, mu=mu, sigma=sigma,  alpha=alpha,beta=beta ))
+          }
+          return(ccdf)
+        },
+        "jsep" = function(y, mu, sigma, alpha, beta){
+          n<- length(y)
+          ccdf<-rep(0,n)
+          for(i in 1:n){
+            ccdf[i]<-exp(sapply(y[i], FUN =jsep_lccdf, mu=mu, sigma=sigma,  alpha=alpha,beta=beta ))
+          }
+          return(ccdf)
         }
   
          )
@@ -249,6 +333,7 @@ neonormal_stanfunc<-function(family="gmsnburr",func="pdf",vectorize=TRUE){
             }
             return(rng)
           }
+         
         )
        }else if(func=="quantile")
        {
@@ -284,8 +369,10 @@ neonormal_stanfunc<-function(family="gmsnburr",func="pdf",vectorize=TRUE){
                           quan[i]<-(sapply(p[i], FUN = jfst_quantile, mu=mu, sigma = sigma, alpha=alpha,beta = beta))
                         }
                         return(quan)
-                      }  
+                      }
                     )
         }
-
+  } else {
+    message("neonormal_stanfunc() skipped: running on CRAN")
+  }
   }

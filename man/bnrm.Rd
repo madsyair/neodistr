@@ -51,7 +51,7 @@ fitted. The details of model specification are explained in
 \item{data}{An object of class \code{data.frame} (or one that can be coerced
 to that class) containing data of all variables used in the model.}
 
-\item{family}{the neo-normal distribution as response in  regression:msnburr(),msnburr2a(),gmsnburr(),jfst()
+\item{family}{the neo-normal distribution as response in  regression:msnburr(),msnburr2a(),gmsnburr(),jfst(), fossep(), jsep()
 default argument in family is vectorize=TRUE. if not vectorize, give argument vectorize=FALSE, example:msnburr(vectorize=FALSE)}
 
 \item{prior}{One or more \code{brmsprior} objects created by
@@ -282,7 +282,7 @@ Fit a neo-normal model that using brm function in brms package.All arguments in 
   }
 }
 \references{
-Buerkner,P-C (2017). brms: An R Package for Bayesian Multilevel
+Burkner,P-C (2017). brms: An R Package for Bayesian Multilevel
 Models Using Stan. \emph{Journal of Statistical Software}, 80(1), 1-28.
 \code{doi:10.18637/jss.v080.i01}
 

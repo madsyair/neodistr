@@ -2,13 +2,13 @@
 
 
 #' @name summary_dist
-#' @param family identify the type of Neo-normal distribution to be used. There are four categories of neo-normal distributions,
-#' which encompass "msnburr" for MSNBurr , "msnburr2a" for MSNBurr-IIa, "gmsnburr" for GMSNBurr, and "jfst" for Jones-Faddy's Skew-t Distribution. 
+#' @param family identify the type of Neo-normal distribution to be used. There are five categories of neo-normal distributions,
+#' which encompass "msnburr" for MSNBurr , "msnburr2a" for MSNBurr-IIa, "gmsnburr" for GMSNBurr, "jfst" for Jones-Faddy's Skew-t Distribution, "fossep" for Fernandez-Osiewalski-Steel Skew Exponential Power Distribution, and "jsep" for Jones's Skew Exponential Power. 
 #' The default value of this parameter is  "msnburr"
 #'
 #' @param par list values of each parameter, based on the chosen distribution. The default value is "par=c(alpha=1,mu=0,sigma=1)" for MSNBurr parameter
 #' parameter of MSNBurr and MSNBurr-IIa are mu, sigma, alpha
-#' parameter of GMSNBurr and JFST are mu, sigma, alpha, beta
+#' parameter of GMSNBurr, JFST, FOSSEP, and JSEP are mu, sigma, alpha, beta
 #'
 #' @description
 #' To display a summary of calculations for a specific neo-normal distribution, 
@@ -22,6 +22,8 @@
 #' Rigby, R.A. and Stasinopoulos, M.D. and Heller, G.Z. and De Bastiani, F. 
 #' (2020) Distributions for Modeling Location, Scale, and Shape: 
 #' Using GAMLSS in R.CRC Press
+#' Fernandez, C., Osiewalski, J., & Steel, M. F. (1995) Modeling and inference with v-spherical distributions. 
+#' Journal of the American Statistical Association, 90(432), pp 1331-1340
 #' 
 #' @examples
 #' summary_dist (family="msnburr2a", par=c(mu=0,sigma=1,alpha=4))
@@ -76,8 +78,41 @@ summary_dist<-function(family="msnburr",par=c(mu=0,sigma=1,alpha=1)){
     sigma=par["sigma"]
     alpha=par["alpha"]
     beta=par["beta"]
+  }else if(family=="fossep"){
+    if(is.na(par["mu"])){
+      par["mu"] <-0
+    }
+    if(is.na(par["sigma"])){
+      par["sigma"] <-1
+    }
+    if(is.na(par["alpha"])){
+      par["alpha"]<-2
+    }
+    if(is.na(par["beta"])){
+      par["beta"] <-2
+    }
+    mu=par["mu"]
+    sigma=par["sigma"]
+    alpha=par["alpha"]
+    beta=par["beta"]
+  }else if(family=="jsep"){
+    if(is.na(par["mu"])){
+      par["mu"] <-0
+    }
+    if(is.na(par["sigma"])){
+      par["sigma"] <-1
+    }
+    if(is.na(par["alpha"])){
+      par["alpha"]<-2
+    }
+    if(is.na(par["beta"])){
+      par["beta"] <-2
+    }
+    mu=par["mu"]
+    sigma=par["sigma"]
+    alpha=par["alpha"]
+    beta=par["beta"]
   }
-
 
    if(family=="msnburr"){
     alpha1<-alpha
@@ -181,6 +216,47 @@ if(family %in%c("msnburr","msnburr2a","gmsnburr")){
       skewness=skewness
       excess.kurtosis=excess.kurtosis
     }
+  }else if(family=="fossep"){
+    a<-alpha
+    b<-beta
+    
+    ez= 2^(1/b)*gamma(2*1/b)*(a-(1/a))
+    varz<-(2^(2/b)*gamma(3*1/b)*(a^2+(1/a^2)-1)/gamma(1/b))-(ez^2)
+    ez3<-(2^(3/b)*gamma(4*1/b)*(a^4-(1/a^4)))/(gamma(1/b)*(a+(1/a)))
+    ez4<-(2^(4/b)*gamma(5*1/b)*(a^5+1/a^5))/(gamma(1/b)*(a+(1/a)))
+    
+    mean<-mu+sigma*ez
+    variance <- varz*sigma^2
+    m3z<-ez3-(3*varz*ez)-(ez^3)
+    m3y<-m3z*sigma^3
+    m4z<-ez4-(4*ez3*ez)+(6*varz*ez^2)+(3*ez^4)
+    m4y<-m4z*sigma^4
+    median<-qfossep(0.5,mu,sigma,alpha,beta)
+    skewness<-m3y/variance^(1.5)
+    excess.kurtosis<-(m4y/variance^2)-3
+    mode<-mu
+  }else if(family == "jsep"){
+    a<-alpha
+    b<-beta
+    
+    c <- 1 / (gamma(1 + 1/b) + gamma(1 + 1/a)) 
+    ez <- c * (1/b * gamma(2/b) - 1/a * gamma(2/a))
+    varz<-c * (1/b * gamma(3/b) + 1/a * gamma(3/a)) - ez^2
+    ez3<-c * (1/b * gamma(4/b) - 1/a * gamma(4/a))
+    ez4<-c * (1/b * gamma(5/b) + 1/a * gamma(5/a))
+    mean<-mu+sigma*ez
+    variance <- varz*sigma^2
+    m3z<-ez3-3*varz*ez-ez^3
+    m3y<-m3z*sigma^3
+    m4z<-ez4-4*ez3*ez+(6*varz*ez^2)+3*ez^4
+    m4y<-m4z*sigma^4
+    m4y<-m4z*sigma^4
+    median<-qjsep(0.5,mu,sigma,alpha,beta)
+    mode<-mu
+    variance <- varz*sigma^2
+    skewness <-m3y/(variance^1.5)
+    excess.kurtosis<-(m4y/variance^2)-3
+    
   }
   
  

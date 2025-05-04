@@ -1,0 +1,89 @@
+---
+title: "Neodistrbrms"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Neodistrbrms}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Bayesian Model Comparison using `brms`
+
+This vignette demonstrates how to fit and compare Bayesian regression models using `brms` with a custom distribution from the `neodistr` package.
+
+## Load Required Packages
+
+```{r setup, include=FALSE}
+library(neodistr)
+library(brms)
+library(loo)
+```
+
+## Generating Data with Stan
+
+The following example creates simulated data using the `jsep` distribution from the `neodistr` package.
+
+```{r}
+set.seed(123)  # Set seed for reproducibility
+x <- runif(100)  # Predictor variable with uniform distribution
+e <- rjsep(100, 0, 1, 2, 2)  # Error term with Jones skew exponential power distribution
+y <- 0.5 + 0.8 * x + e  # Regression model with error
+data <- data.frame(y, x)
+```
+
+## Fitting Bayesian Regression Models
+
+We fit a Bayesian regression model using `brms` with the `jsep` distribution.
+
+```{r}
+jsep <- brms_custom_family("jsep")  # Define custom distribution
+fit <- brm(
+  y ~ x, data = data,
+  family = jsep$custom_family, 
+  stanvars = jsep$stanvars_family,
+  prior = c(
+    set_prior("lognormal(0,1)", class = "alpha"),
+    set_prior("lognormal(0,1.5)", class = "beta"),
+    set_prior("cauchy(0,2.5)", class = "sigma"),
+    set_prior("cauchy(1,2.5)", class = "Intercept")
+  )
+)
+```
+
+## Model Summary
+
+```{r}
+summary(fit)
+```
+
+## Model Evaluation with LOO-CV
+
+Perform Leave-One-Out Cross-Validation (LOO-CV) to assess model performance.
+
+```{r}
+loo(fit)
+```
+
+If any observations have high Pareto k values (i.e., k > 0.7), it indicates that the corresponding data points are highly influential and may cause unstable LOO estimates. In such cases, it is recommended to use moment matching to improve the reliability of the approximation:.
+
+```{r}
+loo(fit, moment_match = TRUE)
+```
+
+## Posterior Predictive Check
+
+Use `posterior_predict` to generate posterior predictions and conduct a visual check.
+
+```{r}
+y_pred <- posterior_predict(fit)
+pp_check(fit)
+```
+
+This vignette provides an overview of fitting and comparing Bayesian models using `brms`, including custom distributions from `neodistr`.

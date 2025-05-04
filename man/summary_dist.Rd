@@ -7,13 +7,13 @@
 summary_dist(family = "msnburr", par = c(mu = 0, sigma = 1, alpha = 1))
 }
 \arguments{
-\item{family}{identify the type of Neo-normal distribution to be used. There are four categories of neo-normal distributions,
-which encompass "msnburr" for MSNBurr , "msnburr2a" for MSNBurr-IIa, "gmsnburr" for GMSNBurr, and "jfst" for Jones-Faddy's Skew-t Distribution. 
+\item{family}{identify the type of Neo-normal distribution to be used. There are five categories of neo-normal distributions,
+which encompass "msnburr" for MSNBurr , "msnburr2a" for MSNBurr-IIa, "gmsnburr" for GMSNBurr, "jfst" for Jones-Faddy's Skew-t Distribution, "fossep" for Fernandez-Osiewalski-Steel Skew Exponential Power Distribution, and "jsep" for Jones's Skew Exponential Power. 
 The default value of this parameter is  "msnburr"}
 
 \item{par}{list values of each parameter, based on the chosen distribution. The default value is "par=c(alpha=1,mu=0,sigma=1)" for MSNBurr parameter
 parameter of MSNBurr and MSNBurr-IIa are mu, sigma, alpha
-parameter of GMSNBurr and JFST are mu, sigma, alpha, beta}
+parameter of GMSNBurr, JFST, FOSSEP, and JSEP are mu, sigma, alpha, beta}
 }
 \value{
 media, mean, mode,  variance, skewness, and excess kurtosis of neo-normal distributions
@@ -32,6 +32,8 @@ Jones, M.C. and Faddy, M. J. (2003) A skew extension of the t distribution, with
 Rigby, R.A. and Stasinopoulos, M.D. and Heller, G.Z. and De Bastiani, F. 
 (2020) Distributions for Modeling Location, Scale, and Shape: 
 Using GAMLSS in R.CRC Press
+Fernandez, C., Osiewalski, J., & Steel, M. F. (1995) Modeling and inference with v-spherical distributions. 
+Journal of the American Statistical Association, 90(432), pp 1331-1340
 }
 \author{
 Achmad Syahrul Choir

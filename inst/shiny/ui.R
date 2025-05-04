@@ -61,7 +61,7 @@ fluidPage(
       # Data probasi
       conditionalPanel(
         condition = "input.menu=='prob'",
-        radioButtons("dist", "Choose distribution:", choices = c("MSNBurr" = "msnburr", "MSNBurr-IIa" = "msnburr2a", "GMSNBurr" = "gmsnburr", "Jones-Faddy's Skew-t" = "jfst"), selected = "msnburr"),
+        radioButtons("dist", "Choose distribution:", choices = c("MSNBurr" = "msnburr", "MSNBurr-IIa" = "msnburr2a", "GMSNBurr" = "gmsnburr", "Jones-Faddy's Skew-t" = "jfst", "Fernandez-Osiewalski-Steel Skew Exponential Power" = "fossep", "Jones Skew Exponential Power" = "jsep"), selected = "msnburr"),
         numericInput("num_samples", "Number of samples:", value = 100),
         
         conditionalPanel(
@@ -92,13 +92,29 @@ fluidPage(
           sliderInput("jsigma", "sigma (σ)", min = 0.01, max = 15, step = 0.01, value = 1),
           sliderInput("jalpha", "alpha (α)", min = 1, max = 15, step = 0.01, value = 2),
           sliderInput("jbeta", "beta (β)", min = 1, max = 15, step = 0.01, value = 2)
+        ),
+        
+        conditionalPanel(
+          condition = "input.dist=='fossep'",
+          sliderInput("fmu", "mu (μ)", min = -10, max = 10, step = 0.01, value = 0),
+          sliderInput("fsigma", "sigma (σ)", min = 0.01, max = 15, step = 0.01, value = 1),
+          sliderInput("falpha", "alpha (α)", min = 0.01, max = 15, step = 0.01, value = 1),
+          sliderInput("fbeta", "beta (β)", min = 0.01, max = 15, step = 0.01, value = 2)
+        ),
+        
+        conditionalPanel(
+          condition = "input.dist=='jsep'",
+          sliderInput("s4mu", "mu (μ)", min = -10, max = 10, step = 0.01, value = 0),
+          sliderInput("s4sigma", "sigma (σ)", min = 0.01, max = 15, step = 0.01, value = 1),
+          sliderInput("s4alpha", "alpha (α)", min = 0.01, max = 15, step = 0.01, value = 2),
+          sliderInput("s4beta", "beta (β)", min = 0.01, max = 15, step = 0.01, value = 2)
         )
       ),
       
       # charistik distribusi
       conditionalPanel(
         condition = "input.menu=='char'",
-        radioButtons("kdist", "Choose distribution:", choices = c("MSNBurr" = "msnburr", "MSNBurr-IIa" = "msnburr2a", "GMSNBurr" = "gmsnburr", "Jones-Faddy's Skew-t" = "jfst"), selected = "msnburr"),
+        radioButtons("kdist", "Choose distribution:", choices = c("MSNBurr" = "msnburr", "MSNBurr-IIa" = "msnburr2a", "GMSNBurr" = "gmsnburr", "Jones-Faddy's Skew-t" = "jfst", "Fernandez-Osiewalski-Steel Skew Exponential Power" = "fossep", "Jones Skew Exponential Power" = "jsep" ), selected = "msnburr"),
         
         conditionalPanel(
           condition = "input.kdist=='msnburr'",
@@ -128,7 +144,23 @@ fluidPage(
           sliderInput("kjsigma", "sigma (σ)", min = 0.01, max = 10, step = 0.01, value = 1),
           sliderInput("kjalpha", "alpha (α)", min = 2.1, max = 15, step = 0.01, value = 3),
           sliderInput("kjbeta", "beta (β)", min = 2.1, max = 15, step = 0.01, value = 3)
-        )
+        ),
+        
+        conditionalPanel(
+          condition = "input.kdist=='fossep'",
+          sliderInput("kfmu", "mu (μ)", min = -10, max = 10, step = 0.01, value = 0),
+          sliderInput("kfsigma", "sigma (σ)", min = 0.01, max = 10, step = 0.01, value = 1),
+          sliderInput("kfalpha", "alpha (α)", min = 1.5, max = 2.0, step = 0.01, value = 1),
+          sliderInput("kfbeta", "beta (β)", min = 0.8, max = 1.1, step = 0.01, value = 1)
+        ),
+
+        conditionalPanel(
+          condition = "input.kdist=='jsep'",
+          sliderInput("ks4mu", "mu (μ)", min = -10, max = 10, step = 0.01, value = 0),
+          sliderInput("ks4sigma", "sigma (σ)", min = 0.01, max = 10, step = 0.01, value = 1),
+          sliderInput("ks4alpha", "alpha (α)", min = 1, max = 15, step = 0.01, value = 2),
+          sliderInput("ks4beta", "beta (β)", min = 1, max = 15, step = 0.01, value = 2)
+        )          
       )
     ),
     

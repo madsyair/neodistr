@@ -1,7 +1,7 @@
 #' Neonormal as custom distribution family in brms 
 #' @name brms_custom_family
 #' @import brms 
-#' @param family distribution neo-normal option: "msnburr", "msnburr2a", "gmsnburr", and "jfst"
+#' @param family distribution neo-normal option: "msnburr", "msnburr2a", "gmsnburr", "jfst", and "fossep"
 #' @param vectorize logical; if TRUE,  Stan code of family distribution is vectorize 
 #' The default value of this parameter is TRUE
 #' @return custom_family is an object of class custom family of brms and stanvars_family is stanvars object (the Stan code of function of neo-normal distributions (lpdf,cdf,lcdf,lccdf,quantile and rng)) 
@@ -218,14 +218,105 @@ brms_custom_family<- function(family="msnburr",vectorize=TRUE){
       )
     }
     custom_neonormal<-neonormal_family(vectorize=vectorize)
+  } else if(family=="fossep"){ # Fernandez Osiewalski Steel SEP
+    
+    stan_funs_family<-stanf_fossep(vectorize=vectorize)
+    log_lik_fossep <- function(i, prep) {
+      .<-fossep_lpdf<-NULL
+      mu <- brms::get_dpar(prep, "mu", i = i)
+      sigma <- brms::get_dpar(prep, "sigma")
+      alpha <- brms::get_dpar(prep, "alpha")     
+      beta <- brms::get_dpar(prep, "beta")   
+      y <- prep$data$Y[i]
+      dfossep(y, mu, sigma, alpha,beta,log=TRUE)
+    }
+    posterior_predict_fossep <- function(i, prep, ...) {
+      .<-fossep_rng<-NULL
+      mu <- brms::get_dpar(prep, "mu", i = i)
+      sigma <- brms::get_dpar(prep, "sigma")
+      alpha <- brms::get_dpar(prep, "alpha")  
+      beta <- brms::get_dpar(prep, "beta")  
+      rfossep(1,mu, sigma,alpha,beta)
+    }
+    posterior_epred_fossep <- function(prep) {
+      mu <- brms::get_dpar(prep, "mu")
+      sigma <- brms::get_dpar(prep, "sigma") 
+      alpha <- brms::get_dpar(prep, "alpha") 
+      beta <- brms::get_dpar(prep, "beta") 
+      #  summary_dist("fossep",par=c(mu=mu,sigma=sigma,alpha=alpha,beta=beta))$Mean
+      a<-alpha
+      b<-beta
+      ez = (2^(1/b)*gamma(2*(1/b))*(a-(1/a)))/(gamma(1/b))
+      mu+sigma*ez
+    }
+    neonormal_family <- function(vectorize=TRUE) {
+      loop<-ifelse(vectorize,FALSE,TRUE)
+      custom_family(
+        "fossep",
+        dpars = c("mu", "sigma","alpha","beta"),
+        links = c("identity","log","log","log"),
+        type = "real",
+        lb=c(NA,0,0,0),
+        ub=c(NA,NA,NA,NA),
+        loop=loop,
+        log_lik = log_lik_fossep,
+        posterior_predict = posterior_predict_fossep,
+        posterior_epred = posterior_epred_fossep
+      )
+    }
+    custom_neonormal<-neonormal_family(vectorize=vectorize)
+  }else if(family=="jsep"){ # Jones skew exponential power
+    
+    stan_funs_family<-stanf_jsep(vectorize=vectorize)
+    log_lik_jsep <- function(i, prep) {
+      .<-jsep_lpdf<-NULL
+      mu <- brms::get_dpar(prep, "mu", i = i)
+      sigma <- brms::get_dpar(prep, "sigma")
+      alpha <- brms::get_dpar(prep, "alpha")     
+      beta <- brms::get_dpar(prep, "beta")   
+      y <- prep$data$Y[i]
+      djsep(y, mu, sigma, alpha,beta,log=TRUE)
+    }
+    posterior_predict_jsep <- function(i, prep, ...) {
+      .<-jsep_rng<-NULL
+      mu <- brms::get_dpar(prep, "mu", i = i)
+      sigma <- brms::get_dpar(prep, "sigma")
+      alpha <- brms::get_dpar(prep, "alpha")  
+      beta <- brms::get_dpar(prep, "beta")  
+      rjsep(1,mu, sigma,alpha,beta)
+    }
+    posterior_epred_jsep <- function(prep) {
+      mu <- brms::get_dpar(prep, "mu")
+      sigma <- brms::get_dpar(prep, "sigma") 
+      alpha <- brms::get_dpar(prep, "alpha") 
+      beta <- brms::get_dpar(prep, "beta") 
+      #  summary_dist("jsep",par=c(mu=mu,sigma=sigma,alpha=alpha,beta=beta))$Mean
+      a<-alpha
+      b<-beta
+      ez <- c * (1/b * gamma(2/b) - 1/a * gamma(2/a))
+      mu+sigma*ez
+    }
+    neonormal_family <- function(vectorize=TRUE) {
+      loop<-ifelse(vectorize,FALSE,TRUE)
+      custom_family(
+        "jsep",
+        dpars = c("mu", "sigma","alpha","beta"),
+        links = c("identity","log","log","log"),
+        type = "real",
+        lb=c(NA,0,0,0),
+        ub=c(NA,NA,NA,NA),
+        loop=loop,
+        log_lik = log_lik_jfst,
+        posterior_predict = posterior_predict_jsep,
+        posterior_epred = posterior_epred_jsep
+      )
+    }
+    custom_neonormal<-neonormal_family(vectorize=vectorize)
   }
   
   stanvars_family <- stanvar(scode = stan_funs_family, block = "functions")
   
-  
   return(list(custom_family = custom_neonormal,stanvars_family = stanvars_family,name = family))
-  
-  
 }
 
 
@@ -237,4 +328,7 @@ msnburr2a <- function(vectorize=TRUE) brms_custom_family(family="msnburr2a",vect
 gmsnburr <- function(vectorize=TRUE) brms_custom_family(family="gmsnburr",vectorize=vectorize)
 #' @export
 jfst <- function(vectorize=TRUE) brms_custom_family(family="jfst",vectorize=vectorize)
+#' @export
+fossep <- function(vectorize=TRUE) brms_custom_family(family="fossep",vectorize=vectorize)
+
 
