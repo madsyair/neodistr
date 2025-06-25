@@ -241,7 +241,7 @@ bnrm <- function(formula, data, family = msnburr(), prior = NULL,
                   file = NULL, file_compress = TRUE,
                   file_refit = getOption("brms.file_refit", "never"),
                   empty = FALSE, rename = TRUE, ...){
-  prior <- NULL
+  
   fname <- family$name
   prior <- switch(fname,
                   "msnburr" = {
