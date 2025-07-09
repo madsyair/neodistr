@@ -12,20 +12,22 @@ The default value of this parameter is TRUE}
 }
 \value{
 \code{fossep_lpdf} gives stan's code of the log of density, \code{fossep_cdf} gives stan's code of the distribution
-function, \code{fossep_lcdf} gives stan's code of the log of distribution function and \code{fossep_lccdf} gives the stans's code of complement of log ditribution function (1-fossep_lcdf)
+function, \code{fossep_lcdf} gives stan's code of the log of distribution function and \code{fossep_lccdf} 
+gives the stans's code of complement of log ditribution function (1-fossep_lcdf)
 }
 \description{
 Stan code of fossep distribution for custom distribution in stan
 }
 \details{
 Fernandez-Osiewalski-Steel Skew Exponential Power Distribution has density:
-\deqn{f(y |\mu,\sigma,\beta,\alpha) = \frac{c}{\sigma} \exp \left( - \frac{1}{2} \left| v z \right|^\tau \right) \quad \text{if } y < \mu}
-\deqn{f(y |\mu,\sigma,\beta,\alpha) = \frac{c}{\sigma} \exp \left( - \frac{1}{2} \left| \frac{v}{z} \right|^\tau \right) \quad \text{if } y \ge \mu}
+\deqn{f(y |\mu,\sigma,\alpha,\beta) = \frac{c}{\sigma} \exp \left( - \frac{1}{2} \left| v z \right|^\beta \right) \quad \text{if } y < \mu}
+\deqn{f(y |\mu,\sigma,\alpha,\beta) = \frac{c}{\sigma} \exp \left( - \frac{1}{2} \left| \frac{v}{z} \right|^\beta \right) \quad \text{if } y \ge \mu}
 \deqn{ \text{where } -\infty < y < \infty, \ -\infty < \mu < \infty, \ \sigma > 0, \ \alpha > 0, \ \beta > 0}
 \deqn{ z = \frac{y - \mu}{\sigma}}
-\deqn{ c = v \tau \left[ (1 + v^2) 2^{\frac{1}{\tau}} \Gamma \left( \frac{1}{\tau} \right) \right]^{-1}}
+\deqn{ c = v \beta \left[ (1 + v^2) 2^{\frac{1}{\beta}} \Gamma \left( \frac{1}{\beta} \right) \right]^{-1}}
  
-This function gives stan code  of log density, cumulative distribution, log of cumulatif distribution, log complementary cumulative distribution of Fernandez-Osiewalski-Steel Skew Exponential Power Distribution
+This function gives stan code  of log density, cumulative distribution, log of cumulatif distribution, 
+log complementary cumulative distribution of Fernandez-Osiewalski-Steel Skew Exponential Power Distribution
 }
 \examples{
 \donttest{
@@ -89,9 +91,11 @@ print(fit2, pars = c("mu", "sigma", "alpha", "beta", "lp__"), probs=c(.025,.5,.9
  }
 }
 \references{
-Fernandez, C., Osiewalski, J., & Steel, M. F. (1995) Modeling and inference with v-spherical distributions. Journal of the American Statistical Association, 90(432), pp 1331-1340
+Fernandez, C., Osiewalski, J., & Steel, M. F. (1995) Modeling and inference with v-spherical distributions. 
+Journal of the American Statistical Association, 90(432), pp 1331-1340
 
-Rigby, R.A. and Stasinopoulos, M.D. and Heller, G.Z. and De Bastiani, F. (2019) Distributions for Modeling Location, Scale, and Shape: Using GAMLSS in R.CRC Press
+Rigby, R.A. and Stasinopoulos, M.D. and Heller, G.Z. and De Bastiani, F. (2019) Distributions for Modeling Location, 
+Scale, and Shape: Using GAMLSS in R.CRC Press
 }
 \author{
 Almira Utami and Achmad Syahrul Choir
