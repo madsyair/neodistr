@@ -29,11 +29,11 @@ Jones-Faddy’s Skew-t distribution has density:
 where \eqn{-\infty<y<\infty,  -\infty<\mu<\infty,  \sigma>0, \alpha>0, \beta>0,} 
 \eqn{z =\frac{y-\mu}{\sigma} }, \eqn{ c = {\left[2^{\left(\alpha+\beta-1\right)} {\left(\alpha+\beta\right)^{\frac{1}{2}}} B(a,b)\right]}^{-1} },
  
-This function gives stan code  of log density, cumulative distribution, log of cumulatif distribution, log complementary cumulative distribution,
+This function gives stan code  of log density, cumulative distribution, log of cumulative distribution, log complementary cumulative distribution,
  quantile, random number of Jones-Faddy's Skew-t distribution
 }
 \examples{
-\donttest{
+\dontrun{
 library (neodistr)
 library (rstan)
 

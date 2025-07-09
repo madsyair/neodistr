@@ -7,7 +7,7 @@
 #' @return custom_family is an object of class custom family of brms and stanvars_family is stanvars object (the Stan code of function of neo-normal distributions (lpdf,cdf,lcdf,lccdf,quantile and rng)) 
 #' @author Achmad Syahrul Choir
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'   library(brms)
 #'   library(neodistr)
 #'   x<-runif(100)

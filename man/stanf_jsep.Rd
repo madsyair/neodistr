@@ -33,7 +33,7 @@ has density:
   \deqn{c = \left[ \Gamma(1 + \beta^{-1}) + \Gamma(1 + \alpha^{-1}) \right]^{-1}.}
 }
 \examples{
-\donttest{
+\dontrun{
 library (neodistr)
 library (rstan)
 

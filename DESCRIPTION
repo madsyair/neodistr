@@ -12,19 +12,16 @@ Authors@R:
       person("Meischa Zahra Nur", "Adhelia", role = c("ctb"))
       )
 Maintainer: Achmad Syahrul Choir <madsyair@stis.ac.id>
-Description: Provides functions for calculating the
-    density, cumulative distribution, quantile, and random number of
+Description: Calculating the density, cumulative distribution, quantile, and random number of
     neo-normal distribution. It also interfaces with the 'brms' package,
     allowing the use of the neo-normal distribution as a custom family.
     This integration enables the application of various 'brms' formulas
-    for neo-normal regression. The package implements the following
-    distributions: Modified to be Stable as Normal from Burr (MSNBurr), Modified to be Stable as Normal from Burr-IIa (MSNBurr-IIa), Generalized of MSNBurr (GMSNBurr), Jones-Faddy Skew-t (JSFT), Fernandez-OSiewalski-Steel Skew Exponential Power (FOSSEP) and Jones Skew Exponential Power (JSEP) .
-    References:
-    Choir, A. S. (2020).Unpublished Dissertation.
-    Iriawan, N. (2000).Unpublished Dissertation.
-    Jones, M. C. and Faddy,M. J. (2003).<doi:10.1111/1467-9868.00378>.
+    for neo-normal regression.  Modified to be Stable as Normal from Burr (MSNBurr), 
+    Modified to be Stable as Normal from Burr-IIa (MSNBurr-IIa), Generalized of MSNBurr (GMSNBurr), 
+    Jones-Faddy Skew-t, Fernandez-Osiewalski-Steel Skew Exponential Power,  
+    and Jones Skew Exponential Power distributions are supported.
+    References: Choir, A. S. (2020).Unpublished Dissertation, Iriawan, N. (2000).Unpublished Dissertation,
     Rigby, R. A., Stasinopoulos, M. D., Heller, G. Z., & Bastiani, F. D. (2019) <doi:10.1201/9780429298547>.
-    Fernandez, C., Osiewalski, J., & Steel, M. F. (1995) <doi:10.1080/01621459.1995.10476637>.
 License: GPL-3
 Depends: R (>= 3.6.0),shinythemes,plotly,brms
 Imports: rstan , stats,Rmpfr,ggplot2,shiny

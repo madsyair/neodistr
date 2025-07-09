@@ -201,7 +201,7 @@
 #'
 #' 
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'   library(neodistr)
 #'   x<-runif(100)
 #'   e<-rmsnburr(100,0,1,0.8)

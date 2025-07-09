@@ -16,7 +16,7 @@ The default value of this parameter is TRUE}
 }
 \value{
 \code{msnburr_lpdf} gives the log of density, \code{msnburr_cdf} gives the distribution
-function, \code{msnburr_lcdf} gives the log of distribution function, \code{msnburr_lccdf} gives the complement of log ditribution function (1-msnburr_lcdf),
+function, \code{msnburr_lcdf} gives the log of distribution function, \code{msnburr_lccdf} gives the complement of log distributionfunction (1-msnburr_lcdf),
  and \code{msnburr_rng} generates
 random deviates.
 }
@@ -28,10 +28,10 @@ MSNBurr-IIa Distribution has density function:
 \deqn{f(y |\mu,\sigma,\alpha)=\frac{\omega}{\sigma}\exp{\left(\omega{\left(\frac{y-\mu}{\sigma}\right)}\right)}{{\left(1+\frac{\exp{\left(\omega{(\frac{y-\mu}{\sigma})}\right)}}{\alpha}\right)}^{-(\alpha+1)}}}
 where \eqn{-\infty < y < \infty, -\infty < \mu< \infty, \sigma>0, \alpha>0, 
 \omega = \frac{1}{\sqrt{2\pi}} {\left(1+\frac{1}{\alpha}\right)^{\alpha+1}}}
-This function gives stan code  of log density, cumulative distribution, log of cumulatif distribution, log complementary cumulative distribution, quantile, random number of MSNBurr-IIa distribution
+This function gives stan code  of log density, cumulative distribution, log of cumulative distribution, log complementary cumulative distribution, quantile, random number of MSNBurr-IIa distribution
 }
 \examples{
-\donttest{
+\dontrun{
 library (neodistr)
 library(rstan)
 #inputting data
@@ -122,7 +122,7 @@ print(fit2, pars=c("mu", "sigma", "alpha",  "lp__"), probs=c(.025,.5,.975))
 }
 }
 \references{
-Choir, A. S. (2020). The New Neo-Normal DDistributions and their Properties. Disertation. Institut Teknologi Sepuluh Nopember.
+Choir, A. S. (2020). The New Neo-Normal Distributions and their Properties. Dissertation. Institut Teknologi Sepuluh Nopember.
 }
 \author{
 Achmad Syahrul Choir and Nur Iriawan

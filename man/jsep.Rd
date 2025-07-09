@@ -51,11 +51,11 @@ The default value of this parameter is FALSE}
 
 \item{p}{vectors of probabilities.}
 
-\item{n}{alphamber of observations.}
+\item{n}{number of observations.}
 }
 \value{
 \code{djsep} gives the density , \code{pjsep} gives the distribution function,
-\code{qjsep} gives quantiles function, \code{rjsep} generates random alphambers.
+\code{qjsep} gives quantiles function, \code{rjsep} generates random numbers.
 }
 \description{
 To calculate density function, distribution function, quantile function, and  build data from random generator function 
@@ -92,6 +92,6 @@ Rigby, R.A. and Stasinopoulos, M.D. and Heller, G.Z. and De Bastiani, F.
 \author{
 Meischa Zahra Nur Adhelia
 }
-\concept{Contialphaous}
+\concept{Continuous}
 \concept{Univariate}
 \keyword{distribution}

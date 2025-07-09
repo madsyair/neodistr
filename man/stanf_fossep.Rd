@@ -30,7 +30,7 @@ This function gives stan code  of log density, cumulative distribution, log of c
 log complementary cumulative distribution of Fernandez-Osiewalski-Steel Skew Exponential Power Distribution
 }
 \examples{
-\donttest{
+\dontrun{
 library (neodistr)
 library (rstan)
 

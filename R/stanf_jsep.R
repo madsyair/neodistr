@@ -33,7 +33,7 @@
 #'   and Shape: Using GAMLSS in R.CRC Press
 #'   
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' library (neodistr)
 #' library (rstan)
 #' 

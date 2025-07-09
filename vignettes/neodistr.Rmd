@@ -76,7 +76,7 @@ library(neodistr)
 
 ### Data Simulation and Exploration
 
-We simulate a right‐skewed dataset of 100 observations from the FOSSEP distribution ($\mu=0$, $\sigma=1$, $\alpha=2$, and $\beta=2$) and perform basic exploratory analysis. In this vignette, pre-computed data are loaded to streamline the presentation. Pre-computed data are generated from the FOSSEP distribution using the `rfossep` function, which is part of the **neodistr** package. The simulated data is stored in an RDS file for easy access. The simulated darta can be generated using the following code. The exploratory analysis includes summary statistics and a histogram of the simulated data.
+We simulate a right‐skewed dataset of 100 observations from the FOSSEP distribution ($\mu=0$, $\sigma=1$, $\alpha=2$, and $\beta=2$) and perform basic exploratory analysis. In this vignette, pre-computed data are loaded to streamline the presentation. Pre-computed data are generated from the FOSSEP distribution using the `rfossep` function, which is part of the **neodistr** package. The simulated data is stored in an RDS file for easy access. The simulated data can be generated using the following code. The exploratory analysis includes summary statistics and a histogram of the simulated data.
 
 ```{r, eval=FALSE,echo=TRUE}
 set.seed(400)
@@ -105,7 +105,7 @@ hist(y, main = "Simulated FOSSEP Data", xlab = "Y", col = "skyblue", breaks = 20
 We model `y` with an intercept-only formula. Priors are informed by the simulation parameters:
 
 * $\alpha, \beta$ ~ lognormal(0.5, 0.5)
-* $\sigma$ ∼ half-nrmal(0, 1)
+* $\sigma$ ∼ half-normal(0, 1)
 * $\mu$ ∼ normal(0, 1)
 
 ```{r}

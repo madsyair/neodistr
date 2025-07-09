@@ -58,7 +58,7 @@ The default value of this parameter is FALSE.}
 \code{qgmsnburr} gives quantiles function, \code{rgmsnburr} generates random numbers.
 }
 \description{
-To calculate density function, distribution funcion, quantile function, and  build data from random generator function 
+To calculate density function, distribution function, quantile function, and  build data from random generator function 
 for the GMSNBurr Distribution.
 }
 \details{
@@ -81,7 +81,7 @@ hist(r, xlab = 'GMSNBurr random number', ylab = 'Frequency',
 main = 'Distribution of GMSNBurr Random Number ')
 }
 \references{
-Choir, A. S. (2020). The New Neo-Normal Distributions and their Properties. Disertation. Institut Teknologi Sepuluh Nopember.
+Choir, A. S. (2020). The New Neo-Normal Distributions and their Properties. Dissertation. Institut Teknologi Sepuluh Nopember.
 
 Iriawan, N. (2000). Computationally Intensive Approaches to Inference in Neo-Normal Linear Models. Curtin University of Technology.
 }

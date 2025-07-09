@@ -12,7 +12,7 @@
 #' @author Achmad Syahrul Choir and Nur Iriawan
 #' @return
 #' \code{msnburr_lpdf} gives the log of density, \code{msnburr_cdf} gives the distribution
-#' function, \code{msnburr_lcdf} gives the log of distribution function, \code{msnburr_lccdf} gives the complement of log ditribution function (1-msnburr_lcdf),
+#' function, \code{msnburr_lcdf} gives the log of distribution function, \code{msnburr_lccdf} gives the complement of log distribution function (1-msnburr_lcdf),
 #'  and \code{msnburr_rng} generates
 #' random deviates.
 #' 
@@ -22,14 +22,14 @@
 #' where \eqn{-\infty < y < \infty, -\infty < \mu< \infty, \sigma>0, \alpha>0, 
 #' \omega = \frac{1}{\sqrt{2\pi}} {\left(1+\frac{1}{\alpha}\right)^{\alpha+1}}}
 #'
-#'This function gives stan code  of log density, cumulative distribution, log of cumulatif distribution, log complementary cumulative distribution, quantile, random number of MSNBurr distribution 
+#'This function gives stan code  of log density, cumulative distribution, log of cumulative distribution, log complementary cumulative distribution, quantile, random number of MSNBurr distribution 
 #'
 #' @references 
 #' Iriawan, N. (2000). Computationally Intensive Approaches to Inference in Neo-Normal Linear Models. Curtin University of Technology.
-#' Choir, A. S. (2020). The New Neo-Normal DDistributions and their Properties. Disertation. Institut Teknologi Sepuluh Nopember.
+#' Choir, A. S. (2020). The New Neo-Normal Distributions and their Properties. Dissertation. Institut Teknologi Sepuluh Nopember.
 #' 
 #' @examples 
-#' \donttest{
+#' \dontrun{
 #' library (neodistr)
 #' library(rstan)
 #' #inputting data

@@ -5,7 +5,7 @@
 #' @importFrom stats pbeta qbeta
 #' @param x,q vector of quantiles. 
 #' @param p vectors of probabilities.
-#' @param n alphamber of observations.
+#' @param n number of observations.
 #' @param mu a location parameter.
 #' @param sigma a scale parameter.
 #' @param alpha a shape parameter (left tail heaviness parameter).
@@ -21,11 +21,11 @@
 #' 
 #' @return 
 #' \code{djsep} gives the density , \code{pjsep} gives the distribution function,
-#' \code{qjsep} gives quantiles function, \code{rjsep} generates random alphambers.
+#' \code{qjsep} gives quantiles function, \code{rjsep} generates random numbers.
 #' @author Meischa Zahra Nur Adhelia
 #' @keywords distribution
 #' @concept Univariate
-#' @concept Contialphaous
+#' @concept Continuous
 #' 
 #' 
 

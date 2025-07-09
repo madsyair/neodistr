@@ -29,7 +29,7 @@
 #' Rigby, R.A. and Stasinopoulos, M.D. and Heller, G.Z. and De Bastiani, F. (2019) Distributions for Modeling Location, 
 #' Scale, and Shape: Using GAMLSS in R.CRC Press
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' library (neodistr)
 #' library (rstan)
 #' 

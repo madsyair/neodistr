@@ -16,7 +16,7 @@ The default value of this parameter is TRUE}
 }
 \value{
 \code{msnburr_lpdf} gives the stans's code of log of density, \code{msnburr_cdf} gives the stans's code of distribution
-function, \code{gmsnburr_lcdf} gives the stans's code of log of distribution function, \code{gmsnburr_lccdf} gives the stans's code of complement of log ditribution function (1-gmsnburr_lcdf),
+function, \code{gmsnburr_lcdf} gives the stans's code of log of distribution function, \code{gmsnburr_lccdf} gives the stans's code of complement of log distribution function (1-gmsnburr_lcdf),
  and \code{gmsnburr_rng} the stans's code of generates random numbers.
 }
 \description{
@@ -28,10 +28,10 @@ GMSNBurr Distribution has density:
 where \eqn{-\infty<y<\infty,  -\infty<\mu<\infty,  \sigma>0, \alpha>0, \beta>0} 
 and  \eqn{\omega = {\frac{B(\alpha,\beta)}{\sqrt{2\pi}}}{{\left(1+{\frac{\beta}{\alpha}}\right)}^{\alpha+\beta}}{\left(\frac{\beta}{\alpha}\right)}^{-\beta}}
 
-This function gives stan code  of log density, cumulative distribution, log of cumulatif distribution, log complementary cumulative distribution, quantile, random number of GMSNBurr distribution
+This function gives stan code  of log density, cumulative distribution, log of cumulative distribution, log complementary cumulative distribution, quantile, random number of GMSNBurr distribution
 }
 \examples{
-\donttest{
+\dontrun{
 library(neodistr)
 library(rstan)
 #inputting data
@@ -130,7 +130,7 @@ print(fit2, pars=c("mu", "sigma", "alpha","beta",  "lp__"), probs=c(.025,.5,.975
 }
 }
 \references{
-Choir, A. S. (2020). The New Neo-Normal DDistributions and their Properties. Disertation. Institut Teknologi Sepuluh Nopember.
+Choir, A. S. (2020). The New Neo-Normal Distributions and their Properties. Dissertation. Institut Teknologi Sepuluh Nopember.
 }
 \author{
 Achmad Syahrul Choir
