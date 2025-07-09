@@ -1,0 +1,19 @@
+  citHeader("To cite package 'neodistr' in publications, please use:")
+
+  bibentry(
+    bibtype = "Manual",
+    title   = "neodistr: Neo-Normal Distribution",
+    author  = c(
+      person("Achmad Syahrul", "Choir",
+             role    = c("aut", "cre"),
+             email   = "madsyair@stis.ac.id",
+             comment = c(ORCID = "0000-0001-7088-0646")),
+      person("Anisa", "Faoziah",          role = "aut"),
+      person("Nur",   "Iriawan",
+             role    = "aut",
+             comment = c(ORCID = "0000-0003-2833-6115"))
+
+    ),
+    year    = "2025",
+    note    = "R package version 0.1.2, https://github.com/madsyair/neodistr"
+  )

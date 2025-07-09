@@ -8,8 +8,8 @@ Authors@R:
       person("Anisa", "Faoziah", role = c("aut")),
       person("Nur", "Iriawan", role = c("aut"),
            comment = c(ORCID = "0000-0003-2833-6115")),
-      person("Almira", "Utami", role = c("aut")),
-      person("Meischa Zahra Nur", "Adhelia", role = c("aut"))
+      person("Almira", "Utami", role = c("ctb")),
+      person("Meischa Zahra Nur", "Adhelia", role = c("ctb"))
       )
 Maintainer: Achmad Syahrul Choir <madsyair@stis.ac.id>
 Description: Provides functions for calculating the
