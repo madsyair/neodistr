@@ -1,6 +1,6 @@
 # These functions is translated from ST5 in gamlss.dist that was written by Bob Rigby and Mikis Stasinopoulos
 
-#' Stan function of Jones and Faddys Skew-t Distribution 
+#' Stan function of Jones and Faddy's Skew-t Distribution 
 
 #' @name stanf_jfst
 #' @description

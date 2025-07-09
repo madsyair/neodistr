@@ -16,7 +16,7 @@
 #' \eqn{P\left[ X\leq x\right]}, otherwise, \eqn{P\left[ X>x\right] }.
 #' 
 #' @description
-#' To calculate density function, distribution funcion, quantile function, and  build data from random generator function 
+#' To calculate density function, distribution function, quantile function, and  build data from random generator function 
 #' for the Jones-Faddy's Skew-t Distribution. 
 #' 
 #' @return 

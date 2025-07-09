@@ -40,7 +40,7 @@ The default value of this parameter is FALSE.}
 \code{qmsnburr} gives quantiles function, \code{rmsnburr} generates random  numbers.
 }
 \description{
-To calculate density function, distribution funcion, quantile function, and  build data from random generator function 
+To calculate density function, distribution function, quantile function, and  build data from random generator function 
 for the MSNBurr Distribution.
 }
 \details{

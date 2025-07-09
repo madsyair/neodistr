@@ -18,10 +18,10 @@
 #          \code{neonormal_stanfunc(family="msnburr2a", func="cdf")} gives the Cumulative Density Function from MSNBurr-IIa distriburion
 #          \code{neonormal_stanfunc(family="msnburr2a", func="ccdf")} gives the Complementary Cumulative Density Function from MSNBurr-IIa distriburion
 #          \code{neonormal_stanfunc(family="msnburr2a", func="rng")} gives the random number generator from MSNBurr-IIa distriburion
-#          \code{neonormal_stanfunc(family="jfst", func="pdf")} gives the Probabillity Density Function from Jones-Faddys Skew-t distriburion
-#          \code{neonormal_stanfunc(family="jfst", func="cdf")} gives the Cumulative Density Function from Jones-Faddys Skew-t distriburion
-#          \code{neonormal_stanfunc(family="jfst", func="ccdf")} gives the Complementary Cumulative Density Function from Jones-Faddys Skew-t distriburion
-#          \code{neonormal_stanfunc(family="jfst", func="rng")} gives the random number generator from Jones-Faddys-Skew-t distriburion
+#          \code{neonormal_stanfunc(family="jfst", func="pdf")} gives the Probabillity Density Function from Jones-Faddy's Skew-t distriburion
+#          \code{neonormal_stanfunc(family="jfst", func="cdf")} gives the Cumulative Density Function from Jones-Faddy's Skew-t distriburion
+#          \code{neonormal_stanfunc(family="jfst", func="ccdf")} gives the Complementary Cumulative Density Function from Jones-Faddy's Skew-t distriburion
+#          \code{neonormal_stanfunc(family="jfst", func="rng")} gives the random number generator from Jones-Faddy's-Skew-t distriburion
 #          \code{neonormal_stanfunc(family="fossep", func="pdf")} gives the Probabillity Density Function from Fernandez-Osiewalski-Steel Skew Exponential Power distriburion
 #          \code{neonormal_stanfunc(family="fossep", func="cdf")} gives the Cumulative Density Function from Fernandez-Osiewalski-Steel Skew Exponential Power distriburion
 #          \code{neonormal_stanfunc(family="fossep", func="ccdf")} gives the Complementary Cumulative Density Function from Fernandez-Osiewalski-Steel Skew Exponential Power distriburion

@@ -1,4 +1,4 @@
-#' Neonormal as custom distribution family in brms 
+#' Neo-normal as custom distribution family in brms 
 #' @name brms_custom_family
 #' @import brms 
 #' @param family distribution neo-normal option: "msnburr", "msnburr2a", "gmsnburr", "jfst", and "fossep"

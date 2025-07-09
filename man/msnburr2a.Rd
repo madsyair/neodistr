@@ -41,7 +41,7 @@ function, \code{qmsnburr2a} gives the quantile function and \code{rmsnburr2a} ge
 random numbers.
 }
 \description{
-To calculate density function, distribution funcion, quantile function, and  build data from random generator function 
+To calculate density function, distribution function, quantile function, and  build data from random generator function 
 for the MSNBurr distribution.
 }
 \details{

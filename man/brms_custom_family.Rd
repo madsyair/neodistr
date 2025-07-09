@@ -2,7 +2,7 @@
 % Please edit documentation in R/brms_custom.R
 \name{brms_custom_family}
 \alias{brms_custom_family}
-\title{Neonormal as custom distribution family in brms}
+\title{Neo-normal as custom distribution family in brms}
 \usage{
 brms_custom_family(family = "msnburr", vectorize = TRUE)
 }
@@ -16,7 +16,7 @@ The default value of this parameter is TRUE}
 custom_family is an object of class custom family of brms and stanvars_family is stanvars object (the Stan code of function of neo-normal distributions (lpdf,cdf,lcdf,lccdf,quantile and rng))
 }
 \description{
-Neonormal as custom distribution family in brms
+Neo-normal as custom distribution family in brms
 }
 \examples{
 \dontrun{

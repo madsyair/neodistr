@@ -2,7 +2,7 @@
 % Please edit documentation in R/stanf_jfst.R
 \name{stanf_jfst}
 \alias{stanf_jfst}
-\title{Stan function of Jones and Faddys Skew-t Distribution}
+\title{Stan function of Jones and Faddy's Skew-t Distribution}
 \usage{
 stanf_jfst(vectorize = TRUE, rng = TRUE)
 }

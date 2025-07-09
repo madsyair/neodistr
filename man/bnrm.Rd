@@ -286,7 +286,7 @@ Burkner,P-C (2017). brms: An R Package for Bayesian Multilevel
 Models Using Stan. \emph{Journal of Statistical Software}, 80(1), 1-28.
 \code{doi:10.18637/jss.v080.i01}
 
-Choir, A. S. (2020). The New Neo-Normal Distributions and their Properties. Disertation. Institut Teknologi Sepuluh Nopember.
+Choir, A. S. (2020). The New Neo-Normal Distributions and their Properties. Dissertation. Institut Teknologi Sepuluh Nopember.
 
 Iriawan, N. (2000). Computationally Intensive Approaches to Inference in Neo-Normal Linear Models. Curtin University of Technology.
 }

@@ -10,7 +10,7 @@
 #' @return
 #' \code{fossep_lpdf} gives stan's code of the log of density, \code{fossep_cdf} gives stan's code of the distribution
 #' function, \code{fossep_lcdf} gives stan's code of the log of distribution function and \code{fossep_lccdf} 
-#' gives the stans's code of complement of log ditribution function (1-fossep_lcdf)
+#' gives the stans's code of complement of log distribution function (1-fossep_lcdf)
 #' @author Almira Utami and Achmad Syahrul Choir
 #' @details
 #'  Fernandez-Osiewalski-Steel Skew Exponential Power Distribution has density:
@@ -20,7 +20,7 @@
 #' \deqn{ z = \frac{y - \mu}{\sigma}}
 #' \deqn{ c = v \beta \left[ (1 + v^2) 2^{\frac{1}{\beta}} \Gamma \left( \frac{1}{\beta} \right) \right]^{-1}}
 #'  
-#' This function gives stan code  of log density, cumulative distribution, log of cumulatif distribution, 
+#' This function gives stan code  of log density, cumulative distribution, log of cumulative distribution, 
 #' log complementary cumulative distribution of Fernandez-Osiewalski-Steel Skew Exponential Power Distribution 
 #' @references 
 #' Fernandez, C., Osiewalski, J., & Steel, M. F. (1995) Modeling and inference with v-spherical distributions. 
