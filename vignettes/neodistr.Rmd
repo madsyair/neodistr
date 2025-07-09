@@ -1,179 +1,439 @@
 ---
-title: "Neo-normal Distribution Family for MCMC Models in Stan"
+title: "Neo-normal Distribution Family for MCMC Models in bnrm, brms, and Stan Code"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Neo-normal Distribution Family for MCMC Models in Stan}
+  %\VignetteIndexEntry{Neo-normal Distribution Family for MCMC Models in bnrm, brms, and Stan Code}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 7, 
+  fig.height = 5,
+  warning = FALSE,
+  message = FALSE
 )
+
 ```
 
 ## Introduction
 
-The **neodistr** package provides neo-normal distribution function for Bayesian modeling.
-This vignette explains how to use it with stan code, especially demonstrates how to fit Bayesian models using the fossep distributions, as one of the neo-normal distribution.
+The **neodistr** package provides neo-normal distribution functions for Bayesian modeling.
+This vignette explains how to use it with `bnrm`, `brms`, and `Stan` code, and demonstrates how to fit Bayesian models using the neo-normal distribution.
 
-## Load Required Package
+**Note**: This vignette contains computationally intensive examples.
 
-```{r}
-set.seed(400)
-library(rstan)
+To keep the vignette lightweight, we use pre-computed results for the examples. The initial examples demonstrate the workflow using pre-computed data and results, while subsequent sections show the code needed to run the models interactively.
+
+# Installation
+
+Install **neodistr** from CRAN or GitHub:
+
+```{r eval=FALSE, echo=TRUE}
+# From CRAN
+install.packages("neodistr")
+
+# From GitHub
+devtools::install_github("madsyair/neodistr")
+```
+
+
+## Load Required Packages
+
+```{r,message=FALSE, echo=TRUE,eval=TRUE}
+ library(rstan)
+  library(brms)
+  library(bayesplot)
+  library(loo)
+  library(neodistr)
+  # Set Stan options for faster computation
+  options(mc.cores = min(2, parallel::detectCores()))
+  rstan_options(auto_write = TRUE)
+```
+
+
+```{r load_packages, message=FALSE,echo=FALSE}
 library(neodistr)
-library(bayesplot)
-library(loo)
-```
 
+# Load other packages conditionally
 
-## Installation
-
-### Install from CRAN
-
-```{r}
-#install.packages("neodistr")
-```
-
-### Or from GitHub
-
-```{r}
-#devtools::install_github("madsyair/neodistr")
-```
-
-## Usage Example
-
-Include data simulation, modeling, estimation, and evaluation.
-
-### Data Simulation
-
-```{r}
-set.seed(400)
-dt <- neodistr::rfossep(100,mu=0, sigma=1, alpha = 1, beta = 2) # simulated data form fossep distribution
-data_list <- list(
- n = 100,
- y = dt
- )
-```
-
-### Modeling 
-
-```{r}
-func_code_vector<-paste(c("functions{",neodistr::stanf_fossep(vectorize=TRUE),"}"),collapse="\n")
-stan_model_fossep <-"
-data{
-  int<lower=1> n;
-  vector[n] y;
-}
-parameters{
-  real mu;
-  real<lower=0> sigma;
-  real<lower=0> alpha;
-  real<lower=0> beta;
-}
-model {
- y ~ fossep(rep_vector(mu, n), sigma, alpha, beta);
-  mu ~ normal(0,1);
-  sigma ~ cauchy(0, 2.5);
-  alpha ~ gamma(2,1);
-  beta ~ gamma(2,1);
-    
-}
-generated quantities {
-  vector[n] log_lik;
+  library(rstan)
+  library(brms)
+  library(bayesplot)
+  library(loo)
   
-  for (i in 1:n) {
-    log_lik[i] = fossep_lpdf(rep_vector(y[i], 1) | rep_vector(mu, 1), sigma, alpha, beta);
-  }
-}
-"
+  # Set Stan options for faster computation
+  options(mc.cores = min(2, parallel::detectCores()))
+  rstan_options(auto_write = TRUE)
+
 ```
 
-### Estimation
+
+## A. Parameter Estimation with the FOSSEP Distribution
+
+### Data Simulation and Exploration
+
+We simulate a right‐skewed dataset of 100 observations from the FOSSEP distribution ($\mu=0$, $\sigma=1$, $\alpha=2$, and $\beta=2$) and perform basic exploratory analysis. In this vignette, pre-computed data are loaded to streamline the presentation. Pre-computed data are generated from the FOSSEP distribution using the `rfossep` function, which is part of the **neodistr** package. The simulated data is stored in an RDS file for easy access. The simulated darta can be generated using the following code. The exploratory analysis includes summary statistics and a histogram of the simulated data.
+
+```{r, eval=FALSE,echo=TRUE}
+set.seed(400)
+y <- rfossep(100, 0, 1, 2, 2)  # Simulated data from fossep distribution
+df <- data.frame(y)
+# Basic exploration
+summary(y)
+hist(y, main = "Simulated FOSSEP Data", xlab = "Y", col = "skyblue", breaks = 20)
+
+```
+
+
+```{r,eval=TRUE,echo=FALSE}
+# this data simulation generated from the fossep distribution
+#y <- rfossep(100, 0, 1, 2, 2)  # Simulated data from fossep distribution
+#df <- data.frame(y)
+y<-readRDS("data_precomputed/fossep_data.rds") # Load pre-computed data
+df <- data.frame(y)
+# Basic exploration
+summary(y)
+hist(y, main = "Simulated FOSSEP Data", xlab = "Y", col = "skyblue", breaks = 20)
+```
+
+### Model Specification
+
+We model `y` with an intercept-only formula. Priors are informed by the simulation parameters:
+
+* $\alpha, \beta$ ~ lognormal(0.5, 0.5)
+* $\sigma$ ∼ half-nrmal(0, 1)
+* $\mu$ ∼ normal(0, 1)
 
 ```{r}
-stan_fossep<- paste (c(func_code_vector,stan_model_fossep,"\n"), collapse = "\n") # merge Stan model 
-fit <- stan(
-    model_code = stan_fossep,      # Stan Program
-    data = data_list,              # named list data
-    chains = 2,                    # number of markov chains
-    warmup = 1000,                 # total number of warmup iterarions per chain
-    iter = 3000,                   # total number of iterations iterarions per chain
-    cores = 1,                     # number of cores (could use one per chain)
-    control = list(                # control sampel behavior
-      adapt_delta = 0.9
-    ),
-    refresh = 1000                 # progress has shown if refresh >=1, else no progress shown
+# Define formula for parameter estimation
+formula <- brms::bf(y ~ 1)
+
+# Choose priors
+prior <- c(
+  set_prior("lognormal(0.5,0.5)", class = "alpha"),
+  set_prior("lognormal(0.5,0.5)", class = "beta"),
+  set_prior("normal(0,1)", class = "sigma"),
+  set_prior("normal(0,1)", class = "Intercept") # mu
 )
 ```
 
-### Evaluation
+### Prior Predictive Check
 
-**R-hat checking**
-```{r}
-print(fit, pars = c("sigma", "alpha", "beta"), probs = c(0.025, 0.5, 0.975))
+The prior predictive check is performed to assess the plausibility of the priors by simulating data from the specified priors. This step helps to ensure that the priors are reasonable and that they can generate data similar to the observed data. To perform the prior predictive check, the `bnrm` function is used with the `sample_prior = "only"` argument. This will generate simulated datasets from the priors without fitting the model to the data.
+
+```{r prior_check_fossep, eval=FALSE}
+# Run prior predictive check (computationally intensive)
+ppc_fit_fossep <- bnrm(
+  formula = formula,
+  data = df,
+  family = fossep(),
+  prior = prior,
+  sample_prior = "only",
+  chains = 2,           # Reduced for demo
+  cores = 1,            # Single core for consistency
+  iter = 4000,          # Reduced iterations
+  warmup = 1000,
+  refresh = 0           # Suppress output
+)
 ```
 
-**Traceplot**
+```{r, prior_check_fossep_pre,eval=FALSE}
 
-```{r}
-traceplot(fit, pars = c("mu", "sigma", "alpha", "beta")) + theme_bw()
-```
+ppc_plot_fossep <- pp_check(ppc_fit_fossep, type = "dens_overlay", nsamples = 200) 
 
-**Posterior Predictive Check**
-
-```{r}
+print(ppc_plot_fossep)
+# Show prior predictive check plot
 
 ```
 
-```{r}
+```{r prior_check_pre_computed, eval=TRUE,echo=FALSE}
+# Load pre-computed prior predictive check results
+ppc_plot_fossep <- readRDS("data_precomputed/ppc_plot_fossep.rds") # Load pre-computed plot
+print(ppc_plot_fossep)
+# Show prior predictive check plot
+```
+
+The plot of the prior predictive check shows the distribution of the simulated data from the priors overlaid  the observed data. This allows us to visually assess whether the priors are reasonable and can generate data similar to the observed data.
+
+### Model Fitting
+
+We fit the model using the `bnrm` function, specifying the formula, data, family, and priors defined earlier. The fitting process uses MCMC sampling to estimate the posterior distributions of the parameters. 
+
+```{r fit_fossep_bnrm, eval=FALSE}
+# Fit the model (computationally intensive)
+fit_fossep_bnrm <- bnrm(
+  formula = formula,
+  data = df,
+  family = fossep(),
+  prior = prior,
+  chains = 2,
+  cores = 1,
+  iter = 4000,
+  warmup = 1000,
+  seed = 123,
+  refresh = 0
+)
+
+```
+After fitting the model, we can summarize the results to see the estimated parameters and their posterior distributions. The summary will include the mean, standard deviation, and credible intervals for each parameter. The convergence diagnostics will also be checked to ensure that the MCMC chains have mixed well and converged to the posterior distribution. Posterior predictive checks will be performed to assess the model fit and the ability of the model to predict new data.
+
+
+```{r show_fossep_results, eval=FALSE}
+  summary(fit_fossep_bnrm)
+  
+  # Convergence diagnostics
+  trace_plot <- mcmc_trace(fit_fossep_bnrm)
+  print(trace_plot)
+  
+  # Posterior predictive check
+  pp_plot <- pp_check(fit_fossep_bnrm)
+  print(pp_plot)
+  
+```
+
+```{r show_fossep_results_pre, eval=TRUE,echo=FALSE}
+# precomputed results
+  fit_fossep_bnrm <- readRDS("data_precomputed/fit_fossep_bnrm.rds") # Load pre-computed fit
+  summary(fit_fossep_bnrm)
+  
+  # Convergence diagnostics
+  trace_plot <- mcmc_trace(fit_fossep_bnrm, facet_args = list(ncol = 2),pars = c("alpha", "beta", "sigma", "Intercept"))
+  print(trace_plot)
+  
+  # Posterior predictive check
+  pp_plot <- pp_check(fit_fossep_bnrm)
+  print(pp_plot)
+```
+
+## B. Regression with the JSEP Distribution
+
+### Data Preparation
+
+
+In the following example, we demonstrate how to perform regression modeling using the JSEP distribution. The code provided below shows how to set up the regression model, specify the priors, and fit the model using the `bnrm` function. 
+
+###  Data Simulation  and Exploration
+
+```{r,eval=FALSE}
+set.seed(123)
+x <- runif(100)
+e <- rjsep(100, 0, 0.1, 0.8,2)  # Simulated errors from JSEP distribution
+y <- 0.5 + 0.8*x + e
+xy<-cbind(y,x)
+
+df_reg <- data.frame(y, x)
+# Basic exploration
+plot(x, y, main = "Regression Data", pch = 19, col = "steelblue")
 
 ```
 
-**Leave-One-out Cross-Validation (LOO-cv)**
+```{r,eval=TRUE, echo=FALSE}
+xy <- readRDS("data_precomputed/jsep_data.rds") # Load pre-computed data
+df_reg<-data.frame(xy)
+x<- df_reg$x
+y<- df_reg$y
+# Basic exploration
+plot(x, y, main = "Regression Data", pch = 19, col = "steelblue")
 
-```{r}
-loo(fit)
 ```
 
-```{r}
-loo(fit, moment_match = TRUE)
+
+### Model Specification and Fitting
+
+We specify the regression model using the `brms` formula interface. The regression formula is defined as `y ~ x`, where `y` is the response variable and `x` is the predictor variable. The priors for the regression parameters are set as follows:
+Prior  of $\alpha$ is set to log-normal(0, 0.5), $\beta$ is set to log-normal(1, 0.5), $\sigma$ is set to half-normal(0, 1), and the intercept and slope are set to normal(0, 1). The code syntax for defining the model and these priors is shown below.
+
+```{r,eval=TRUE}
+# Define regression formula
+formula_reg <- brms::bf(y ~ x)
+
+# Priors for regression
+prior_reg <- c(
+  set_prior("lognormal(0,0.5)", class = "alpha"),
+  set_prior("lognormal(0,0.5)", class = "beta"),
+  set_prior("normal(0,1)", class = "sigma"),
+  set_prior("normal(0,1)", class = "Intercept"),
+  set_prior("normal(0,1)", class = "b")
+)
 ```
 
-## Conclusion
+### Prior Predictive Check
 
-The **R-hat** values for all parameters are close to 1.00, indicating that the Markov Chains have converged.
-If R-hat were greater than 1.1, it would suggest issues with convergence, requiring more iterations or better tuning.
+We evaluate our chosen priors via a prior predictive check, which entails drawing simulated datasets solely from those priors to verify they can plausibly reproduce the characteristics of the actual data. In practice, this is done by calling `bnrm(..., sample_prior = "only")`, which generates the prior‐based simulations without fitting the model to the observed data.
 
-The **traceplot** shows well-mixed chains with no visible patterns or drifts, confirming good mixing.
-If chains were separated or trending, it might indicate poor convergence, requiring adjustments such as increasing adapt_delta or warmup.
-
-The **posterior predictive** distribution overlaps well with the observed data, suggesting that the model is capable of generating realistic samples.
-If there were significant mismatches, it would indicate model misspecification, requiring reconsideration of priors, likelihood functions, or additional predictors.
-
-Higher **elpd_loo** → better predictive performance.
-Lower **looic** → better balance between fit and complexity.
-**p_loo** should be smaller than the number of parameters or data; if too large → potential overfitting or misspecification.
-High Pareto-k → LOO estimates may be unreliable.
-
-**Moment matching** corrects the importance sampling weights for problematic observations in LOO-CV without requiring a full model refit. When moment_match = TRUE, the algorithm identifies observations with high Pareto k values (e.g., > 0.7) and adjusts their importance sampling estimates by recalculating log posterior densities.
-
-
-
-
-
+```{r pc_check_jsep_reg, eval=FALSE}
+# Fit regression model
+fit_ppc_jsep <- bnrm(
+  formula = formula_reg,
+  data = df_reg,
+  family = jsep(),
+  prior = prior_reg,
+  chains = 2,
+  cores = 1,
+  iter = 4000,
+  sample_prior = "only", # Prior predictive check
+  warmup = 1000,
+  seed = 123,
+  refresh = 0
+)
+# prior predictive check fir jesp
 
 
+ppc_plot_jsep<- pp_check(fit_ppc_jsep, type = "dens_overlay", nsamples = 200)
+print(ppc_plot_jsep)
+# Show prior predictive check plot
+```
+
+```{r ppc_plot_jsep, eval=TRUE,echo=FALSE,message=FALSE}
 
 
+ppc_plot_jsep <- readRDS("data_precomputed/ppc_plot_jsep.rds") # Load pre-computed plot
+print(ppc_plot_jsep)
+# Show prior predictive check plot
+```
+
+The prior predictive check plot overlays the data simulated from our priors onto the real observations, letting us visually judge whether those priors can plausibly reproduce the distribution of the actual data.
+
+### Model Fitting
+
+We fit the regression model using the `bnrm` function, specifying the formula, data, family, and priors defined earlier. The fitting process uses MCMC sampling to estimate the posterior distributions of the parameters. 
+
+```{r fit_jsep_bnrm, eval=FALSE}
+fit_jsep_bnrm <- bnrm(
+  formula = formula_reg,
+  data = df_reg,
+  family = jsep(),
+  prior = prior_reg,
+  chains = 2,
+  cores = 1,
+  iter = 4000,
+   warmup = 1000,
+  seed = 123,
+  refresh = 0
+)
+
+```
+
+After fitting the model, we can summarize the results to see the estimated parameters and their posterior distributions. The summary will include the mean, standard deviation, and credible intervals for each parameter. The convergence diagnostics will also be checked to ensure that the MCMC chains have mixed well and converged to the posterior distribution. Posterior predictive checks will be performed to assess the model fit and the ability of the model to predict new data.
+
+```{r show_jsep_results, eval=FALSE}
+ 
+summary(fit_jsep_bnrm)
+# Convergence diagnostics
+  trace_plot <- mcmc_trace(fit_jsep_bnrm, facet_args = list(ncol = 2),pars = c("alpha", "beta", "sigma", "Intercept","b_x"))
+  print(trace_plot)
+  
+  # Posterior predictive check
+  pp_plot <- pp_check(fit_jsep_bnrm)
+  print(pp_plot)
+  
+  # Model evaluation
+  loo_result <- loo(fit_jsep_bnrm, moment_match = TRUE)
+  print(loo_result)
+ 
+```
+
+```{r show_jsep_results_pre, eval=TRUE, echo=FALSE}
+fit_jsep_bnrm <- readRDS("data_precomputed/fit_jsep_bnrm.rds") # Load pre-computed fit  
+ 
+summary(fit_jsep_bnrm)
+# Convergence diagnostics
+  trace_plot <- mcmc_trace(fit_jsep_bnrm, facet_args = list(ncol = 2),pars = c("alpha", "beta", "sigma", "Intercept","b_x"))
+  print(trace_plot)
+  
+  # Posterior predictive check
+  pp_plot <- pp_check(fit_jsep_bnrm)
+  print(pp_plot)
+  
+  # Model evaluation
+  loo_result <- loo(fit_jsep_bnrm, moment_match = TRUE)
+  print(loo_result)
+ 
+```
 
 
+## Usage Example with `brms` code
 
 
+The `brms` interface requires custom family definitions. Fossep and JSEP distributions can be defined using the `brms_custom_family` function. The following code demonstrates how to set up the custom family for FOSSEP  distributions, fit the model, and summarize the results. 
+
+The following code demonstrates how to set up the custom family for FOSSEP distributions, fit the model, and summarize the results. The `brms_custom_family` function is used to define the custom family, and then the `brm` function is used to fit the model. The summary of the fitted model is displayed at the end.
 
 
+```{r brms_demo, eval=FALSE}
+# Define custom family for brms
+fossep_custom <- brms_custom_family("fossep")
 
+# Fit model with brms
+fit_brms_demo <- brm(
+  y ~ 1,
+  data = df,
+  family = fossep_custom$custom_family,
+  stanvars = fossep_custom$stanvars_family,
+  chains = 2,
+  cores = 2,
+  iter = 4000,
+  warmup = 1000,
+  seed = 123,
+  refresh = 0
+)
+summary(fit_brms_demo)
+
+```
+
+## Usage Example with Stan code
+
+
+The `stanf_fossep` function generates the Stan code for the FOSSEP distribution. The following code demonstrates how to prepare the data, define the Stan model, and fit it using the `stan` function. The Stan model includes the custom family function and the data specification.
+
+```{r stan_demo, eval=FALSE}
+# Prepare data for Stan
+stan_data <- list(
+  n = length(y),
+  y = y
+)
+
+# Simple Stan model (abbreviated for vignette)
+stan_code <- paste0(
+  "functions { ", stanf_fossep(vectorize = TRUE), " }",
+  "data { int<lower=1> n; vector[n] y; }",
+  "parameters { real mu; real<lower=0> sigma; real<lower=0> alpha; real<lower=0> beta; }",
+  "model { y ~ fossep(rep_vector(mu, n), sigma, alpha, beta); }"
+)
+
+# Fit Stan model
+fit_stan_demo <- stan(
+  model_code = stan_code,
+  data = stan_data,
+  chains = 2,
+  cores = 1,
+  iter = 1000,
+  warmup = 500,
+  refresh = 0
+)
+summary(fit_stan_demo, pars = c("mu", "sigma", "alpha", "beta"))
+```
+
+
+## Practical Recommendations
+
+**For routine analysis:**
+- Use `bnrm()` for seamless integration with neo-normal distributions
+- Start with `iter = 2000, warmup = 1000` for initial exploration
+- Increase to `iter = 4000, warmup = 2000` for final results
+
+**For custom implementations:**
+- Use `brms_custom_family()` for maximum flexibility with brms
+- Direct Stan code offers most control but requires more setup
+
+**Performance tips:**
+- Use `cores = parallel::detectCores()` for parallel processing
+- Set `refresh = 0` to suppress output in production
+- Consider `adapt_delta = 0.95` if you encounter divergent transitions
+
+For production use, we recommend starting with the `bnrm` interface for its simplicity, then moving to `brms` or direct Stan code for more complex modeling needs.
 
