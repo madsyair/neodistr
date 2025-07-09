@@ -304,4 +304,98 @@ stanf_jsep<-function(vectorize=TRUE){
     }
     '
   }
+  else{
+    #PDF
+    dist<-'real jsep_lpdf(real y, real mu, real sigma, real alpha, real beta){
+      if (sigma<=0)
+        reject("sigma<=0; found sigma =", sigma);
+      if(alpha<=0)
+        reject ("alpha<=0, found alpha = ", alpha);
+      if (beta<=0)
+        reject ("beta<=0; found beta =", beta);
+      real a=alpha;
+      real b=beta;
+      real z=(y-mu)/sigma;
+      real lk1 = lgamma(1+1/a);
+      real lk2 = lgamma(1+1/b) ;
+      real k1 = exp(lk1); 
+      real k2 = exp(lk2);
+      real loglik=(y<mu) ? - pow(fabs(z), a): - pow(fabs(z), b);
+      return loglik - log(k1 + k2) - log(sigma);
+    }
+    //CDF
+    real jsep_cdf(real y, real mu, real sigma, real alpha, real beta)
+    {
+      if (sigma<=0)
+        reject("sigma<=0; found sigma =", sigma);
+      if(alpha<=0)
+        reject ("alpha<=0, found alpha = ", alpha);
+      if (beta<=0)
+        reject ("beta<=0; found beta =", beta);
+      real a=alpha;
+      real b=beta;
+      real z=(y-mu)/sigma;
+      
+      // c = pow((exp(lgamma(1+pow(b,-1))) + exp(lgamma(1+pow(a,-1)))),-1)
+      //log_cdf += -log(exp(lgamma(1+pow(b,-1))) + exp(lgamma(1+pow(a,-1)))) - log(a) + lgamma(1/a) + log1m(gamma_p(1/a,pow(fabs(z), a))); // Nilai absolut z dipangkatkan a        
+      
+      real lk1 = lgamma(1+1/a);
+      real lk2 = lgamma(1+1/b);
+      real lk = lk2 - lk1;
+      real k = exp(lk);
+      real s1 = pow(fabs(z), a);
+      real s2 = pow(fabs(z), b);
+      real cdf1 = 1 - gamma_p(1/a,s1);
+      real cdf2 = 1 + k * gamma_p(1/b,s2);
+      
+      return (y<mu) ? cdf1/(1+k):cdf2/(1+k);
+    }
+    
+    //Log CDF
+    real jsep_lcdf(real y, real mu, real sigma, real alpha, real beta)
+    {
+      if (sigma<=0)
+        reject("sigma<=0; found sigma =", sigma);
+      if(alpha<=0)
+        reject ("alpha<=0, found alpha = ", alpha);
+      if (beta<=0)
+        reject ("beta<=0; found beta =", beta);
+      real a=alpha;
+      real b=beta;
+      real z=(y-mu)/sigma;
+      real lk1 = lgamma(1+pow(a,-1));
+      real lk2 = lgamma(1+pow(b,-1));
+      real lk = lk2 - lk1;
+      real k = exp(lk);
+      real s1 = pow(fabs(z), a);
+      real s2 = pow(fabs(z), b);
+      real log_cdf1 = log1m(gamma_p(1/a,s1));
+      real log_cdf2 = log1p(k * gamma_p(1/b,s2));
+      
+      return (y<mu) ? log_cdf1 - log1p(k):log_cdf2 - log1p(k);
+    }
+    
+    //log CCDF
+    real jsep_lccdf (real y, real mu, real sigma, real alpha, real beta)
+    {
+      if (sigma<=0)
+        reject("sigma<=0; found sigma =", sigma);
+      if(alpha<=0)
+        reject ("alpha<=0, found alpha = ", alpha);
+      if (beta<=0)
+        reject ("beta<=0; found beta =", beta);
+      real a=alpha;
+      real b=beta;
+      real z=(y-mu)/sigma;
+      real lk1 = lgamma(1+pow(a,-1));
+      real lk2 = lgamma(1+pow(b,-1));
+      real lk = lk2 - lk1;
+      real k = exp(lk);
+      real s1 = pow(fabs(z), a);
+      real s2 = pow(fabs(z), b);
+      
+      return (y<mu) ? log(k+gamma_p(1/a, s1)) - log1p(k):log(k)+log1m(gamma_p(1/b, s2)) - log1p(k);
+    }
+    '
+  }
 }
