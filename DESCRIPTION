@@ -28,7 +28,8 @@ Description: Provides functions for calculating the
 License: GPL-3
 Depends: R (>= 3.6.0),shinythemes,plotly,brms
 Imports: rstan , stats,Rmpfr,ggplot2,shiny
-Suggests: kableExtra, knitr, rmarkdown, testthat, bayesplot, loo
+Suggests:
+    spelling, kableExtra, knitr, rmarkdown, testthat, bayesplot, loo
 URL: https://github.com/madsyair/neodistr
 BugReports: https://github.com/madsyair/neodistr/issues
 Encoding: UTF-8
@@ -36,3 +37,4 @@ NeedsCompilation: no
 Packaged: 2019-02-28 09:55:35 UTC; madsyair
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr, rmarkdown
+Language: en-US

@@ -53,7 +53,7 @@
 ^tests/testthat/helper-.*\.R$
 ^tests/figs$
 ^tests/figs/.*$
-^tests/spelling\.R$
+
 
 # Spelling and documentation
 ^\.spelling$
