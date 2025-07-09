@@ -1,3 +1,148 @@
-^.*\.Rproj$
+# ==============================================================================
+# .Rbuildignore - Comprehensive ignore patterns for R package building
+# ==============================================================================
+
+# Version Control
+^\.git$
+^\.gitignore$
+^\.gitattributes$
+^\.gitmodules$
+
+# GitHub specific
+^\.github$
+^\.github/.*$
+
+# IDE and Editor files
+^\.vscode$
+^\.vscode/.*$
+^\.idea$
+^\.idea/.*$
+*\.Rproj$
 ^\.Rproj\.user$
-^LICENSE\.md$
+^\.Rproj\.user/.*$
+*\.sublime-*
+*~$
+*\.swp$
+*\.swo$
+^\.DS_Store$
+
+# R Development files
+^\.Rhistory$
+^\.RData$
+^\.Ruserdata$
+^renv$
+^renv\.lock$
+^packrat$
+^rsconnect$
+
+# Build and Package files
+^.*\.tar\.gz$
+^.*\.tgz$
+^.*\.zip$
+^CRAN-RELEASE$
+^cran-comments\.md$
+^CRAN-SUBMISSION$
+^pkgdown$
+^_pkgdown\.y*ml$
+^docs$
+^doc$
+
+# Testing files (conditionally ignore stan tests)
+^tests/testthat/.*_stan\.R$
+^tests/testthat/test_.*_stan\.R$
+^tests/testthat/helper-.*\.R$
+^tests/figs$
+^tests/figs/.*$
+^tests/spelling\.R$
+
+# Spelling and documentation
+^\.spelling$
+^revdep$
+
+# CI/CD and automation
+^\.travis\.yml$
+^appveyor\.yml$
+^codecov\.yml$
+^\.codecov\.yml$
+^\.coveralls\.yml$
+^Makefile$
+^makefile$
+
+# Docker
+^Dockerfile$
+^\.dockerignore$
+^docker-compose.*\.yml$
+
+# Development scripts and notes
+^dev$
+^development$
+^dev-*
+^scratch$
+^tmp$
+^temp$
+^TODO$
+^TODO\.md$
+^NOTES$
+^NOTES\.md$
+^\.notes$
+^notes\.txt$
+
+# Backup and temporary files
+^.*\.bak$
+^.*\.orig$
+^.*\.tmp$
+^.*\.temp$
+^\.#.*$
+^\#.*\#$
+
+# OS specific
+^Thumbs\.db$
+^\.DS_Store$
+^\._.DS_Store$
+^\.Spotlight-V100$
+^\.Trashes$
+^ehthumbs\.db$
+^Desktop\.ini$
+
+# R CMD check artifacts
+^.*\.Rcheck$
+^.*\.Rcheck/.*$
+
+# Shiny
+^rsconnect$
+
+# Benchmarking and profiling
+^benchmark$
+^benchmarks$
+^profiling$
+^Rprof\.out$
+
+# Data files (if not part of package)
+^data-raw$
+^raw-data$
+^external-data$
+
+# Documentation source
+^vignettes/.*\.html$
+^vignettes/.*\.R$
+^README\.Rmd$
+^README_files$
+^NEWS\.md$
+^man-roxygen$
+
+# Package development
+^\.lintr$
+^\.pre-commit-config\.yaml$
+^\.pre-commit-hooks\.yaml$
+
+# Stan specific (if using rstan/cmdstan)
+^stan$
+^cmdstan$
+^.*\.stan$
+^.*_files$
+
+# Log files
+^.*\.log$
+^logs$
+
+

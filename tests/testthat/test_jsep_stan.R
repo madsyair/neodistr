@@ -11,7 +11,12 @@ if (interactive() || identical(Sys.getenv("NOT_CRAN"), "true")) {
   ccdf_jsep <- neodistr:::neonormal_stanfunc(family ="jsep", func = "ccdf",vectorize = TRUE)
   lcdf_jsep <- neodistr:::neonormal_stanfunc(family ="jsep", func = "lcdf",vectorize = TRUE)
 
-
+  #Non-Vector
+  pdf0_jsep <- neodistr:::neonormal_stanfunc(family ="jsep", func = "pdf",vectorize = FALSE )
+  cdf0_jsep <- neodistr:::neonormal_stanfunc(family ="jsep", func = "cdf",vectorize = FALSE )
+  ccdf0_jsep <- neodistr:::neonormal_stanfunc(family ="jsep", func = "ccdf",vectorize = FALSE )
+  lcdf0_jsep <- neodistr:::neonormal_stanfunc(family ="jsep", func = "lcdf",vectorize = FALSE )
+  
 # ----------------------------Test Inapproriate parameters-------------------------------------------
 
 

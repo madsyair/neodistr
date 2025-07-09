@@ -5,7 +5,7 @@ Version: 0.1.2
 Authors@R:
     c(person("Achmad Syahrul", "Choir", email = "madsyair@stis.ac.id",
              comment = c(ORCID = "0000-0001-7088-0646"), role = c("aut", "cre")),
-      person("Anisa'", "Faoziah", role = c("aut")),
+      person("Anisa", "Faoziah", role = c("aut")),
       person("Nur", "Iriawan", role = c("aut"),
            comment = c(ORCID = "0000-0003-2833-6115")),
       person("Almira", "Utami", role = c("aut")),
