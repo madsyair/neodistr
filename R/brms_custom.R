@@ -330,7 +330,6 @@ gmsnburr <- function(vectorize=TRUE) brms_custom_family(family="gmsnburr",vector
 jfst <- function(vectorize=TRUE) brms_custom_family(family="jfst",vectorize=vectorize)
 #' @export
 fossep <- function(vectorize=TRUE) brms_custom_family(family="fossep",vectorize=vectorize)
-
 #' @export
 jsep <- function(vectorize=TRUE) brms_custom_family(family="jsep",vectorize=vectorize)
 
