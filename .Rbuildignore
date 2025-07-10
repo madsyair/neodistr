@@ -13,7 +13,7 @@
 ^\.github/.*$
 
 # IDE and Editor files
-neodistr
+
 ^.*\\.Rproj$
 ^\.Rproj\.user$
 ^\.Rproj\.user/.*$
@@ -143,11 +143,6 @@ neodistr
 
 ^Meta$
 
-# Abaikan file backup Emacs/Vim yang berakhiran “~” di mana saja
-(^|/).*~$
 
-# Abaikan file berekstensi .bak di mana saja
-(^|/).*\.bak$
-
-# Abaikan file atau folder yang mengandung kata “backup” di mana saja
+# ignore file or folder that contains backup
 (^|/).*backup.*$

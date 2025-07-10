@@ -79,12 +79,15 @@ library(neodistr)
 We simulate a right‐skewed dataset of 100 observations from the FOSSEP distribution ($\mu=0$, $\sigma=1$, $\alpha=2$, and $\beta=2$) and perform basic exploratory analysis. In this vignette, pre-computed data are loaded to streamline the presentation. Pre-computed data are generated from the FOSSEP distribution using the `rfossep` function, which is part of the **neodistr** package. The simulated data is stored in an RDS file for easy access. The simulated data can be generated using the following code. The exploratory analysis includes summary statistics and a histogram of the simulated data.
 
 ```{r, eval=FALSE,echo=TRUE}
+#install.packages("R.utils")
+#library(R.utils)
 set.seed(400)
 precomp_dir <- system.file("data_precomputed", package = "neodistr")
 # Simulate data from FOSSEP distribution
 y <- rfossep(100, 0, 1, 2, 2)  # Simulated data from fossep distribution
 df <- data.frame(y)
-#saveRDS(y, file.path(precomp_dir, "fossep_data.rds")) # Save pre-computed data
+# R.utils::saveObject(y, file.path(precomp_dir, "fossep_data.rds"),format="rds") # Save pre-computed data
+#gzip(file.path(precomp_dir, "fossep_data.rds"))  
 # Basic exploration
 summary(y)
 hist(y, main = "Simulated FOSSEP Data", xlab = "Y", col = "skyblue", breaks = 20)
@@ -146,8 +149,8 @@ ppc_fit_fossep <- bnrm(
 
 ```{r, prior_check_fossep_pre,eval=FALSE}
 # Show prior predictive check plot
-ppc_plot_fossep <- pp_check(ppc_fit_fossep, type = "dens_overlay", nsamples = 10) 
-#saveRDS(ppc_plot_fossep, file.path(precomp_dir, "ppc_plot_fossep.rds")) # Save pre-computed plot file.path(precomp_dir, "fossep_data.rds")
+ppc_plot_fossep <- pp_check(ppc_fit_fossep, type = "dens_overlay") 
+# R.utils::saveObject(ppc_plot_fossep, file.path(precomp_dir, "ppc_plot_fossep.rds"),format="rds") # Save pre-computed plot file.path(precomp_dir, "fossep_data.rds")
 print(ppc_plot_fossep)
 
 ```
@@ -179,7 +182,7 @@ fit_fossep_bnrm <- bnrm(
   seed = 123,
   refresh = 0
 )
-#saveRDS(fit_fossep_bnrm, file.path(precomp_dir, "fit_fossep_bnrm.rds")) # Save pre-computed fit
+# R.utils::saveObject(fit_fossep_bnrm, file.path(precomp_dir, "fit_fossep_bnrm.rds"),format="rds") # Save pre-computed fit
 ```
 After fitting the model, we can summarize the results to see the estimated parameters and their posterior distributions. The summary will include the mean, standard deviation, and credible intervals for each parameter. The convergence diagnostics will also be checked to ensure that the MCMC chains have mixed well and converged to the posterior distribution. Posterior predictive checks will be performed to assess the model fit and the ability of the model to predict new data.
 
@@ -193,7 +196,7 @@ After fitting the model, we can summarize the results to see the estimated param
   
   # Posterior predictive check
   pp_plot <- pp_check(fit_fossep_bnrm)
-  #saveRDS(pp_plot, file.path(precomp_dir, "pp_plot_fossep.rds")) # Save pre-computed plot
+  # R.utils::saveObject(pp_plot, file.path(precomp_dir, "pp_plot_fossep.rds"),format="rds") # Save pre-computed plot
   print(pp_plot)
   
 ```
@@ -232,7 +235,7 @@ df_reg <- data.frame(y, x)
 # Basic exploration
 plot(x, y, main = "Regression Data", pch = 19, col = "steelblue")
 #save pre-computed data
-#saveRDS(xy, file.path(precomp_dir,"jsep_data.rds")) # Save pre-computed data
+# R.utils::saveObject(xy, file.path(precomp_dir,"jsep_data.rds"),format="rds") # Save pre-computed data
 ```
 
 ```{r,eval=TRUE, echo=FALSE}
@@ -288,7 +291,7 @@ fit_ppc_jsep <- bnrm(
 
 
 ppc_plot_jsep<- pp_check(fit_ppc_jsep, type = "dens_overlay", nsamples = 200)
-#saveRDS(ppc_plot_jsep, file.path(precomp_dir,"ppc_plot_jsep.rds")) # Save pre-computed plot
+# R.utils::saveObject(ppc_plot_jsep, file.path(precomp_dir,"ppc_plot_jsep.rds"),format="rds") # Save pre-computed plot
 print(ppc_plot_jsep)
 # Show prior predictive check plot
 ```
@@ -320,7 +323,7 @@ fit_jsep_bnrm <- bnrm(
   seed = 123,
   refresh = 0
 )
-#saveRDS(fit_jsep_bnrm, file.path(precomp_dir, "fit_jsep_bnrm.rds")) # Save pre-computed fit
+# R.utils::saveObject(fit_jsep_bnrm, file.path(precomp_dir, "fit_jsep_bnrm.rds"),format="rds") # Save pre-computed fit
 ```
 
 After fitting the model, we can summarize the results to see the estimated parameters and their posterior distributions. The summary will include the mean, standard deviation, and credible intervals for each parameter. The convergence diagnostics will also be checked to ensure that the MCMC chains have mixed well and converged to the posterior distribution. Posterior predictive checks will be performed to assess the model fit and the ability of the model to predict new data.
@@ -335,11 +338,11 @@ summary(fit_jsep_bnrm)
   # Posterior predictive check
   pp_plot <- pp_check(fit_jsep_bnrm)
   
- #saveRDS(pp_plot, file.path(precomp_dir,"pp_plot_jsep.rds")) # Save pre-computed plot
+ # R.utils::saveObject(pp_plot, file.path(precomp_dir,"pp_plot_jsep.rds"),format="rds") # Save pre-computed plot
 
   # Model evaluation
   loo_result <- loo(fit_jsep_bnrm, moment_match = TRUE)
-  #saveRDS(loo_result, file.path(precomp_dir,"loo_result_jsep.rds")) # Save pre-computed loo result
+  # R.utils::saveObject(loo_result, file.path(precomp_dir,"loo_result_jsep.rds"),format="rds") # Save pre-computed loo result
   print(loo_result)
  
 ```
