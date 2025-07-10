@@ -2,7 +2,7 @@
 title: "Neo-normal Distribution Family for MCMC Models in 'bnrm', 'brms', and 'Stan' Code"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Neo-normal Distribution Family for MCMC Models in bnrm, brms, and Stan Code}
+  %\VignetteIndexEntry{Neo-normal Distribution Family for MCMC Models in 'bnrm', 'brms', and 'Stan' Code}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -95,7 +95,7 @@ hist(y, main = "Simulated FOSSEP Data", xlab = "Y", col = "skyblue", breaks = 20
 # this data simulation generated from the fossep distribution
 #y <- rfossep(100, 0, 1, 2, 2)  # Simulated data from fossep distribution
 #df <- data.frame(y)
-#precomp_dir <- system.file("data_precomputed", package = "neodistr")
+precomp_dir <- system.file("data_precomputed", package = "neodistr")
 y <- readRDS(file.path(precomp_dir, "fossep_data.rds")) # Load pre-computed data
 df <- data.frame(y)
 # Basic exploration
@@ -146,7 +146,7 @@ ppc_fit_fossep <- bnrm(
 
 ```{r, prior_check_fossep_pre,eval=FALSE}
 # Show prior predictive check plot
-ppc_plot_fossep <- pp_check(ppc_fit_fossep, type = "dens_overlay", nsamples = 200) 
+ppc_plot_fossep <- pp_check(ppc_fit_fossep, type = "dens_overlay", nsamples = 10) 
 #saveRDS(ppc_plot_fossep, file.path(precomp_dir, "ppc_plot_fossep.rds")) # Save pre-computed plot file.path(precomp_dir, "fossep_data.rds")
 print(ppc_plot_fossep)
 
@@ -154,7 +154,7 @@ print(ppc_plot_fossep)
 
 ```{r prior_check_pre_computed, eval=TRUE,echo=FALSE}
 # Load pre-computed prior predictive check results
-ppc_plot_fossep <- readRDS("file.path") # Load pre-computed plot
+ppc_plot_fossep <- readRDS(file.path(precomp_dir, "ppc_plot_fossep.rds")) # Load pre-computed plot
 print(ppc_plot_fossep)
 # Show prior predictive check plot
 ```
@@ -193,12 +193,12 @@ After fitting the model, we can summarize the results to see the estimated param
   
   # Posterior predictive check
   pp_plot <- pp_check(fit_fossep_bnrm)
-  #saveRDS(pp_plot, file.path(precomp_dir, "ppc_plot_fossep.rds")) # Save pre-computed plot
+  #saveRDS(pp_plot, file.path(precomp_dir, "pp_plot_fossep.rds")) # Save pre-computed plot
   print(pp_plot)
   
 ```
 
-```{r show_fossep_results_pre, eval=TRUE,echo=FALSE,cache=TRUE}
+```{r show_fossep_results_pre, eval=TRUE,echo=FALSE}
 # precomputed results
  fit_fossep_bnrm <- readRDS(file.path(precomp_dir, "fit_fossep_bnrm.rds")) # Load pre-computed fit
   summary(fit_fossep_bnrm)
@@ -208,7 +208,7 @@ After fitting the model, we can summarize the results to see the estimated param
 # Read pre-computed plot
   # Posterior predictive check
   
-  pp_plot<-readRDS(file.path(precomp_dir,"ppc_plot_fossep.rds")) # Load pre-computed plot
+  pp_plot<-readRDS(file.path(precomp_dir,"pp_plot_fossep.rds")) # Load pre-computed plot
   print(pp_plot)
 ```
 
@@ -293,10 +293,10 @@ print(ppc_plot_jsep)
 # Show prior predictive check plot
 ```
 
-```{r ppc_plot_jsep, eval=TRUE,echo=FALSE,message=FALSE,cache=TRUE}
+```{r ppc_plot_jsep, eval=TRUE,echo=FALSE,message=FALSE}
 
 
-ppc_plot_jsep <- readRDS("data_precomputed/ppc_plot_jsep.rds") # Load pre-computed plot
+ppc_plot_jsep <- readRDS(file.path(precomp_dir,"ppc_plot_jsep.rds")) # Load pre-computed plot
 print(ppc_plot_jsep)
 # Show prior predictive check plot
 ```
@@ -335,16 +335,16 @@ summary(fit_jsep_bnrm)
   # Posterior predictive check
   pp_plot <- pp_check(fit_jsep_bnrm)
   
- #saveRDS(pp_plot, file.path(precomp_dir,"ppc_plot_jsep.rds")) # Save pre-computed plot
+ #saveRDS(pp_plot, file.path(precomp_dir,"pp_plot_jsep.rds")) # Save pre-computed plot
 
   # Model evaluation
   loo_result <- loo(fit_jsep_bnrm, moment_match = TRUE)
-#  saveRDS(loo_result, file.path(precomp_dir,"loo_result_jsep.rds")) # Save pre-computed loo result
+  #saveRDS(loo_result, file.path(precomp_dir,"loo_result_jsep.rds")) # Save pre-computed loo result
   print(loo_result)
  
 ```
 
-```{r show_jsep_results_pre, eval=TRUE, echo=FALSE,cache=TRUE}
+```{r show_jsep_results_pre, eval=TRUE, echo=FALSE}
 fit_jsep_bnrm <- readRDS(file.path(precomp_dir,"fit_jsep_bnrm.rds")) # Load pre-computed fit  
  
 summary(fit_jsep_bnrm)
@@ -352,7 +352,7 @@ summary(fit_jsep_bnrm)
   trace_plot <- mcmc_trace(fit_jsep_bnrm, facet_args = list(ncol = 2),pars = c("alpha", "beta", "sigma", "Intercept","b_x"))
   print(trace_plot)
   # Posterior predictive check
-  pp_plot <- readRDS(file.path(precomp_dir,"ppc_plot_jsep.rds")) # Load pre-computed 
+  pp_plot <- readRDS(file.path(precomp_dir,"pp_plot_jsep.rds")) # Load pre-computed 
   print(pp_plot)
   
   # Model evaluation
