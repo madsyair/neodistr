@@ -13,17 +13,12 @@
 ^\.github/.*$
 
 # IDE and Editor files
-^\.vscode$
-^\.vscode/.*$
-^\.idea$
-^\.idea/.*$
-*\.Rproj$
+neodistr
+^.*\\.Rproj$
 ^\.Rproj\.user$
 ^\.Rproj\.user/.*$
-*\.sublime-*
-*~$
-*\.swp$
-*\.swo$
+^README\.md$
+.*\.Rproj$
 ^\.DS_Store$
 
 # R Development files
@@ -146,3 +141,13 @@
 ^logs$
 
 
+^Meta$
+
+# Abaikan file backup Emacs/Vim yang berakhiran “~” di mana saja
+(^|/).*~$
+
+# Abaikan file berekstensi .bak di mana saja
+(^|/).*\.bak$
+
+# Abaikan file atau folder yang mengandung kata “backup” di mana saja
+(^|/).*backup.*$

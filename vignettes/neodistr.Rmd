@@ -1,5 +1,5 @@
 ---
-title: "Neo-normal Distribution Family for MCMC Models in bnrm, brms, and Stan Code"
+title: "Neo-normal Distribution Family for MCMC Models in 'bnrm', 'brms', and 'Stan' Code"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Neo-normal Distribution Family for MCMC Models in bnrm, brms, and Stan Code}
@@ -37,7 +37,7 @@ Install **neodistr** from CRAN or GitHub:
 install.packages("neodistr")
 
 # From GitHub
-devtools::install_github("madsyair/neodistr")
+#devtools::install_github("madsyair/neodistr")
 ```
 
 
@@ -80,12 +80,14 @@ We simulate a right‐skewed dataset of 100 observations from the FOSSEP distrib
 
 ```{r, eval=FALSE,echo=TRUE}
 set.seed(400)
+precomp_dir <- system.file("data_precomputed", package = "neodistr")
+# Simulate data from FOSSEP distribution
 y <- rfossep(100, 0, 1, 2, 2)  # Simulated data from fossep distribution
 df <- data.frame(y)
+#saveRDS(y, file.path(precomp_dir, "fossep_data.rds")) # Save pre-computed data
 # Basic exploration
 summary(y)
 hist(y, main = "Simulated FOSSEP Data", xlab = "Y", col = "skyblue", breaks = 20)
-
 ```
 
 
@@ -93,7 +95,8 @@ hist(y, main = "Simulated FOSSEP Data", xlab = "Y", col = "skyblue", breaks = 20
 # this data simulation generated from the fossep distribution
 #y <- rfossep(100, 0, 1, 2, 2)  # Simulated data from fossep distribution
 #df <- data.frame(y)
-y<-readRDS("data_precomputed/fossep_data.rds") # Load pre-computed data
+#precomp_dir <- system.file("data_precomputed", package = "neodistr")
+y <- readRDS(file.path(precomp_dir, "fossep_data.rds")) # Load pre-computed data
 df <- data.frame(y)
 # Basic exploration
 summary(y)
@@ -142,17 +145,16 @@ ppc_fit_fossep <- bnrm(
 ```
 
 ```{r, prior_check_fossep_pre,eval=FALSE}
-
-ppc_plot_fossep <- pp_check(ppc_fit_fossep, type = "dens_overlay", nsamples = 200) 
-
-print(ppc_plot_fossep)
 # Show prior predictive check plot
+ppc_plot_fossep <- pp_check(ppc_fit_fossep, type = "dens_overlay", nsamples = 200) 
+#saveRDS(ppc_plot_fossep, file.path(precomp_dir, "ppc_plot_fossep.rds")) # Save pre-computed plot file.path(precomp_dir, "fossep_data.rds")
+print(ppc_plot_fossep)
 
 ```
 
 ```{r prior_check_pre_computed, eval=TRUE,echo=FALSE}
 # Load pre-computed prior predictive check results
-ppc_plot_fossep <- readRDS("data_precomputed/ppc_plot_fossep.rds") # Load pre-computed plot
+ppc_plot_fossep <- readRDS("file.path") # Load pre-computed plot
 print(ppc_plot_fossep)
 # Show prior predictive check plot
 ```
@@ -177,7 +179,7 @@ fit_fossep_bnrm <- bnrm(
   seed = 123,
   refresh = 0
 )
-
+#saveRDS(fit_fossep_bnrm, file.path(precomp_dir, "fit_fossep_bnrm.rds")) # Save pre-computed fit
 ```
 After fitting the model, we can summarize the results to see the estimated parameters and their posterior distributions. The summary will include the mean, standard deviation, and credible intervals for each parameter. The convergence diagnostics will also be checked to ensure that the MCMC chains have mixed well and converged to the posterior distribution. Posterior predictive checks will be performed to assess the model fit and the ability of the model to predict new data.
 
@@ -191,21 +193,22 @@ After fitting the model, we can summarize the results to see the estimated param
   
   # Posterior predictive check
   pp_plot <- pp_check(fit_fossep_bnrm)
+  #saveRDS(pp_plot, file.path(precomp_dir, "ppc_plot_fossep.rds")) # Save pre-computed plot
   print(pp_plot)
   
 ```
 
-```{r show_fossep_results_pre, eval=TRUE,echo=FALSE}
+```{r show_fossep_results_pre, eval=TRUE,echo=FALSE,cache=TRUE}
 # precomputed results
-  fit_fossep_bnrm <- readRDS("data_precomputed/fit_fossep_bnrm.rds") # Load pre-computed fit
+ fit_fossep_bnrm <- readRDS(file.path(precomp_dir, "fit_fossep_bnrm.rds")) # Load pre-computed fit
   summary(fit_fossep_bnrm)
-  
   # Convergence diagnostics
   trace_plot <- mcmc_trace(fit_fossep_bnrm, facet_args = list(ncol = 2),pars = c("alpha", "beta", "sigma", "Intercept"))
   print(trace_plot)
-  
+# Read pre-computed plot
   # Posterior predictive check
-  pp_plot <- pp_check(fit_fossep_bnrm)
+  
+  pp_plot<-readRDS(file.path(precomp_dir,"ppc_plot_fossep.rds")) # Load pre-computed plot
   print(pp_plot)
 ```
 
@@ -228,11 +231,12 @@ xy<-cbind(y,x)
 df_reg <- data.frame(y, x)
 # Basic exploration
 plot(x, y, main = "Regression Data", pch = 19, col = "steelblue")
-
+#save pre-computed data
+#saveRDS(xy, file.path(precomp_dir,"jsep_data.rds")) # Save pre-computed data
 ```
 
 ```{r,eval=TRUE, echo=FALSE}
-xy <- readRDS("data_precomputed/jsep_data.rds") # Load pre-computed data
+xy <- readRDS(file.path(precomp_dir,"jsep_data.rds")) # Load pre-computed data
 df_reg<-data.frame(xy)
 x<- df_reg$x
 y<- df_reg$y
@@ -284,11 +288,12 @@ fit_ppc_jsep <- bnrm(
 
 
 ppc_plot_jsep<- pp_check(fit_ppc_jsep, type = "dens_overlay", nsamples = 200)
+#saveRDS(ppc_plot_jsep, file.path(precomp_dir,"ppc_plot_jsep.rds")) # Save pre-computed plot
 print(ppc_plot_jsep)
 # Show prior predictive check plot
 ```
 
-```{r ppc_plot_jsep, eval=TRUE,echo=FALSE,message=FALSE}
+```{r ppc_plot_jsep, eval=TRUE,echo=FALSE,message=FALSE,cache=TRUE}
 
 
 ppc_plot_jsep <- readRDS("data_precomputed/ppc_plot_jsep.rds") # Load pre-computed plot
@@ -315,7 +320,7 @@ fit_jsep_bnrm <- bnrm(
   seed = 123,
   refresh = 0
 )
-
+#saveRDS(fit_jsep_bnrm, file.path(precomp_dir, "fit_jsep_bnrm.rds")) # Save pre-computed fit
 ```
 
 After fitting the model, we can summarize the results to see the estimated parameters and their posterior distributions. The summary will include the mean, standard deviation, and credible intervals for each parameter. The convergence diagnostics will also be checked to ensure that the MCMC chains have mixed well and converged to the posterior distribution. Posterior predictive checks will be performed to assess the model fit and the ability of the model to predict new data.
@@ -329,28 +334,29 @@ summary(fit_jsep_bnrm)
   
   # Posterior predictive check
   pp_plot <- pp_check(fit_jsep_bnrm)
-  print(pp_plot)
   
+ #saveRDS(pp_plot, file.path(precomp_dir,"ppc_plot_jsep.rds")) # Save pre-computed plot
+
   # Model evaluation
   loo_result <- loo(fit_jsep_bnrm, moment_match = TRUE)
+#  saveRDS(loo_result, file.path(precomp_dir,"loo_result_jsep.rds")) # Save pre-computed loo result
   print(loo_result)
  
 ```
 
-```{r show_jsep_results_pre, eval=TRUE, echo=FALSE}
-fit_jsep_bnrm <- readRDS("data_precomputed/fit_jsep_bnrm.rds") # Load pre-computed fit  
+```{r show_jsep_results_pre, eval=TRUE, echo=FALSE,cache=TRUE}
+fit_jsep_bnrm <- readRDS(file.path(precomp_dir,"fit_jsep_bnrm.rds")) # Load pre-computed fit  
  
 summary(fit_jsep_bnrm)
 # Convergence diagnostics
   trace_plot <- mcmc_trace(fit_jsep_bnrm, facet_args = list(ncol = 2),pars = c("alpha", "beta", "sigma", "Intercept","b_x"))
   print(trace_plot)
-  
   # Posterior predictive check
-  pp_plot <- pp_check(fit_jsep_bnrm)
+  pp_plot <- readRDS(file.path(precomp_dir,"ppc_plot_jsep.rds")) # Load pre-computed 
   print(pp_plot)
   
   # Model evaluation
-  loo_result <- loo(fit_jsep_bnrm, moment_match = TRUE)
+  loo_result <- readRDS(file.path(precomp_dir,"loo_result_jsep.rds")) # Load pre-computed loo result
   print(loo_result)
  
 ```
@@ -358,7 +364,7 @@ summary(fit_jsep_bnrm)
 
 ## Usage Example with `brms` code
 
-
+The `brms` package provides a high-level interface for Bayesian regression modeling using Stan. It allows users to specify models using a formula interface similar to that of `lm` or `glm`, while also supporting custom families. The neo-normal distributions, such as FOSSEP and JSEP, can be used with `brms` by defining custom families.
 The `brms` interface requires custom family definitions. Fossep and JSEP distributions can be defined using the `brms_custom_family` function. The following code demonstrates how to set up the custom family for FOSSEP  distributions, fit the model, and summarize the results. 
 
 The following code demonstrates how to set up the custom family for FOSSEP distributions, fit the model, and summarize the results. The `brms_custom_family` function is used to define the custom family, and then the `brm` function is used to fit the model. The summary of the fitted model is displayed at the end.
