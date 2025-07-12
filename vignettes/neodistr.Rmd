@@ -26,7 +26,11 @@ This vignette explains how to use it with `bnrm`, `brms`, and `Stan` code, and d
 
 **Note**: This vignette contains computationally intensive examples.
 
-To keep the vignette lightweight, we use pre-computed results for the examples. The initial examples demonstrate the workflow using pre-computed data and results, while subsequent sections show the code needed to run the models interactively.
+To keep the vignette lightweight, we use pre-computed results for the examples 
+# tambahkan penjelasan bahwa iterasi hanay 2000 supaya tdak besar dalam bahasa inggris
+
+
+. The initial examples demonstrate the workflow using pre-computed data and results, while subsequent sections show the code needed to run the models interactively.
 
 # Installation
 
@@ -84,9 +88,9 @@ We simulate a right‐skewed dataset of 100 observations from the FOSSEP distrib
 set.seed(400)
 precomp_dir <- system.file("data_precomputed", package = "neodistr")
 # Simulate data from FOSSEP distribution
-y <- rfossep(100, 0, 1, 2, 2)  # Simulated data from fossep distribution
+y <- rfossep(50, 0, 1, 2, 2)  # Simulated data from fossep distribution
 df <- data.frame(y)
-# R.utils::saveObject(y, file.path(precomp_dir, "fossep_data.rds"),format="rds") # Save pre-computed data
+#saveRDS(y, file.path(precomp_dir, "fossep_data.rds")) # Save pre-computed data
 #gzip(file.path(precomp_dir, "fossep_data.rds"))  
 # Basic exploration
 summary(y)
@@ -110,7 +114,8 @@ hist(y, main = "Simulated FOSSEP Data", xlab = "Y", col = "skyblue", breaks = 20
 
 We model `y` with an intercept-only formula. Priors are informed by the simulation parameters:
 
-* $\alpha, \beta$ ~ lognormal(0.5, 0.5)
+* $\alpha$ ~ lognormal(0, 0.5)
+* $\beta$ ~ lognormal(log(2), 0.25)
 * $\sigma$ ∼ half-normal(0, 1)
 * $\mu$ ∼ normal(0, 1)
 
@@ -120,8 +125,8 @@ formula <- brms::bf(y ~ 1)
 
 # Choose priors
 prior <- c(
-  set_prior("lognormal(0.5,0.5)", class = "alpha"),
-  set_prior("lognormal(0.5,0.5)", class = "beta"),
+  set_prior("lognormal(0,0.5)", class = "alpha"),
+  set_prior("lognormal(log(2),0.5)", class = "beta"),
   set_prior("normal(0,1)", class = "sigma"),
   set_prior("normal(0,1)", class = "Intercept") # mu
 )
@@ -141,7 +146,7 @@ ppc_fit_fossep <- bnrm(
   sample_prior = "only",
   chains = 2,           # Reduced for demo
   cores = 1,            # Single core for consistency
-  iter = 4000,          # Reduced iterations
+  iter = 2000,          # Reduced iterations
   warmup = 1000,
   refresh = 0           # Suppress output
 )
@@ -150,7 +155,7 @@ ppc_fit_fossep <- bnrm(
 ```{r, prior_check_fossep_pre,eval=FALSE}
 # Show prior predictive check plot
 ppc_plot_fossep <- pp_check(ppc_fit_fossep, type = "dens_overlay") 
-# R.utils::saveObject(ppc_plot_fossep, file.path(precomp_dir, "ppc_plot_fossep.rds"),format="rds") # Save pre-computed plot file.path(precomp_dir, "fossep_data.rds")
+#saveRDS(ppc_plot_fossep, file.path(precomp_dir, "ppc_plot_fossep.rds")) # Save pre-computed plot file.path(precomp_dir, "fossep_data.rds")
 print(ppc_plot_fossep)
 
 ```
@@ -177,12 +182,12 @@ fit_fossep_bnrm <- bnrm(
   prior = prior,
   chains = 2,
   cores = 1,
-  iter = 4000,
+  iter = 2000,
   warmup = 1000,
   seed = 123,
   refresh = 0
 )
-# R.utils::saveObject(fit_fossep_bnrm, file.path(precomp_dir, "fit_fossep_bnrm.rds"),format="rds") # Save pre-computed fit
+#saveRDS(fit_fossep_bnrm, file.path(precomp_dir, "fit_fossep_bnrm.rds")) # Save pre-computed fit
 ```
 After fitting the model, we can summarize the results to see the estimated parameters and their posterior distributions. The summary will include the mean, standard deviation, and credible intervals for each parameter. The convergence diagnostics will also be checked to ensure that the MCMC chains have mixed well and converged to the posterior distribution. Posterior predictive checks will be performed to assess the model fit and the ability of the model to predict new data.
 
@@ -196,7 +201,7 @@ After fitting the model, we can summarize the results to see the estimated param
   
   # Posterior predictive check
   pp_plot <- pp_check(fit_fossep_bnrm)
-  # R.utils::saveObject(pp_plot, file.path(precomp_dir, "pp_plot_fossep.rds"),format="rds") # Save pre-computed plot
+  #saveRDS(pp_plot, file.path(precomp_dir, "pp_plot_fossep.rds")) # Save pre-computed plot
   print(pp_plot)
   
 ```
@@ -226,8 +231,8 @@ In the following example, we demonstrate how to perform regression modeling usin
 
 ```{r,eval=FALSE}
 set.seed(123)
-x <- runif(100)
-e <- rjsep(100, 0, 0.1, 0.8,2)  # Simulated errors from JSEP distribution
+x <- runif(50)
+e <- rjsep(50, 0, 0.1, 0.8,2)  # Simulated errors from JSEP distribution
 y <- 0.5 + 0.8*x + e
 xy<-cbind(y,x)
 
@@ -235,7 +240,7 @@ df_reg <- data.frame(y, x)
 # Basic exploration
 plot(x, y, main = "Regression Data", pch = 19, col = "steelblue")
 #save pre-computed data
-# R.utils::saveObject(xy, file.path(precomp_dir,"jsep_data.rds"),format="rds") # Save pre-computed data
+#saveRDS(xy, file.path(precomp_dir,"jsep_data.rds")) # Save pre-computed data
 ```
 
 ```{r,eval=TRUE, echo=FALSE}
@@ -260,8 +265,8 @@ formula_reg <- brms::bf(y ~ x)
 
 # Priors for regression
 prior_reg <- c(
-  set_prior("lognormal(0,0.5)", class = "alpha"),
-  set_prior("lognormal(0,0.5)", class = "beta"),
+  set_prior("lognormal(log(2),0.25)", class = "alpha"),
+  set_prior("lognormal(log(2),0.25)", class = "beta"),
   set_prior("normal(0,1)", class = "sigma"),
   set_prior("normal(0,1)", class = "Intercept"),
   set_prior("normal(0,1)", class = "b")
@@ -281,7 +286,7 @@ fit_ppc_jsep <- bnrm(
   prior = prior_reg,
   chains = 2,
   cores = 1,
-  iter = 4000,
+  iter = 2000,
   sample_prior = "only", # Prior predictive check
   warmup = 1000,
   seed = 123,
@@ -291,7 +296,7 @@ fit_ppc_jsep <- bnrm(
 
 
 ppc_plot_jsep<- pp_check(fit_ppc_jsep, type = "dens_overlay", nsamples = 200)
-# R.utils::saveObject(ppc_plot_jsep, file.path(precomp_dir,"ppc_plot_jsep.rds"),format="rds") # Save pre-computed plot
+#saveRDS(ppc_plot_jsep, file.path(precomp_dir,"ppc_plot_jsep.rds")) # Save pre-computed plot
 print(ppc_plot_jsep)
 # Show prior predictive check plot
 ```
@@ -318,12 +323,12 @@ fit_jsep_bnrm <- bnrm(
   prior = prior_reg,
   chains = 2,
   cores = 1,
-  iter = 4000,
+  iter = 2000,
    warmup = 1000,
   seed = 123,
   refresh = 0
 )
-# R.utils::saveObject(fit_jsep_bnrm, file.path(precomp_dir, "fit_jsep_bnrm.rds"),format="rds") # Save pre-computed fit
+#saveRDS(fit_jsep_bnrm, file.path(precomp_dir, "fit_jsep_bnrm.rds")) # Save pre-computed fit
 ```
 
 After fitting the model, we can summarize the results to see the estimated parameters and their posterior distributions. The summary will include the mean, standard deviation, and credible intervals for each parameter. The convergence diagnostics will also be checked to ensure that the MCMC chains have mixed well and converged to the posterior distribution. Posterior predictive checks will be performed to assess the model fit and the ability of the model to predict new data.
@@ -338,11 +343,11 @@ summary(fit_jsep_bnrm)
   # Posterior predictive check
   pp_plot <- pp_check(fit_jsep_bnrm)
   
- # R.utils::saveObject(pp_plot, file.path(precomp_dir,"pp_plot_jsep.rds"),format="rds") # Save pre-computed plot
+ #saveRDS(pp_plot, file.path(precomp_dir,"pp_plot_jsep.rds")) # Save pre-computed plot
 
   # Model evaluation
   loo_result <- loo(fit_jsep_bnrm, moment_match = TRUE)
-  # R.utils::saveObject(loo_result, file.path(precomp_dir,"loo_result_jsep.rds"),format="rds") # Save pre-computed loo result
+  #saveRDS(loo_result, file.path(precomp_dir,"loo_result_jsep.rds")) # Save pre-computed loo result
   print(loo_result)
  
 ```

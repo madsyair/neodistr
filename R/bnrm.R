@@ -302,10 +302,10 @@ bnrm <- function(formula, data, family = msnburr(), prior = NULL,
                         prior
                       } else {
                         if (length(which(prior$class == "alpha")) == 0){
-                          c(prior, set_prior("lognormal(1,1)", class = "alpha",lb=0))
+                          c(prior, set_prior("lognormal(0,5)", class = "alpha",lb=0))
                         }else{
                           if (length(which(prior$class == "beta")) == 0)
-                            c(prior, set_prior("lognormal(1,1)", class = "beta",lb=0))
+                            c(prior, set_prior("lognormal(log(2),0.25)", class = "beta",lb=0))
                         }
                       }
                     } else {
@@ -319,10 +319,10 @@ bnrm <- function(formula, data, family = msnburr(), prior = NULL,
                         prior
                       } else {
                         if (length(which(prior$class == "alpha")) == 0){
-                          c(prior, set_prior("lognormal(1,1)", class = "alpha",lb=0))
+                          c(prior, set_prior("lognormal(log(2),0.25)", class = "alpha",lb=0))
                         }else{
                           if (length(which(prior$class == "beta")) == 0)
-                            c(prior, set_prior("lognormal(1,1)", class = "beta",lb=0))
+                            c(prior, set_prior("lognormal(log(2),0.25)", class = "beta",lb=0))
                         }
                       }
                     } else {
