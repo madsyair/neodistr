@@ -160,7 +160,7 @@ stanf_msnburr2a <- function(vectorize = TRUE, rng = TRUE) {
       ', loc_v, ' zoa;
       ', common_check, '
       zoa = omega * ((y - mu) / sigma) - log(alpha);
-      return exp(', if (vectorize) "sum(-alpha * log1p_exp(zoa))" else "(-alpha * log1p_exp(zoa))", ');
+      return ', if (vectorize) "sum(-expm1(-alpha * log1p_exp(zoa)))" else "expm1(-alpha * log1p_exp(zoa))", ';
     }
 
     real msnburr2a_lcdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha) {
@@ -170,7 +170,7 @@ stanf_msnburr2a <- function(vectorize = TRUE, rng = TRUE) {
       ', loc_v, ' zoa;
       ', common_check, '
       zoa = omega * ((y - mu) / sigma) - log(alpha);
-      return ', if (vectorize) "-sum(alpha * log1p_exp(zoa))" else "-alpha * log1p_exp(zoa)", ';
+      return ', if (vectorize) "sum(log1m_exp(-alpha * log1p_exp(zoa)))" else "log1m_exp(-alpha * log1p_exp(zoa))", ';
     }
 
     real msnburr2a_lccdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha) {
@@ -180,7 +180,7 @@ stanf_msnburr2a <- function(vectorize = TRUE, rng = TRUE) {
       ', loc_v, ' zoa;
       ', common_check, '
       zoa = omega * ((y - mu) / sigma) - log(alpha);
-      return ', if (vectorize) "sum(log1m_exp(-(alpha * log1p_exp(zoa))))" else "log1m_exp(-(alpha * log1p_exp(zoa)))", ';
+      return ', if (vectorize) "-sum((alpha * log1p_exp(zoa)))" else "-(alpha * log1p_exp(zoa))", ';
     }
   ')
 
