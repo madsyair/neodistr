@@ -126,7 +126,7 @@ stanf_msnburr2a <- function(vectorize = TRUE, rng = TRUE) {
   sig_y  <- if (vectorize) "vector" else "real"
   sig_mu <- if (vectorize) "vector" else "real"
   
-  # 2. Local Variable Definitions (Requires [N] for vectors)
+  # 2. Local Variable Definitions
   loc_v  <- if (vectorize) "vector[N]" else "real"
   
   # 3. Validation & Common Math Logic
@@ -136,7 +136,7 @@ stanf_msnburr2a <- function(vectorize = TRUE, rng = TRUE) {
     lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);
     omega = exp(lomega);'
 
-  # 4. Distribution Template (Type IIa uses Positive Signs)
+  # 4. Distribution Template
   dist_code <- paste0('
     real msnburr2a_lpdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha) {
       int N = ', if (vectorize) "rows(y)" else "1", ';
@@ -149,28 +149,10 @@ stanf_msnburr2a <- function(vectorize = TRUE, rng = TRUE) {
       zo = omega * ((y - mu) / sigma);
       zoa = zo - log(alpha);
       lp = ', if (vectorize) "rep_vector((lomega - log(sigma)), N)" else "(lomega - log(sigma))", ' + zo - ((alpha + 1.0) * log1p_exp(zoa));
-      ', if (vectorize) 'return sum(lp);' 
-         else 'return lp;', '
-    }
-
-    real msnburr2a_cdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha) {
-      int N = ', if (vectorize) "rows(y)" else "1", ';
-      real lomega;
-      real omega;
-      ', loc_v, ' zoa;
-      ', common_check, '
-      zoa = omega * ((y - mu) / sigma) - log(alpha);
-      return ', if (vectorize) "sum(-expm1(-alpha * log1p_exp(zoa)))" else "expm1(-alpha * log1p_exp(zoa))", ';
-    }
-
-    real msnburr2a_lcdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha) {
-      int N = ', if (vectorize) "rows(y)" else "1", ';
-      real lomega;
-      real omega;
-      ', loc_v, ' zoa;
-      ', common_check, '
-      zoa = omega * ((y - mu) / sigma) - log(alpha);
-      return ', if (vectorize) "sum(log1m_exp(-alpha * log1p_exp(zoa)))" else "log1m_exp(-alpha * log1p_exp(zoa))", ';
+      ', if (vectorize) 'for(i in 1:N) if(is_inf(zo[i])) lp[i] = negative_infinity();
+      return sum(lp);' 
+         else 'if(is_inf(zo)) lp = negative_infinity();
+      return lp;', '
     }
 
     real msnburr2a_lccdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha) {
@@ -180,7 +162,16 @@ stanf_msnburr2a <- function(vectorize = TRUE, rng = TRUE) {
       ', loc_v, ' zoa;
       ', common_check, '
       zoa = omega * ((y - mu) / sigma) - log(alpha);
-      return ', if (vectorize) "-sum((alpha * log1p_exp(zoa)))" else "-(alpha * log1p_exp(zoa))", ';
+      return ', if (vectorize) "-sum(alpha * log1p_exp(zoa))" else "-alpha * log1p_exp(zoa)", ';
+    }
+
+    real msnburr2a_lcdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha) {
+      int N = ', if (vectorize) "rows(y)" else "1", ';
+      return log1m_exp(msnburr2a_lccdf(y, mu, sigma, alpha));
+    }
+
+    real msnburr2a_cdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha) {
+      return exp(msnburr2a_lcdf(y, mu, sigma, alpha));
     }
   ')
 
@@ -193,26 +184,22 @@ stanf_msnburr2a <- function(vectorize = TRUE, rng = TRUE) {
       real inner;
       if (alpha <= 0) reject("alpha <= 0; found alpha =", alpha);
       if (sigma <= 0) reject("sigma <= 0; found sigma =", sigma);
-      if (p < 0 || p > 1) reject("p < 0 or p > 1, found p = ", p);
+      if (p <= 0 || p >= 1) reject("p must be in (0,1); found p = ", p);
+      
       lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);
       omega = exp(lomega);
-      log_term = -log(p) / alpha;
+      
+      // For IIa (Right Skewed), quantile uses 1-p because of the 1 - (...) structure
+      log_term = -log1m(p) / alpha;
       inner = (log_term > 20.0) ? log_term : log(expm1(log_term));
-      inner = fmin(inner, 700.0);
+      
       return mu + (sigma / omega) * (log(alpha) + inner);
     }
 
     real msnburr2a_rng(real mu, real sigma, real alpha) {
-      if (alpha <= 0 || sigma <= 0) reject("Invalid parameters in RNG");
       return msnburr2a_quantile(uniform_rng(1e-12, 1.0 - 1e-12), mu, sigma, alpha);
     }
   '
-
-  # Combine and Format
   out <- if (rng) paste0(dist_code, qr_code) else dist_code
-  
-  # Ensure newline after every semicolon and remove excessive spaces
-  #out <- gsub(";[ ]*", ";\n", out)
-  
   return(out)
 }
