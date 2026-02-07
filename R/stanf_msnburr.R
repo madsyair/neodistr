@@ -136,7 +136,8 @@ stanf_msnburr<-function(vectorize=TRUE,rng=TRUE){
     reject("sigma<=0; found sigma =", sigma);
     //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
     lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);    
-    omega=exp(lomega);    zo=-omega*((y-mu)/sigma);
+    omega=exp(lomega);    
+    zo=-omega*((y-mu)/sigma);
     zoa=zo-log(alpha);
     //lp=rep_vector((log(omega)-log(sigma)),N)+(zo)-((alpha+1)*log1p_exp(zoa));
      lp=rep_vector((lomega-log(sigma)),N)+(zo)-((alpha+1.0)*log1p_exp(zoa));
@@ -215,7 +216,8 @@ stanf_msnburr<-function(vectorize=TRUE,rng=TRUE){
     if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
     //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
-    lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);    omega=exp(lomega);
+    lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);    
+    omega=exp(lomega);
     zo=-omega*((y-mu)/sigma);
     zoa=zo-log(alpha);
     if(is_inf(zo)==1){
