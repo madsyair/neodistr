@@ -122,271 +122,130 @@
 #' print(fit2, pars=c("mu", "sigma", "alpha","beta",  "lp__"), probs=c(.025,.5,.975))
 #' }
 #' @export
-stanf_gmsnburr<-function(vectorize =TRUE,rng=TRUE){
-  if(vectorize ){
-    dist<-
-  'real gmsnburr_lpdf(vector y, vector mu,real sigma,real alpha, real beta) {
-    // gmsnburr log pdf
-     if (alpha<=0)
-      reject("alpha<=0; found alpha =", alpha);
-    if (beta<=0)
-      reject("beta<=0; found beta =", beta);
-    if (sigma<=0)
-      reject("sigma<=0; found sigma =", sigma);
-    int N = rows(y);
-    vector[N] lp;
-    real lomega=-0.5*log(2*pi())+lbeta(alpha,beta)-beta*(log(beta/alpha))+(alpha+beta)*log1p(beta/alpha);
-    real omega=exp(lomega);
-    //vector[N] epart=exp(-omega*((y-mu)/sigma));
-    vector[N] zo=-omega*((y-mu)/sigma);
-    vector[N] zoa=zo+log(beta)-log(alpha);
- 
-    lp=rep_vector((lomega-log(sigma)+beta*(log(beta)-log(alpha))-lbeta(alpha,beta)),N)+beta*zo-((alpha+beta)*log1p_exp(zoa));
-//    lp=rep_vector(lomega-log(sigma)+beta*(log(beta/alpha))-N*lbeta(alpha,beta),N)-(beta*omega((y-mu)/sigma))-((alpha+beta)*log1p((beta/alpha)*epart));
+stanf_gmsnburr <- function(vectorize = TRUE, rng = TRUE) {
 
-    for (i in 1:N){
-    if(is_inf(zo[i])==1){
-    lp[i]=negative_infinity();
-    }
-    }
-    return sum(lp);
-// return N*lomega-N*log(sigma)+N*beta*(log(beta)-log(alpha))+sum(beta*zo)-sum((alpha+beta)*log1p_exp(zoa))-N*lbeta(alpha,beta);
- //    return N*lomega-N*log(sigma)+N*beta*(log(beta/alpha))-sum(beta*omega*((y-mu)/sigma))-sum((alpha+beta)*log1p((beta/alpha)*epart))-N*lbeta(alpha,beta);
+  # 1. Type Signatures for Arguments
+  sig_y  <- if (vectorize) "vector" else "real"
+  sig_mu <- if (vectorize) "vector" else "real"
 
-  }
-  
-  //gmsnburr cdf
-  real gmsnburr_cdf(vector y, vector mu, real sigma,real alpha,real beta) {
-    int N = rows(y);
-    real lomega;
-    real omega;
-    if (alpha<=0)
-      reject("alpha<=0; found alpha =", alpha);
-    if (beta<=0)
-      reject("beta<=0; found beta =", beta);
-    if (sigma<=0)
-      reject("sigma<=0; found sigma =", sigma);
-    lomega=-0.5*log(2*pi())+lbeta(alpha,beta)-beta*(log(beta)-log(alpha))+(alpha+beta)*log1p(beta/alpha);
-    omega=exp(lomega);
-   
-    vector[N] zo=-omega*((y-mu)/sigma);
-    vector[N] zoa=zo+log(beta)-log(alpha);
-    
-    vector[N] ep=exp(-log1p_exp(zoa));
-      
-    return exp(beta_lcdf(ep|alpha,beta));
-  }
-  
-  //gmsnburr log cdf
-  real gmsnburr_lcdf(vector y, vector mu, real sigma,real alpha,real beta) {
-    // generalised gmsnburr log cdf
-    int N = rows(y);
-    real lomega;
-    real omega;
-    if (alpha<=0)
-      reject("alpha<=0; found alpha =", alpha);
-    if (beta<=0)
-      reject("beta<=0; found beta =", beta);
-    if (sigma<=0)
-      reject("sigma<=0; found sigma =", sigma);
-    lomega=-0.5*log(2*pi())+lbeta(alpha,beta)-beta*(log(beta)-log(alpha))+(alpha+beta)*log1p(beta/alpha);
-    omega=exp(lomega);
-   // epart=exp(-omega*((y-mu)/sigma));
-    //for (i in 1:N){
-    //  ep=rep_vector(1,N)./(1+(beta/alpha)*epart);
-  
-      //}
-      
-    vector[N] zo=-omega*((y-mu)/sigma);
-    vector[N] zoa=zo+log(beta)-log(alpha);
-    
-    vector[N] ep=exp(-log1p_exp(zoa));
-  
-    return (beta_lcdf(ep|alpha,beta));
-  }
-  
-  //gmsnburr log ccdf
-  real gmsnburr_lccdf(vector y, vector mu, real sigma,real alpha,real beta) {
-    int N = rows(y);
-    real lomega;
-    real omega;
-  //  vector[N] epart;
-  //  vector[N] ep;
-    if (alpha<=0)
-      reject("alpha<=0; found alpha =", alpha);
-    if (beta<=0)
-      reject("beta<=0; found beta =", beta);
-    if (sigma<=0)
-      reject("sigma<=0; found sigma =", sigma);
-    lomega=-0.5*log(2*pi())+lbeta(alpha,beta)-beta*(log(beta)-log(alpha))+(alpha+beta)*log1p(beta/alpha);
-    omega=exp(lomega);
-    //epart=exp(-omega*((y-mu)/sigma));
-    //for (i in 1:N){
-    //  ep=rep_vector(1,N)./(1+(beta/alpha)*epart);
-  
-      //}
-      
-    vector[N] zo=-omega*((y-mu)/sigma);
-    vector[N] zoa=zo+log(alpha)-log(beta);
-    
-    vector[N] ep=exp(-log1p_exp(zoa));
-  
-    return (beta_lccdf(ep|alpha,beta));
-  }'
-  }else{
-  dist<-'real gmsnburr_lpdf(real y, real mu,real sigma,real alpha, real beta) {
-    // gmsnburr log pdf
-  real lp;
-    real lomega=-0.5*log(2*pi())+lbeta(alpha,beta)-beta*(log(beta/alpha))+(alpha+beta)*log1p(beta/alpha);
-    real omega=exp(lomega);
-    real zo=-omega*((y-mu)/sigma);
-    real zoa=zo+log(beta)-log(alpha);
-    if (alpha<=0)
-      reject("alpha<=0; found alpha =", alpha);
-    if (beta<=0)
-      reject("beta<=0; found beta =", beta);
-    if (sigma<=0)
-      reject("sigma<=0; found sigma =", sigma);
-      if(is_inf(zo)==1){
-        lp=negative_infinity();
-      }else{
-        lp=lomega-log(sigma)+beta*(log(beta)-log(alpha))+(beta*zo)-(alpha+beta)*log1p_exp(zoa)-lbeta(alpha,beta);
-        }
-    
-    return lp;
-  }
-  
-  //gmsnburr cdf
-  real gmsnburr_cdf(real y, real mu, real sigma,real alpha,real beta) {
-    real lomega;
-    real omega;
-    if (alpha<=0)
-      reject("alpha<=0; found alpha =", alpha);
-    if (beta<=0)
-      reject("beta<=0; found beta =", beta);
-    if (sigma<=0)
-      reject("sigma<=0; found sigma =", sigma);
-    lomega=-0.5*log(2*pi())+lbeta(alpha,beta)-beta*(log(beta)-log(alpha))+(alpha+beta)*log1p(beta/alpha);
-    omega=exp(lomega);
-   
-    real zo=-omega*((y-mu)/sigma);
-    real zoa=zo+log(beta)-log(alpha);
-    
-    real ep=exp(-log1p_exp(zoa));
-      
-    return exp(beta_lcdf(ep|alpha,beta));
-  }
-  
-  //gmsnburr log cdf
-  real gmsnburr_lcdf(real y, real mu, real sigma,real alpha,real beta) {
-    // generalised gmsnburr log cdf
-    real lomega;
-    real omega;
-    if (alpha<=0)
-      reject("alpha<=0; found alpha =", alpha);
-    if (beta<=0)
-      reject("beta<=0; found beta =", beta);
-    if (sigma<=0)
-      reject("sigma<=0; found sigma =", sigma);
-    lomega=-0.5*log(2*pi())+lbeta(alpha,beta)-beta*(log(beta)-log(alpha))+(alpha+beta)*log1p(beta/alpha);
-    omega=exp(lomega);
-   // epart=exp(-omega*((y-mu)/sigma));
-    //for (i in 1:N){
-    //  ep=rep_vector(1,N)./(1+(beta/alpha)*epart);
-  
-      //}
-      
-    real zo=-omega*((y-mu)/sigma);
-    real zoa=zo+log(beta)-log(alpha);
-    
-    real ep=exp(-log1p_exp(zoa));
-  
-    return (beta_lcdf(ep|alpha,beta));
-  }
-  
-  //gmsnburr log ccdf
-  real gmsnburr_lccdf(real y, real mu, real sigma,real alpha,real beta) {
-    real lomega;
-    real omega;
-  //  vector[N] epart;
-  //  vector[N] ep;
-    if (alpha<=0)
-      reject("alpha<=0; found alpha =", alpha);
-    if (beta<=0)
-      reject("beta<=0; found beta =", beta);
-    if (sigma<=0)
-      reject("sigma<=0; found sigma =", sigma);
-    lomega=-0.5*log(2*pi())+lbeta(alpha,beta)-beta*(log(beta)-log(alpha))+(alpha+beta)*log1p(beta/alpha);
-    omega=exp(lomega);
-    //epart=exp(-omega*((y-mu)/sigma));
-    //for (i in 1:N){
-    //  ep=rep_vector(1,N)./(1+(beta/alpha)*epart);
-  
-      //}
-      
-    real zo=-omega*((y-mu)/sigma);
-    real zoa=zo+log(beta)-log(alpha);
-    
-    real ep=exp(-log1p_exp(zoa));
-  
-    return (beta_lccdf(ep|alpha,beta));
-  }'
-  }
-qr<-'
-  //gmsnburr quantile
-  real gmsnburr_quantile(real p, real mu, real sigma, real alpha, real beta){
-  real omega;
-  real lomega;
-  //real zf;
-  if (alpha<=0)
-    reject("alpha<=0; found alpha =", alpha);
-  if (beta<=0)
-    reject("beta<=0; found beta =", beta);
-  if (sigma<=0)
-    reject("sigma<=0; found sigma =", sigma);
-  if(p < 0||p > 1)
-    reject("p<0 or p>1, found p = ", p);
-    
-  lomega=-0.5*log(2*pi())+lbeta(alpha,beta)-beta*(log(beta)-log(alpha))+(alpha+beta)*log1p(beta/alpha);
-  omega=exp(lomega);
-  real ib=inv_inc_beta(alpha, beta,  p);
-  real s = (alpha/beta)*((1/ib)-1);
- // zf <-qf(p,2*beta,2*alpha,lower.tail=!lower.tail,log.p=log.p);
-  return (mu-(sigma/omega)*log(s));
-      
-  }
-  
-  //gmsnburr rng
-  real gmsnburr_rng(real mu, real sigma,real alpha,real beta) {
-  // real lomega;
-//  real omega;
-  //  real logzf;
-  //  real z1;
-  //  real z2;
-  //   real rb;
-    // real z;
-    if (alpha<=0)
-      reject("alpha<=0; found alpha =", alpha);
-    if (beta<=0)
-      reject("beta<=0; found beta =", beta);
-    if (sigma<=0)
-      reject("sigma<=0; found sigma =", sigma);
-  //  lomega=-0.5*log(2*pi())+lbeta(alpha,beta)-beta*(log(beta)-log(alpha))+(alpha+beta)*log1p(beta/alpha);
-  //  omega=exp(lomega);
-  //  rb=beta_rng(beta,alpha);
-  //  z=(alpha*rb)/(beta*(1-rb));
-  //  return (mu-(sigma/omega)*log(z))
-    
-    
-  // z1=chi_square_rng(2*alpha)/(2*alpha);
-   //z2=chi_square_rng(2*beta)/(2*beta);
-   //logzf=log(z2)-log(z1);
-  //  return (mu-(sigma/omega)*logzf);
-    return gmsnburr_quantile(uniform_rng(0,1), mu, sigma, alpha, beta);
-  }'
-if(rng){
-paste0(dist,qr)
-}else{
-dist 
+  # 2. Local Variable Declarations
+  loc_v <- if (vectorize) "vector[N]" else "real"
+
+  # 3. Validation & Common Math Logic
+  #    omega = B(a,b)/sqrt(2*pi) * (1+b/a)^(a+b) * (b/a)^(-b)
+  #    log(omega) = lbeta(a,b) - 0.5*log(2*pi) + (a+b)*log1p(b/a) - b*(log(b)-log(a))
+  common_check <- '
+    if (alpha <= 0) { reject("alpha <= 0; found alpha =", alpha); }
+    if (beta  <= 0) { reject("beta  <= 0; found beta  =", beta);  }
+    if (sigma <= 0) { reject("sigma <= 0; found sigma =", sigma); }
+    lomega = -0.5 * log(2 * pi()) + lbeta(alpha, beta)
+             - beta * (log(beta) - log(alpha))
+             + (alpha + beta) * log1p(beta / alpha);
+    omega = exp(lomega);'
+
+  # 4. Distribution Functions
+  #    Key variables:
+  #      zo  = -omega * (y - mu) / sigma
+  #      zoa = zo + log(beta/alpha)
+  #
+  #    LPDF:  lomega - log(sigma) + beta*log(beta/alpha) - lbeta(alpha,beta)
+  #           + beta*zo - (alpha+beta)*log1p_exp(zoa)
+  #
+  #    CDF via incomplete beta:
+  #      Let ep = 1/(1 + (beta/alpha)*exp(zo)) = sigmoid(-zoa) = exp(-log1p_exp(zoa))
+  #      Then CDF = I_ep(alpha, beta)  [regularized incomplete beta]
+
+  dist_code <- paste0('
+    real gmsnburr_lpdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha, real beta) {
+      int N = ', if (vectorize) "rows(y)" else "1", ';
+      real lomega;
+      real omega;
+      ', loc_v, ' lp;
+      ', loc_v, ' zo;
+      ', loc_v, ' zoa;
+      ', if (vectorize) 'if (rows(y) != rows(mu)) { reject("y and mu must have same length"); }' else '', '
+      ', common_check, '
+      zo = -omega * ((y - mu) / sigma);
+      zoa = zo + log(beta) - log(alpha);
+      lp = ', if (vectorize)
+        'rep_vector((lomega - log(sigma) + beta * (log(beta) - log(alpha)) - lbeta(alpha, beta)), N)'
+      else
+        '(lomega - log(sigma) + beta * (log(beta) - log(alpha)) - lbeta(alpha, beta))',
+      ' + beta * zo - (alpha + beta) * log1p_exp(zoa);
+      ', if (vectorize)
+        'for(i in 1:N) { if(is_inf(zo[i])) lp[i] = negative_infinity(); }
+      return sum(lp);'
+      else
+        'if(is_inf(zo)) lp = negative_infinity();
+      return lp;', '
+    }
+
+    real gmsnburr_lcdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha, real beta) {
+      int N = ', if (vectorize) "rows(y)" else "1", ';
+      real lomega;
+      real omega;
+      ', loc_v, ' zo;
+      ', loc_v, ' zoa;
+      ', loc_v, ' ep;
+      ', if (vectorize) 'if (rows(y) != rows(mu)) { reject("y and mu must have same length"); }' else '', '
+      ', common_check, '
+      zo = -omega * ((y - mu) / sigma);
+      zoa = zo + log(beta) - log(alpha);
+      ep = exp(-log1p_exp(zoa));
+      return beta_lcdf(ep | alpha, beta);
+    }
+
+    real gmsnburr_lccdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha, real beta) {
+      int N = ', if (vectorize) "rows(y)" else "1", ';
+      real lomega;
+      real omega;
+      ', loc_v, ' zo;
+      ', loc_v, ' zoa;
+      ', loc_v, ' ep;
+      ', if (vectorize) 'if (rows(y) != rows(mu)) { reject("y and mu must have same length"); }' else '', '
+      ', common_check, '
+      zo = -omega * ((y - mu) / sigma);
+      zoa = zo + log(beta) - log(alpha);
+      ep = exp(-log1p_exp(zoa));
+      return beta_lccdf(ep | alpha, beta);
+    }
+
+    real gmsnburr_cdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha, real beta) {
+      return exp(gmsnburr_lcdf(y, mu, sigma, alpha, beta));
+    }
+  ')
+
+  # 5. Quantile and RNG Logic
+  qr_code <- '
+    real gmsnburr_quantile(real p, real mu, real sigma, real alpha, real beta) {
+      real lomega;
+      real omega;
+      real ib;
+      real log_s;
+      if (alpha <= 0 || beta <= 0 || sigma <= 0) { reject("Invalid parameters"); }
+      if (p <= 0 || p >= 1) { reject("p must be in (0,1); found p = ", p); }
+
+      lomega = -0.5 * log(2 * pi()) + lbeta(alpha, beta)
+               - beta * (log(beta) - log(alpha))
+               + (alpha + beta) * log1p(beta / alpha);
+      omega = exp(lomega);
+
+      ib = inv_inc_beta(alpha, beta, p);
+
+      // s = (alpha/beta) * ((1 - ib) / ib)
+      // Compute in log-space to avoid overflow when ib ≈ 0
+      log_s = log(alpha) - log(beta) + log1m(ib) - log(ib);
+
+      return mu - (sigma / omega) * log_s;
+    }
+
+    real gmsnburr_rng(real mu, real sigma, real alpha, real beta) {
+      return gmsnburr_quantile(uniform_rng(1e-12, 1.0 - 1e-12), mu, sigma, alpha, beta);
+    }
+  '
+
+  # Merge and return
+  return(if (rng) paste0(dist_code, qr_code) else dist_code)
 }
+
 }
