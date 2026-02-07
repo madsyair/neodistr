@@ -123,8 +123,8 @@ stanf_msnburr <- function(vectorize = TRUE, rng = TRUE) {
   loc_v  <- if (vectorize) "vector[N]" else "real"
   
   common_check <- '
-    if (alpha <= 0) reject("alpha <= 0; found alpha =", alpha);
-    if (sigma <= 0) reject("sigma <= 0; found sigma =", sigma);
+    if (alpha <= 0) reject("alpha <= 0, found alpha =", alpha);
+    if (sigma <= 0) reject("sigma <= 0, found sigma =", sigma);
     lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);
     omega = exp(lomega);'
 
