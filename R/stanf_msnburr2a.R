@@ -118,62 +118,79 @@
 #' print(fit2, pars=c("mu", "sigma", "alpha",  "lp__"), probs=c(.025,.5,.975))
 #' 
 #' }
+#' 
 #' @export
 stanf_msnburr2a <- function(vectorize = TRUE, rng = TRUE) {
   
-  # 1. Dynamic Type Definition
-  type_y  <- if (vectorize) "vector" else "real"
-  type_mu <- if (vectorize) "vector" else "real"
+  # 1. Type Signatures
+  sig_y  <- if (vectorize) "vector" else "real"
+  sig_mu <- if (vectorize) "vector" else "real"
   
-  # 2. Validation & Constants (Common to both MSNBurr types)
+  # 2. Local Variable Definitions (Requires [N] for vectors)
+  loc_v  <- if (vectorize) "vector[N]" else "real"
+  
+  # 3. Validation & Common Math Logic
   common_check <- '
     if (alpha <= 0) reject("alpha <= 0; found alpha =", alpha);
     if (sigma <= 0) reject("sigma <= 0; found sigma =", sigma);
     lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);
     omega = exp(lomega);'
 
-  # 3. Distribution Code Template
-  # Note: MSNBurr-IIa uses positive omega (zo = omega * z) 
-  # whereas MSNBurr uses negative omega (zo = -omega * z).
+  # 4. Distribution Template (Type IIa uses Positive Signs)
   dist_code <- paste0('
-    real msnburr2a_lpdf(', type_y, ' y, ', type_mu, ' mu, real sigma, real alpha) {
+    real msnburr2a_lpdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha) {
       int N = ', if (vectorize) "rows(y)" else "1", ';
-      real lomega; real omega;
-      ', type_y, ' lp; ', type_y, ' zo; ', type_y, ' zoa;
+      real lomega;
+      real omega;
+      ', loc_v, ' lp;
+      ', loc_v, ' zo;
+      ', loc_v, ' zoa;
       ', common_check, '
-      zo = omega * ((y - mu) / sigma); // Note: Positive sign for IIa
+      zo = omega * ((y - mu) / sigma);
       zoa = zo - log(alpha);
       lp = ', if (vectorize) "rep_vector((lomega - log(sigma)), N)" else "(lomega - log(sigma))", ' + zo - ((alpha + 1.0) * log1p_exp(zoa));
       ', if (vectorize) 'return sum(lp);' 
          else 'return lp;', '
     }
 
-    real msnburr2a_cdf(', type_y, ' y, ', type_mu, ' mu, real sigma, real alpha) {
-      real lomega; real omega; ', type_y, ' zoa;
+    real msnburr2a_cdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha) {
+      int N = ', if (vectorize) "rows(y)" else "1", ';
+      real lomega;
+      real omega;
+      ', loc_v, ' zoa;
       ', common_check, '
       zoa = omega * ((y - mu) / sigma) - log(alpha);
       return exp(', if (vectorize) "sum(-alpha * log1p_exp(zoa))" else "(-alpha * log1p_exp(zoa))", ');
     }
 
-    real msnburr2a_lcdf(', type_y, ' y, ', type_mu, ' mu, real sigma, real alpha) {
-      real lomega; real omega; ', type_y, ' zoa;
+    real msnburr2a_lcdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha) {
+      int N = ', if (vectorize) "rows(y)" else "1", ';
+      real lomega;
+      real omega;
+      ', loc_v, ' zoa;
       ', common_check, '
       zoa = omega * ((y - mu) / sigma) - log(alpha);
       return ', if (vectorize) "-sum(alpha * log1p_exp(zoa))" else "-alpha * log1p_exp(zoa)", ';
     }
 
-    real msnburr2a_lccdf(', type_y, ' y, ', type_mu, ' mu, real sigma, real alpha) {
-      real lomega; real omega; ', type_y, ' zoa;
+    real msnburr2a_lccdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha) {
+      int N = ', if (vectorize) "rows(y)" else "1", ';
+      real lomega;
+      real omega;
+      ', loc_v, ' zoa;
       ', common_check, '
       zoa = omega * ((y - mu) / sigma) - log(alpha);
       return ', if (vectorize) "sum(log1m_exp(-(alpha * log1p_exp(zoa))))" else "log1m_exp(-(alpha * log1p_exp(zoa)))", ';
     }
   ')
 
-  # 4. Quantile & RNG (Specific to MSNBurr-IIa)
+  # 5. Quantile and RNG Logic
   qr_code <- '
     real msnburr2a_quantile(real p, real mu, real sigma, real alpha) {
-      real lomega; real omega; real log_term; real inner;
+      real lomega;
+      real omega;
+      real log_term;
+      real inner;
       if (alpha <= 0) reject("alpha <= 0; found alpha =", alpha);
       if (sigma <= 0) reject("sigma <= 0; found sigma =", sigma);
       if (p < 0 || p > 1) reject("p < 0 or p > 1, found p = ", p);
@@ -182,7 +199,7 @@ stanf_msnburr2a <- function(vectorize = TRUE, rng = TRUE) {
       log_term = -log(p) / alpha;
       inner = (log_term > 20.0) ? log_term : log(expm1(log_term));
       inner = fmin(inner, 700.0);
-      return mu + (sigma / omega) * (log(alpha) + inner); // Note: mu + ... for IIa
+      return mu + (sigma / omega) * (log(alpha) + inner);
     }
 
     real msnburr2a_rng(real mu, real sigma, real alpha) {
@@ -191,7 +208,11 @@ stanf_msnburr2a <- function(vectorize = TRUE, rng = TRUE) {
     }
   '
 
-  # 5. Result
+  # Combine and Format
   out <- if (rng) paste0(dist_code, qr_code) else dist_code
+  
+  # Ensure newline after every semicolon and remove excessive spaces
+  out <- gsub(";[ ]*", ";\n", out)
+  
   return(out)
 }
