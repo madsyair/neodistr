@@ -2,7 +2,8 @@
 #' @name stanf_msnburr2a
 #'
 #' @description
-#' Stan code of MSNBurr-IIa distribution for custom distribution in stan
+#' Provides Stan code for the MSNBurr-IIa distribution (Log-density, CDF, RNG, etc.).
+#' This variant is specifically designed to handle right-skewed data.
 #'
 #' @param vectorize logical; if TRUE, Vectorize Stan code of MSNBurr-IIa distribution are given 
 #' The default value of this parameter is TRUE
@@ -117,202 +118,80 @@
 #' print(fit2, pars=c("mu", "sigma", "alpha",  "lp__"), probs=c(.025,.5,.975))
 #' 
 #' }
-
 #' @export
-stanf_msnburr2a<-function(vectorize=TRUE,rng=TRUE){
-  if(vectorize){
-dist<-  'real msnburr2a_lpdf(vector y,  vector mu, real sigma,real alpha) {
-  // msnburr2a log pdf
-  int N = rows(y);
-  real lomega; 
-  real omega;
-  vector[N] lp;
-  vector[N] zo;
-   if (alpha<=0)
-    reject("alpha<=0; found alpha =", alpha);
-  if (sigma<=0)
-    reject("sigma<=0; found sigma =", sigma);
-  //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
-  lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);
-  omega = exp(lomega);
-  zo=-omega*((y-mu)/sigma);
- // lp=rep_vector((lomega-log(sigma)+(alpha+1)*log(alpha)),N)+(alpha*zo)-((alpha+1)*log1p(alpha*exp(zo)));
-# to avoid overflow in zo
-lp=rep_vector((lomega-log(sigma)+(alpha+1)*log(alpha)),N)+(alpha*zo)-((alpha+1)*log_sum_exp(0, log(alpha) + zo));
-  return sum(lp);
-  //return N*log(omega)-N*log(sigma)+N*(alpha+1)*log(alpha)+sum(alpha*zo)-sum((alpha+1)*log1p(alpha*exp(zo)));
- //return N*log(omega)-N*log(sigma)+sum(zo)-sum((alpha+1)*log1p_exp(zoa));
- 
-  }
+stanf_msnburr2a <- function(vectorize = TRUE, rng = TRUE) {
+  
+  # 1. Dynamic Type Definition
+  type_y  <- if (vectorize) "vector" else "real"
+  type_mu <- if (vectorize) "vector" else "real"
+  
+  # 2. Validation & Constants (Common to both MSNBurr types)
+  common_check <- '
+    if (alpha <= 0) reject("alpha <= 0; found alpha =", alpha);
+    if (sigma <= 0) reject("sigma <= 0; found sigma =", sigma);
+    lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);
+    omega = exp(lomega);'
 
-  //msnburr2a cdf
-  real msnburr2a_cdf(vector y, vector mu, real sigma,real alpha) {
-    int N = rows(y);
-   real lomega; 
-  real omega;
-    vector[N] zoa;
-    if (alpha<=0)
-      reject("alpha<=0; found alpha =", alpha);
-    if (sigma<=0)
-      reject("sigma<=0; found sigma =", sigma);
-  //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
-    lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);
-    omega = exp(lomega);
-    zoa=(omega*((y-mu)/sigma)-log(alpha));
-    return exp(sum(log1m_exp(-alpha*log1p_exp(zoa))));
-   }
-  
-  // msnburr2a log cdf
-  real msnburr2a_lcdf(vector y, vector mu, real sigma,real alpha ) {
-    int N = rows(y);
-   real lomega; 
-  real omega;
-    vector[N] zoa;
-    if (alpha<=0)
-      reject("alpha<=0; found alpha =", alpha);
-    if (sigma<=0)
-      reject("sigma<=0; found sigma =", sigma);
-  //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
-    lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);
-    omega = exp(lomega)
-    zoa=(omega*((y-mu)/sigma)-log(alpha));
-    return  (sum(log1m_exp(-alpha*log1p_exp(zoa))));
-    
-  }
-  
-  // msnburr2a log ccdf
-  real msnburr2a_lccdf(vector y, vector mu, real sigma,real alpha) {
-    int N = rows(y);
-  real lomega; 
-  real omega;
-    vector[N] zoa;
-    if (alpha<=0)
-      reject("alpha<=0; found alpha =", alpha);
-    if (sigma<=0)
-      reject("sigma<=0; found sigma =", sigma);
-  //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
-    lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);
-    omega = exp(lomega);
-    zoa=(omega*((y-mu)/sigma)-log(alpha));
-    return (sum(-alpha*log1p_exp(zoa)));
-    }'
-}else{
-  dist<-
-    'real msnburr2a_lpdf(real y,  real mu, real sigma,real alpha) {
-  // msnburr2a log pdf
-  real lomega; 
-  real omega;
-  real zo;
-  real zoa; 
-  real lp;
-  if (alpha<=0)
-    reject("alpha<=0; found alpha =", alpha);
-  if (sigma<=0)
-    reject("sigma<=0; found sigma =", sigma);
-  //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
-  lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);
-  omega = exp(lomega);
-   zo=-omega*((y-mu)/sigma);
-   if(is_inf(zo)==1){
-   lp=negative_infinity();
-   }else{
- //  lp=lomega-log(sigma)+(alpha+1)*log(alpha)+(alpha*zo)-((alpha+1)*log1p(alpha*exp(zo)));
-  // using log_sum_exp to void  overflow on exp(zo)
-lp = lomega - log(sigma) + (alpha + 1) * log(alpha) + (alpha * zo)- (alpha + 1) * log_sum_exp(0, log(alpha) + zo);
-
-   }
-   return lp;
- // return log(omega)-log(sigma)+(alpha+1)*log(alpha)+(alpha*zo)-((alpha+1)*log1p(alpha*exp(zo)));
-      }
-
-  //msnburr2a cdf
-  real msnburr2a_cdf(real y, real mu, real sigma,real alpha) {
-  real lomega; 
-  real omega;
-    real zoa;
-  
-    if (alpha<=0)
-      reject("alpha<=0; found alpha =", alpha);
-    if (sigma<=0)
-      reject("sigma<=0; found sigma =", sigma);
-  //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
-    lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);
-    omega = exp(lomega);
-    zoa=(omega*((y-mu)/sigma)-log(alpha));
-    return exp(log1m_exp(-alpha*log1p_exp(zoa)));
-   }
-  
-  // msnburr2a log cdf
-  real msnburr2a_lcdf(real y, real mu, real sigma,real alpha ) {
-  real lomega; 
-  real omega;
-    real zoa;
-    if (alpha<=0)
-      reject("alpha<=0; found alpha =", alpha);
-    if (sigma<=0)
-      reject("sigma<=0; found sigma =", sigma);
-  //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
-    lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);
-    omega = exp(lomega);
-    zoa=(omega*((y-mu)/sigma)-log(alpha));
-    return  log1m_exp(-alpha*log1p_exp(zoa));
-    
-  }
-  
-  // msnburr2a log ccdf
-  real msnburr2a_lccdf(real y, real mu, real sigma,real alpha) {
-  real lomega; 
-  real omega;
-    real zoa;
-    if (alpha<=0)
-      reject("alpha<=0; found alpha =", alpha);
-    if (sigma<=0)
-      reject("sigma<=0; found sigma =", sigma);
-  //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
-    lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);
-    omega = exp(lomega);
-    zoa=(omega*((y-mu)/sigma)-log(alpha));
-    return ((-alpha*log1p_exp(zoa)));
+  # 3. Distribution Code Template
+  # Note: MSNBurr-IIa uses positive omega (zo = omega * z) 
+  # whereas MSNBurr uses negative omega (zo = -omega * z).
+  dist_code <- paste0('
+    real msnburr2a_lpdf(', type_y, ' y, ', type_mu, ' mu, real sigma, real alpha) {
+      int N = ', if (vectorize) "rows(y)" else "1", ';
+      real lomega; real omega;
+      ', type_y, ' lp; ', type_y, ' zo; ', type_y, ' zoa;
+      ', common_check, '
+      zo = omega * ((y - mu) / sigma); // Note: Positive sign for IIa
+      zoa = zo - log(alpha);
+      lp = ', if (vectorize) "rep_vector((lomega - log(sigma)), N)" else "(lomega - log(sigma))", ' + zo - ((alpha + 1.0) * log1p_exp(zoa));
+      ', if (vectorize) 'for(i in 1:N) if(is_inf(zo[i])) lp[i] = negative_infinity(); return sum(lp);' 
+         else 'if(is_inf(zo)) lp = negative_infinity(); return lp;', '
     }
-  '
 
-}
-qr<- 
-'  //msnburr2a quantile
-  real msnburr2a_quantile (real p, real mu, real sigma, real alpha){
-  real lomega; 
-  real omega;
-  real log_term;
-  real inner;
-      if (alpha<=0)
-        reject("alpha<=0; found alpha =", alpha);
-      if (sigma<=0)
-        reject("sigma<=0; found sigma =", sigma);
-      if(p < 0||p > 1)
-        reject("p<0 or p>1, found p = ", p);
-  //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
+    real msnburr2a_cdf(', type_y, ' y, ', type_mu, ' mu, real sigma, real alpha) {
+      real lomega; real omega; ', type_y, ' zoa;
+      ', common_check, '
+      zoa = omega * ((y - mu) / sigma) - log(alpha);
+      return exp(', if (vectorize) "sum(-alpha * log1p_exp(zoa))" else "(-alpha * log1p_exp(zoa))", ');
+    }
+
+    real msnburr2a_lcdf(', type_y, ' y, ', type_mu, ' mu, real sigma, real alpha) {
+      real lomega; real omega; ', type_y, ' zoa;
+      ', common_check, '
+      zoa = omega * ((y - mu) / sigma) - log(alpha);
+      return ', if (vectorize) "-sum(alpha * log1p_exp(zoa))" else "-alpha * log1p_exp(zoa)", ';
+    }
+
+    real msnburr2a_lccdf(', type_y, ' y, ', type_mu, ' mu, real sigma, real alpha) {
+      real lomega; real omega; ', type_y, ' zoa;
+      ', common_check, '
+      zoa = omega * ((y - mu) / sigma) - log(alpha);
+      return ', if (vectorize) "sum(log1m_exp(-(alpha * log1p_exp(zoa))))" else "log1m_exp(-(alpha * log1p_exp(zoa)))", ';
+    }
+  ')
+
+  # 4. Quantile & RNG (Specific to MSNBurr-IIa)
+  qr_code <- '
+    real msnburr2a_quantile(real p, real mu, real sigma, real alpha) {
+      real lomega; real omega; real log_term; real inner;
+      if (alpha <= 0) reject("alpha <= 0; found alpha =", alpha);
+      if (sigma <= 0) reject("sigma <= 0; found sigma =", sigma);
+      if (p < 0 || p > 1) reject("p < 0 or p > 1, found p = ", p);
       lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);
       omega = exp(lomega);
       log_term = -log(p) / alpha;
       inner = (log_term > 20.0) ? log_term : log(expm1(log_term));
       inner = fmin(inner, 700.0);
-      return mu + (sigma / omega) * (log(alpha) + inner);
- 
-      
-  }
-  
-  //msnburr2a_rng
-  real msnburr2a_rng(real mu, real sigma,real alpha) {
-    if (alpha<=0)
-      reject("alpha<=0; found alpha =", alpha);
-    if (sigma<=0)
-      reject("sigma<=0; found sigma =", sigma);
-    return msnburr2a_quantile(uniform_rng(1e-12, 1.0 - 1e-12), mu, sigma, alpha);
-  }'
-if(rng){
-  paste0(dist,qr)
-}else{
-  dist 
-}
-}
+      return mu + (sigma / omega) * (log(alpha) + inner); // Note: mu + ... for IIa
+    }
 
+    real msnburr2a_rng(real mu, real sigma, real alpha) {
+      if (alpha <= 0 || sigma <= 0) reject("Invalid parameters in RNG");
+      return msnburr2a_quantile(uniform_rng(1e-12, 1.0 - 1e-12), mu, sigma, alpha);
+    }
+  '
+
+  # 5. Result
+  out <- if (rng) paste0(dist_code, qr_code) else dist_code
+  return(out)
+}
