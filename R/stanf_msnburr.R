@@ -146,8 +146,8 @@ stanf_msnburr <- function(vectorize = TRUE, rng = TRUE) {
       zo = -omega * ((y - mu) / sigma);
       zoa = zo - log(alpha);
       lp = ', if (vectorize) "rep_vector((lomega - log(sigma)), N)" else "(lomega - log(sigma))", ' + zo - ((alpha + 1.0) * log1p_exp(zoa));
-      ', if (vectorize) 'for(i in 1:N) if(is_inf(zo[i])) lp[i] = negative_infinity(); return sum(lp);' 
-         else 'if(is_inf(zo)) lp = negative_infinity(); return lp;', '
+      ', if (vectorize) 'return sum(lp);' 
+         else 'return lp;', '
     }
 
     real msnburr_cdf(', type_y, ' y, ', type_mu, ' mu, real sigma, real alpha) {
