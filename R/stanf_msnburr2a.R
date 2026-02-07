@@ -212,7 +212,7 @@ stanf_msnburr2a <- function(vectorize = TRUE, rng = TRUE) {
   out <- if (rng) paste0(dist_code, qr_code) else dist_code
   
   # Ensure newline after every semicolon and remove excessive spaces
-  out <- gsub(";[ ]*", ";\n", out)
+  #out <- gsub(";[ ]*", ";\n", out)
   
   return(out)
 }
