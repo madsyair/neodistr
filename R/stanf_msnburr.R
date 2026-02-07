@@ -115,33 +115,27 @@
 #'   cores = 2             # number of cores (could use one per chain)
 #' )
 #' 
-#' # Showing the estimation results of the parameters that were executed using the Stan file
-#' print(fit2, pars=c("mu", "sigma", "alpha",  "lp__"), probs=c(.025,.5,.975))
-#' 
-#' }
-
 #' @export
 stanf_msnburr <- function(vectorize = TRUE, rng = TRUE) {
   
-  # 1. Define Data Types (Dynamic Typing)
-  type_y  <- if (vectorize) "vector" else "real"
-  type_mu <- if (vectorize) "vector" else "real"
+  sig_y  <- if (vectorize) "vector" else "real"
+  sig_mu <- if (vectorize) "vector" else "real"
+  loc_v  <- if (vectorize) "vector[N]" else "real"
   
-  # 2. Validation & Constants Block (Stored as string to prevent repetition)
-  # Note: The original Stan syntax logic is preserved as requested.
   common_check <- '
     if (alpha <= 0) reject("alpha <= 0; found alpha =", alpha);
     if (sigma <= 0) reject("sigma <= 0; found sigma =", sigma);
     lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);
     omega = exp(lomega);'
 
-  # 3. Distribution Function Template
-  # Using a glue-like approach (paste0) to interpolate data types and logic
   dist_code <- paste0('
-    real msnburr_lpdf(', type_y, ' y, ', type_mu, ' mu, real sigma, real alpha) {
+    real msnburr_lpdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha) {
       int N = ', if (vectorize) "rows(y)" else "1", ';
-      real lomega; real omega;
-      ', type_y, ' lp; ', type_y, ' zo; ', type_y, ' zoa;
+      real lomega;
+      real omega;
+      ', loc_v, ' lp;
+      ', loc_v, ' zo;
+      ', loc_v, ' zoa;
       ', common_check, '
       zo = -omega * ((y - mu) / sigma);
       zoa = zo - log(alpha);
@@ -150,32 +144,43 @@ stanf_msnburr <- function(vectorize = TRUE, rng = TRUE) {
          else 'return lp;', '
     }
 
-    real msnburr_cdf(', type_y, ' y, ', type_mu, ' mu, real sigma, real alpha) {
-      real lomega; real omega; ', type_y, ' zoa;
+    real msnburr_cdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha) {
+      int N = ', if (vectorize) "rows(y)" else "1", ';
+      real lomega;
+      real omega;
+      ', loc_v, ' zoa;
       ', common_check, '
       zoa = -omega * ((y - mu) / sigma) - log(alpha);
       return exp(', if (vectorize) "sum(-alpha * log1p_exp(zoa))" else "(-alpha * log1p_exp(zoa))", ');
     }
 
-    real msnburr_lcdf(', type_y, ' y, ', type_mu, ' mu, real sigma, real alpha) {
-      real lomega; real omega; ', type_y, ' zoa;
+    real msnburr_lcdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha) {
+      int N = ', if (vectorize) "rows(y)" else "1", ';
+      real lomega;
+      real omega;
+      ', loc_v, ' zoa;
       ', common_check, '
       zoa = -omega * ((y - mu) / sigma) - log(alpha);
       return ', if (vectorize) "-sum(alpha * log1p_exp(zoa))" else "-alpha * log1p_exp(zoa)", ';
     }
 
-    real msnburr_lccdf(', type_y, ' y, ', type_mu, ' mu, real sigma, real alpha) {
-      real lomega; real omega; ', type_y, ' zoa;
+    real msnburr_lccdf(', sig_y, ' y, ', sig_mu, ' mu, real sigma, real alpha) {
+      int N = ', if (vectorize) "rows(y)" else "1", ';
+      real lomega;
+      real omega;
+      ', loc_v, ' zoa;
       ', common_check, '
       zoa = -omega * ((y - mu) / sigma) - log(alpha);
       return ', if (vectorize) "sum(log1m_exp(-(alpha * log1p_exp(zoa))))" else "log1m_exp(-(alpha * log1p_exp(zoa)))", ';
     }
   ')
 
-  # 4. Quantile & RNG Block (RNG operations remain scalar-based)
   qr_code <- '
     real msnburr_quantile(real p, real mu, real sigma, real alpha) {
-      real lomega; real omega; real log_term; real inner;
+      real lomega;
+      real omega;
+      real log_term;
+      real inner;
       if (alpha <= 0) reject("alpha <= 0; found alpha =", alpha);
       if (sigma <= 0) reject("sigma <= 0; found sigma =", sigma);
       if (p < 0 || p > 1) reject("p < 0 or p > 1, found p = ", p);
@@ -193,7 +198,8 @@ stanf_msnburr <- function(vectorize = TRUE, rng = TRUE) {
     }
   '
 
-  # 5. Combined Output
   out <- if (rng) paste0(dist_code, qr_code) else dist_code
+  # Clean up formatting: Ensure a newline follows every semicolon
+  out <- gsub(";[ ]*", ";\n", out)
   return(out)
 }
