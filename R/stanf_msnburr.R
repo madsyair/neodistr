@@ -125,6 +125,7 @@ stanf_msnburr<-function(vectorize=TRUE,rng=TRUE){
   dist<-'real msnburr_lpdf(vector y, vector mu, real sigma,real alpha) {
     // msnburr log pdf
     int N = rows(y);
+    real lomega; // add lomega
     real omega;
     vector[N] lp;
     vector[N] zo;
@@ -133,10 +134,12 @@ stanf_msnburr<-function(vectorize=TRUE,rng=TRUE){
     reject("alpha<=0; found alpha =", alpha);
     if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
-    omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
-    zo=-omega*((y-mu)/sigma);
+    //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
+    lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);    
+    omega=exp(lomega);    zo=-omega*((y-mu)/sigma);
     zoa=zo-log(alpha);
-    lp=rep_vector((log(omega)-log(sigma)),N)+(zo)-((alpha+1)*log1p_exp(zoa));
+    //lp=rep_vector((log(omega)-log(sigma)),N)+(zo)-((alpha+1)*log1p_exp(zoa));
+     lp=rep_vector((lomega-log(sigma)),N)+(zo)-((alpha+1.0)*log1p_exp(zoa));
     for(i in 1:N){
     if(is_inf(zo[i])==1){
     lp[i]<-negative_infinity();
@@ -149,13 +152,16 @@ stanf_msnburr<-function(vectorize=TRUE,rng=TRUE){
     // msnburr cdf
     real msnburr_cdf(vector y,  vector mu, real sigma,real alpha) {
     int N = rows(y);
+    real lomega;
     real omega;
     vector[N] zoa;
     if (alpha<=0)
     reject("alpha<=0; found alpha =", alpha);
     if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
-    omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
+    //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
+    lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);    
+    omega=exp(lomega);
      zoa=-omega*((y-mu)/sigma)-log(alpha);
      return exp(sum(-alpha*log1p_exp(zoa)));
      }
@@ -163,28 +169,34 @@ stanf_msnburr<-function(vectorize=TRUE,rng=TRUE){
     //msnburr log CDF
     real msnburr_lcdf(vector y, vector mu, real sigma, real alpha) {
     int N = rows(y);
+    real lomega;
     real omega;
     vector[N] zoa;
     if (alpha<=0)
     reject("alpha<=0; found alpha =", alpha);
     if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
-    omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
-     zoa=-omega*((y-mu)/sigma)-log(alpha);
-     return -sum(alpha*log1p_exp(zoa));
+    //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
+    lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);    
+    omega=exp(lomega);
+    zoa=-omega*((y-mu)/sigma)-log(alpha);
+    return -sum(alpha*log1p_exp(zoa));
      }
     
     // msnburr lccdf
     real msnburr_lccdf(vector y,vector mu, real sigma,real alpha) {
     // msnburr log ccdf
     int N = rows(y);
+    real lomega;
     real omega;
     vector[N] zoa;
     if (alpha<=0)
     reject("alpha<=0; found alpha =", alpha);
     if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
-    omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
+    //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
+    lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);    
+    omega=exp(lomega);
     zoa=-omega*((y-mu)/sigma)-log(alpha);
     return sum(log1m_exp(-(alpha*log1p_exp(zoa))));
     }
@@ -194,6 +206,7 @@ stanf_msnburr<-function(vectorize=TRUE,rng=TRUE){
   real msnburr_lpdf(real y, real mu, real sigma,real alpha) {
     // msnburr log pdf
     real omega;
+    real lomega;
     real zo;
     real zoa;
     real lp;
@@ -201,13 +214,15 @@ stanf_msnburr<-function(vectorize=TRUE,rng=TRUE){
     reject("alpha<=0; found alpha =", alpha);
     if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
-    omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
+    //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
+    lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);    omega=exp(lomega);
     zo=-omega*((y-mu)/sigma);
     zoa=zo-log(alpha);
     if(is_inf(zo)==1){
     lp=negative_infinity();
     }else{
-    lp=log(omega)-log(sigma)+zo-(alpha+1)*log1p_exp(zoa);
+   lp=lomega-log(sigma)+zo-(alpha+1.0)*log1p_exp(zoa);
+
     }
     return lp;
    // return log(omega)-log(sigma)+zo-(alpha+1)*log1p_exp(zoa);
@@ -215,41 +230,49 @@ stanf_msnburr<-function(vectorize=TRUE,rng=TRUE){
     
     // msnburr cdf
     real msnburr_cdf(real y,  real mu, real sigma,real alpha) {
-   
+    real lomega;
     real omega;
     real zoa;
     if (alpha<=0)
     reject("alpha<=0; found alpha =", alpha);
     if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
-    omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
-     zoa=-omega*((y-mu)/sigma)-log(alpha);
+    //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
+    lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);    
+    omega=exp(lomega);
+    zoa=-omega*((y-mu)/sigma)-log(alpha);
      return exp((-alpha*log1p_exp(zoa)));
      }
     
     //msnburr log CDF
     real msnburr_lcdf(real y, real mu, real sigma, real alpha) {
+    real lomega;
     real omega;
     real zoa;
     if (alpha<=0)
     reject("alpha<=0; found alpha =", alpha);
     if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
-    omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
-     zoa=-omega*((y-mu)/sigma)-log(alpha);
+    //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
+    lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);
+    omega=exp(lomega);
+    zoa=-omega*((y-mu)/sigma)-log(alpha);
      return -alpha*log1p_exp(zoa);
      }
     
     // msnburr lccdf
     real msnburr_lccdf(real y,real mu, real sigma,real alpha) {
     // msnburr log ccdf
+    real lomega;
     real omega;
     real zoa;
     if (alpha<=0)
     reject("alpha<=0; found alpha =", alpha);
     if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
-    omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
+    //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
+    lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);
+    omega=exp(lomega);
     zoa=-omega*((y-mu)/sigma)-log(alpha);
     return (log1m_exp(-(alpha*log1p_exp(zoa))));
     }
@@ -260,15 +283,29 @@ qr<-'
 
     // msnburr quantile
     real msnburr_quantile(real p, real mu, real sigma, real alpha){
-      real omega;
+    real lomega;
+    real omega;
+    real log_term;
+    real inner;
       if (alpha<=0)
         reject("alpha<=0; found alpha =", alpha);
       if (sigma<=0)
         reject("sigma<=0; found sigma =", sigma);
       if(p < 0||p > 1)
         reject("p<0 or p>1, found p = ", p);
-      omega = ((1+1/alpha)^(alpha+1))/sqrt(2*pi());
-      return (mu-(sigma/omega*(log(alpha)+log((p^(-1/alpha))-1))));
+    //omega=(1/sqrt(2*pi()))*pow(1+(1/alpha),(alpha+1));
+    lomega = -0.5 * log(2 * pi()) + (alpha + 1.0) * log1p(1.0 / alpha);
+    omega=exp(lomega);
+    //return (mu-(sigma/omega*(log(alpha)+log((p^(-1/alpha))-1))));
+  // Stable computation of log(p^(-1/alpha) - 1)
+  // = log(exp(-log(p)/alpha) - 1)
+  log_term = -log(p) / alpha;
+  
+  // For large log_term: log(exp(x) - 1) ≈ x
+  // For small log_term: compute directly
+  inner = (log_term > 20.0) ? log_term : log(expm1(log_term));
+  inner = fmin(inner, 700.0);
+  return mu - (sigma / omega) * (log(alpha) + inner);
     }
     
     //msnburr rng
@@ -277,7 +314,8 @@ qr<-'
     reject("alpha<=0; found alpha =", alpha);
     if (sigma<=0)
     reject("sigma<=0; found sigma =", sigma);
-    return msnburr_quantile(uniform_rng(0,1), mu, sigma, alpha);
+
+    return msnburr_quantile(uniform_rng(1e-12, 1.0 - 1e-12), mu, sigma, alpha);
     }'
 if(rng){
   paste0(dist,qr)
