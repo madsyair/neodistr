@@ -247,5 +247,3 @@ stanf_gmsnburr <- function(vectorize = TRUE, rng = TRUE) {
   # Merge and return
   return(if (rng) paste0(dist_code, qr_code) else dist_code)
 }
-
-}
